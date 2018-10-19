@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.Dao.TraningMapper">
+    <sql id="base_col">
+        ot.id,
+        ot.type,
+        ot.out_url as outUrl,
+        ot.title,
+        ot.image_url as imageUrl,
+        ot.video_url as videoUrl,
+        ot.teacher_desc as teacherDesc,
+        ot.teacher_desc_video as teacherDescVideo,
+        ot.description,
+        ot.outline,
+        ot.classfile_desc as classfileDesc,
+        ot.classfile,
+        ot.read_num as readNum,
+        ot.collection_num as collectionNum,
+        DATE_FORMAT(ot.create_date,'%Y-%m-%d %H:%i:%s') as createDate
+    </sql>
+    <sql id="base_col_sub">
+        ot.id,
+        ot.type,
+        ot.out_url as outUrl,
+        ot.title,
+        ot.image_url as imageUrl,
+        ot.video_url as videoUrl,
+        ot.teacher_desc as teacherDesc,
+        ot.teacher_desc_video as teacherDescVideo,
+        CONCAT(SUBSTR(ot.description,1,20),'...') as description,
+        ot.outline,
+        ot.classfile_desc as classfileDesc,
+        ot.classfile,
+        ot.read_num as readNum,
+        ot.collection_num as collectionNum,
+        DATE_FORMAT(ot.create_date,'%Y-%m-%d %H:%i:%s') as createDate
+    </sql>
+    <select id="getCountOfTraning" parameterType="com.zx.Pojo.OnlineTraning" resultType="int">
+        select count(id) as num
+        from online_traning
+        where 1=1
+        <if test="title != null and title != ''">
+            and title like concat('%', #{title}, '%')
+        </if>
+        <if test="type != null and type != 0">
+            and type = #{type}
+        </if>
+    </select>
+
+    <select id="getListOfTraning" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.OnlineTraning">
+        select <include refid="base_col_sub"/>
+        from online_traning ot
+        where 1=1
+        <if test="conditionOnlineTraning.title != null and conditionOnlineTraning.title != ''">
+            and ot.title like concat('%', #{conditionOnlineTraning.title}, '%')
+        </if>
+        <if test="conditionOnlineTraning.type != null and conditionOnlineTraning.type != 0 ">
+            and ot.type = #{conditionOnlineTraning.type}
+        </if>
+        order by ot.create_date DESC
+        limit #{begin},#{shownum}
+    </select>
+
+    <insert id="addTraningInfo" parameterType="com.zx.Pojo.OnlineTraning">
+        insert into online_traning(type,out_url,title,image_url,video_url,teacher_desc,teacher_desc_video,description,
+        outline,classfile_desc,classfile) values(#{type},#{outUrl},#{title},#{imageUrl},#{videoUrl},#{teacherDesc},#{teacherDescVideo},
+        #{description},#{outline},#{classfileDesc},#{classfile})
+    </insert>
+
+    <select id="getListofinfoBytype" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.OnlineTraning">
+        select ot.id,
+        ot.out_url as outUrl,
+        ot.title,
+        ot.image_url as imageUrl,
+        ot.read_num as readNum,
+        ot.collection_num as collectionNum
+        from online_traning ot
+        where type=#{conditionOnlineTraning.type}
+        order by ot.create_date DESC
+        limit #{begin},#{shownum}
+    </select>
+
+    <select id="getTraningInfoByid" parameterType="int" resultType="com.zx.Pojo.OnlineTraning">
+        select <include refid="base_col"/>
+        from online_traning ot
+        where id=#{id}
+    </select>
+
+    <insert id="addTraningQuestion" parameterType="com.zx.Pojo.TraningQuestion">
+        insert into traning_question(id,traning_id,title,type,seq_no,answer)
+        value(#{id},#{traningId},#{title},#{type},#{seqNo},#{answer})
+    </insert>
+
+    <insert id="BatchAddQuestionAnswer" parameterType="arrayList">
+        insert into traning_answer(question_id,select_name,select_content)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.questionId},#{item.selectName},#{item.selectContent})
+        </foreach>
+    </insert>
+
+    <select id="getQuestioninfoByArticalId" parameterType="int" resultType="com.zx.Pojo.TraningQuestion">
+        select id,traning_id as traningId,title,type,seq_no as seqNo,answer,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+        from traning_question where traning_id=#{id}
+    </select>
+
+    <select id="getAnswerbyQuestionId" parameterType="com.zx.Pojo.TraningQuestion" resultType="com.zx.Pojo.TraningAnswer">
+        select id,question_id as questionId,select_name as selectName,select_content as selectContent,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+        from traning_answer where question_id=#{id}
+    </select>
+
+    <insert id="saveExamation" parameterType="com.zx.Pojo.Examination">
+        insert into examination(exam_id,title) values(#{examId},#{title})
+    </insert>
+
+    <insert id="BatchAddAnswer" parameterType="arrayList">
+        insert into answer(question_id,select_name,select_content)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.questionId},#{item.selectName},#{item.selectContent})
+        </foreach>
+    </insert>
+
+    <insert id="saveQuestion" parameterType="com.zx.Pojo.Question">
+        insert into question(id,examation_id,type,question_title,question_answer)
+        values(#{id},#{examId},#{type},#{questionTitle},#{questionAnswer})
+    </insert>
+
+    <select id="getAnswerInfoByExamId" parameterType="String" resultType="com.zx.Pojo.Question">
+        select b.id as id,b.question_answer as questionAnswer
+        from examination a
+        left join question b on a.exam_id=b.examation_id
+        where 1=1 and a.exam_id=#{examId}
+    </select>
+
+    <insert id="addUserExamInfo" parameterType="com.zx.Pojo.UserExam">
+        insert into user_exam(exam_id,score) values(#{examId},#{score})
+    </insert>
+
+    <select id="getCountOfExam" resultType="int">
+        select count(exam_id) as num
+        from examination
+    </select>
+    <select id="getListofExamInfo" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.Examination">
+        select exam_id as examId,title,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+        from examination
+        limit #{begin},#{shownum}
+    </select>
+
+    <select id="getQuestionByExamId" parameterType="String" resultType="com.zx.Pojo.Question">
+        select id,examation_id as examId,type,question_title as questionTitle,question_answer as questionAnswer,
+        DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+        from question where examation_id=#{examId}
+    </select>
+
+    <select id="getAnswerbyQid" parameterType="String" resultType="com.zx.Pojo.Answer">
+        select select_name as selectName,select_content as selectContent
+        from answer where question_id=#{questionId}
+    </select>
+</mapper>

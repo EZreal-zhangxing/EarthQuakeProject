@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.Dao.VolunteerTeamMapper">
+    <select id="getListofTeamType" resultType="com.zx.Pojo.TeamType">
+        select id,team_type as teamType from team_type order by id
+    </select>
+
+    <select id="getListofTeamServiceType" resultType="com.zx.Pojo.TeamSerciveType">
+        select id,service_name as serviceName from team_service_type order by id
+    </select>
+
+    <sql id="base_colu">
+        vt.id,
+        vt.title,
+        vt.out_url as outUrl,
+        vt.url,
+        vt.description,
+        vt.content,
+        vt.team_num as teamNum,
+        vt.area_id as areaId,
+        vt.service_type as serviceType,
+        vt.team_man_num as teamManNum,
+        vt.team_type as teamType,
+        DATE_FORMAT(vt.create_date,'%Y-%m-%d %H:%i:%s') as createDate,
+        vt.team_man as teamMan,
+        vt.team_man_tel as teamManTel,
+        vt.team_man_email as teamManEmail,
+        vt.team_address as teamAddress,
+        vt.sign_num as signNum
+    </sql>
+
+    <select id="getCountOfVolunteerTeam" parameterType="com.zx.Pojo.VolunteerTeam" resultType="int">
+        select count(id) as num from volunteer_team
+        where 1=1
+        <if test="title != null and '' != title ">
+            and title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="areaId != null and areaId != ''">
+            and area_id = #{areaId}
+        </if>
+        <if test="serviceType != null and serviceType != ''">
+            and service_type = #{serviceType}
+        </if>
+        <if test="teamType != null and teamType != ''">
+            and team_type = #{teamType}
+        </if>
+        <if test="teamManNum != null and teamManNum != '' ">
+            and team_man_num = #{teamManNum}
+        </if>
+    </select>
+
+    <select id="getListofVolunteerTeam" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.VolunteerTeam">
+        select <include refid="base_colu"/>,
+        a.area_name as areaName,
+        tst.service_name as serviceName,
+        tt.team_type as teamTypeName
+        from volunteer_team vt
+        left join area a on vt.area_id=a.id
+        left join team_service_type tst on tst.id=vt.service_type
+        left join team_type tt on vt.team_type=tt.id
+        where 1=1
+        <if test="conditionVolunteerTeam.title != null and '' != conditionVolunteerTeam.title ">
+            and title like CONCAT('%',#{conditionVolunteerTeam.title},'%')
+        </if>
+        <if test="conditionVolunteerTeam.areaId != null and conditionVolunteerTeam.areaId != ''">
+            and area_id = #{conditionVolunteerTeam.areaId}
+        </if>
+        <if test="conditionVolunteerTeam.serviceType != null and conditionVolunteerTeam.serviceType != ''">
+            and service_type = #{conditionVolunteerTeam.serviceType}
+        </if>
+        <if test="conditionVolunteerTeam.teamType != null and conditionVolunteerTeam.teamType != ''">
+            and team_type = #{conditionVolunteerTeam.teamType}
+        </if>
+        <if test="conditionVolunteerTeam.teamManNum != null and conditionVolunteerTeam.teamManNum != '' ">
+            and team_man_num = #{conditionVolunteerTeam.teamManNum}
+        </if>
+        limit #{begin},#{shownum}
+    </select>
+
+    <insert id="saveVolunteerTeam" parameterType="com.zx.Pojo.VolunteerTeam">
+        insert into volunteer_team(title,out_url,url,description,content,team_num,
+        area_id,service_type,team_man_num,team_type,create_date,team_man,team_man_tel,
+        team_man_email,team_address)
+        VALUES(#{title},#{outUrl},#{url},#{description},#{content},#{teamNum},
+        #{areaId},#{serviceType},#{teamManNum},#{teamType},NOW(),#{teamMan},#{teamManTel},
+        #{teamManEmail},#{teamAddress})
+    </insert>
+
+    <delete id="delVolunteerTeam" parameterType="int">
+        delete from volunteer_team where id=#{id}
+    </delete>
+
+    <select id="getVolunteerTeamByid" parameterType="int" resultType="com.zx.Pojo.VolunteerTeam">
+        select <include refid="base_colu"/>
+        a.area_name as areaName,
+        tst.service_name as serviceName,
+        tt.team_type as teamTypeName
+        from volunteer_team vt
+        left join area a on vt.area_id=a.id
+        left join team_service_type tst on tst.id=vt.service_type
+        left join team_type tt on vt.team_type=tt.id
+        where 1=1 and vt.id=#{id}
+    </select>
+
+    <insert id="addSignTeam" parameterType="com.zx.Pojo.TeamSign">
+        insert into team_sign(team_id,user_id) VALUES (#{teamId},#{userId})
+    </insert>
+
+    <select id="getListofSignTeam" parameterType="int" resultType="com.zx.Pojo.TeamSign">
+        select ts.id,ts.team_id as teamId,vt.title as teamName,ts.user_id as userId,u.user_name as userName,
+        u.telphone as userPhone,
+	    vt.description as teamDesc,
+         DATE_FORMAT(ts.sign_date,'%Y-%m-%d %H:%i:%s') as signDate
+        from team_sign ts
+        left join `user` u on ts.user_id=u.id
+        left join volunteer_team vt on ts.team_id=vt.id
+        where 1=1 and vt.id=#{id}
+    </select>
+</mapper>

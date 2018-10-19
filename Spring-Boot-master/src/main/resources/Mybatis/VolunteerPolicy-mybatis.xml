@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.Dao.VolunteerPolicyMapper">
+    <sql id="base_coloum">
+        vp.id,
+        vp.model_id as modelId,
+        vp.title,
+        vp.description,
+        vp.content,
+        vp.out_url as outUrl,
+        vp.image_url as imageUrl,
+        vp.view_num as viewNum,
+        vp.common_num as commonNum,
+        DATE_FORMAT(vp.create_date,'%Y-%m-%d %H:%i:%s') as createDate
+    </sql>
+    <select id="getCountofVolunteerPolicy" parameterType="com.zx.Pojo.VolunteerPolicy" resultType="int">
+        select count(id) as num from volunteer_policy
+        where 1=1
+        <if test="modelId!=null and modelId!=''">
+            and model_id=#{modelId}
+        </if>
+        <if test="title!=null and title!=''">
+            and title like CONCAT('%',#{title},'%')
+        </if>
+    </select>
+
+    <select id="getListOfVolunteerPolicy" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.VolunteerPolicy">
+        select <include refid="base_coloum"/>,
+        m.model_name as modelName
+        from volunteer_policy vp
+        left join model m on vp.model_id = m.id
+        where 1=1
+        <if test="conditionVolunteerPolicy.modelId!=null and conditionVolunteerPolicy.modelId!=''">
+            and model_id=#{conditionVolunteerPolicy.modelId}
+        </if>
+        <if test="conditionVolunteerPolicy.title!=null and conditionVolunteerPolicy.title!=''">
+            and title like CONCAT('%',#{conditionVolunteerPolicy.title},'%')
+        </if>
+        limit #{begin},#{shownum}
+    </select>
+
+    <delete id="delVolunteerPolicy" parameterType="int">
+        delete from volunteer_policy where id=#{id}
+    </delete>
+
+    <insert id="addVolunteerPolicy" parameterType="com.zx.Pojo.VolunteerPolicy">
+        insert into volunteer_policy(model_id,title,description,content,out_url,image_url,view_num,common_num)
+        values(#{modelId},#{title},#{description},#{content},#{outUrl},#{imageUrl},#{viewNum},#{commonNum})
+    </insert>
+
+    <update id="updateVolunteerPolicy" parameterType="com.zx.Pojo.VolunteerPolicy">
+        update volunteer_policy
+        set model_id=#{modelId},
+        title=#{title},
+        description=#{description},
+        content=#{content},
+        out_url=#{outUrl},
+        image_url=#{imageUrl}
+        where id=#{id}
+    </update>
+
+    <select id="getVolunteerPolicyByid" parameterType="int" resultType="com.zx.Pojo.VolunteerPolicy">
+        select <include refid="base_coloum"/>,
+        m.model_name as modelName
+        from volunteer_policy vp
+        left join model m on vp.model_id = m.id
+        where 1=1 and vp.id=#{id}
+    </select>
+
+    <update id="updateAddViewNum" parameterType="int">
+        update volunteer_policy set view_num=view_num+1 where id=#{id}
+    </update>
+
+    <update id="updateAddCommonNum" parameterType="int">
+        update volunteer_policy set common_num=common_num+1 where id=#{id}
+    </update>
+    <update id="updateReduceCommonNum" parameterType="int">
+        update volunteer_policy set common_num=common_num-1 where id=#{id}
+    </update>
+
+    <insert id="addPolicyCommon" parameterType="com.zx.Pojo.Common">
+        insert into common(artical_id,type,user_id,user_name,content)
+        values(#{articalId},#{type},#{userId},#{userName},#{content})
+    </insert>
+
+    <delete id="delPolicyCommon" parameterType="int">
+        delete from common where id=#{id}
+    </delete>
+    <delete id="delPolicyCommonByArticalId" parameterType="int">
+        delete from common where artical_id=#{articalId} and type=4
+    </delete>
+
+    <select id="getListofPolicyCommon" parameterType="int" resultType="com.zx.Pojo.Common">
+        select a.id,
+        a.artical_id as articalId,
+        a.user_id as userId,
+        a.user_name as userName,
+        a.content,
+        DATE_FORMAT(a.create_date,'%Y-%m-%d %H:%i:%s') as createDate,
+        b.title,
+        b.description,
+        c.model_name as modelName
+        from common a
+        left join volunteer_policy b on a.artical_id=b.id
+        left join model c on b.model_id=c.id
+        where 1=1 and a.artical_id=#{articalId} and a.type=4
+    </select>
+</mapper>

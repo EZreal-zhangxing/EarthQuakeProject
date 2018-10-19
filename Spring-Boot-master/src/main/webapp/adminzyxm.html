@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>志愿项目</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="介绍如何搭建Bootstrap里面HTML基本元素，并利用可扩展的class增强其展示效果。">
+    <meta name="keywords" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/docs.css" rel="stylesheet">
+    <link href="css/prettify.css" rel="stylesheet">
+    <link href="css/datetimepicker.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/bootstrap-select.css">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.js"></script>
+    <![endif]-->
+    <!-- Le fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="img/favicon.png">
+
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" onload="getArea();">
+
+    <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+		  <div class="nav-collapse collapse">
+            <ul class="nav">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">新闻资讯 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminyfc.html">新闻资讯</a></li>
+					  <li><a href="editnews.html" target="_blank">新闻添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿故事 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzygs.html">志愿故事</a></li>
+					  <li><a href="editzygs.html" target="_blank">志愿故事添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿团体 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzytt.html">志愿团体</a></li>
+					  <li><a href="editzytt.html" target="_blank">志愿团体添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿项目 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzyxm.html">志愿项目</a></li>
+					  <li><a href="editzyxm.html" target="_blank">志愿项目添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿之星 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzyzx.html">志愿之星</a></li>
+					  <li><a href="editzyzx.html" target="_blank">志愿之星添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿政策 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzyzc.html">志愿政策</a></li>
+					  <li><a href="editzyzc.html" target="_blank">志愿政策添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">在线培训 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzxpx.html">课程预览</a></li>
+					  <li><a href="editzxpx.html" target="_blank">课程配置</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">在线考试 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzxks.html">考试试卷预览</a></li>
+					  <li><a href="editQuestion.html" target="_blank">考试配置</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">文件资源 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminfile.html">文件资源预览</a></li>
+					  <li><a href="editQuestion.html" target="_blank">考试配置</a></li>
+					</ul>
+				</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Subhead
+================================================== -->
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h1>志愿项目</h1>
+    <p class="lead">志愿项目管理。</p>
+  </div>
+</header>
+
+
+  <div class="container">
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="width:100%">
+        <!-- Forms
+        ================================================== -->
+        <section id="price">
+          <div class="page-header">
+            <h1>文章信息维护</h1>
+          </div>
+		  <div class="bs-docs-example">
+		  	<form id="queryPrice" class="" align="center" action="" method="post">
+                <div class="form-inline">
+                    <input type="text" id="articelName" name="articelName" placeholder="文章名" autocomplete="off" value="">
+                    <select class="span2" id="modelarea">
+                        <option value="" selected>请选择地区：</option>
+                    </select>
+                    <select class="span2" id="serviceType">
+                        <option value="" selected>请选择服务类别：</option>
+                        <option value="1">演练项目</option>
+                        <option value="2">培训项目</option>
+                        <option value="3">活动项目</option>
+                        <option value="4">师资项目</option>
+                    </select>
+                    <select class="span2" id="projectStatue">
+                        <option value="" selected>请选择项目状态：</option>
+                        <option value="1">招募</option>
+                        <option value="2">待启动</option>
+                        <option value="3">招募中</option>
+                        <option value="4">招募已结束</option>
+                        <option value="5">已结项目</option>
+                    </select>
+                </div>
+                <br>
+                <div class="form-inline">
+                    <select class="span2" id="signArea">
+                        <option value="" selected>请选择报名范围：</option>
+                        <option value="1">公开招募</option>
+                        <option value="2">仅招募实名自愿者</option>
+                        <option value="3">指定自愿团体招募</option>
+                        <option value="4">设定免审密码招募</option>
+                    </select>
+                    <select class="span2" id="serviceTo">
+                        <option value="" selected>请选择服务对象：</option>
+                        <option value="1">儿童</option>
+                        <option value="2">青少年</option>
+                        <option value="3">孤寡老</option>
+                        <option value="4">残障人士</option>
+                        <option value="5">优抚对象</option>
+                        <option value="6">特困群体</option>
+                        <option value="7">其他</option>
+                    </select>
+                    <select class="span2" id="projectManNum">
+                        <option value="" selected>请选择项目人数：</option>
+                        <option value="1">1-100</option>
+                        <option value="2">101-200</option>
+                        <option value="3">201-500</option>
+                        <option value="4">501-1000</option>
+                        <option value="5">1000以上</option>
+                    </select>
+                </div>
+                <br>
+                <div class="input-append date form_datetime">
+                    <input id="startDate" size="16" type="text" value="" placeholder="开始时间" readonly>
+                    <span class="add-on"><i class="icon-th"></i></span>
+                </div>
+                <div class="input-append date form_datetime">
+                    <input id="endDate" size="16" type="text" value="" placeholder="结束时间" readonly>
+                    <span class="add-on"><i class="icon-th"></i></span>
+                </div>
+                <div class="form-inline">
+				    <button id="queryPrice_btn" class="btn btn-primary" type="button" onclick="loadArticel(1)"><i class="icon-search icon-white"></i> 查询</button>&nbsp;
+				    <button id="queryPrice_reset" class="btn btn-warning" type="button" onclick="reset()"><i class="icon-repeat icon-white"></i> 重置</button>
+                </div>
+			</form>
+		  </div>
+		 
+          <div class="bs-docs-example">
+            <table class="table table-hover table-bordered" style="table-layout:fixed;">
+              <thead>
+                <tr>
+                  <th width="2px">#</th>
+				  <th width="60px">文章标题</th>
+                  <!--<th width="65px">展示图片</th>-->
+                  <th width="60px">项目区域</th>
+                  <th width="45px">服务类别</th>
+                  <th width="45px">项目状态</th>
+                  <th width="45px">报名范围</th>
+                  <th width="45px">服务对象</th>
+                  <th width="45px">项目人数</th>
+                  <th width="60px">发布时间</th>
+                  <th width="60px">结束时间</th>
+				  <th width="45px">报名人数</th>
+				  <th width="80px">操作</th>
+                </tr>
+              </thead>
+              <tbody id="articelBody">
+              	
+              </tbody>
+            </table>
+			<div class="form-inline">
+				<div class="pagination" align="center">
+				 	<ul id="pageinfo">
+				 		
+				 	</ul>
+				</div>
+				<div class="pagination" align="right">
+				<ul>
+					<li>
+						<a id="jumptopage" href="">跳转至：</a>
+						<input type="text" style="width:20px;" placeholder="" autocomplete="off" onkeyup="changeA($(this).val())">
+					</li>
+				</ul>
+			</div>
+			</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+
+  <!--消息model-->
+	<div id="messageModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel"></h3>
+	  </div>
+	  <div class="modal-body">
+		<p><h4 align="center" id="myModalContent"></h4></p>
+	  </div>
+	  <div class="modal-footer" id="message_buttons">
+		<button id="message_button_no" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">关闭</button>
+	  </div>
+	</div>
+	 <!--删除文章信息model-->
+	<div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel1">提示！</h3>
+	  </div>
+	  <div class="modal-body">
+		<h4 align="center">确认删除？</h4>
+		<form id="deletePrFomr" method="POST" action="">
+			<input type="text" name="artId" id="artId" placeholder="" autocomplete="off"/>
+		</form>
+		<div class="modal-footer">
+			<button id="modal_deleteAr" class="btn btn-primary">确认</button>
+			<button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">取消</button>
+		 </div>
+	  </div>
+	</div>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+    <script src="js/bootstrap-affix.js"></script>
+    <script src="js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="js/holder.js"></script>
+    <script src="js/prettify.js"></script>
+
+    <script src="js/application.js"></script>
+    <script type="text/javascript">
+        $(".form_datetime").datetimepicker({
+            format: "yyyy-mm-dd hh:ii:ss"
+        });
+    </script>
+    <script type="text/javascript">
+	    function reset()
+	    {
+			$('#articelName').attr("value","");
+	    }
+    	function getArea(){
+	        areaStr=$("#modelarea").html();
+	        $.ajax({
+                url:"/volunteerProject/getListofArea",
+                type:"post",
+                async:"false",
+                success:function(data){
+                    var arealist=eval(data);
+                    for(var i=0;i<arealist.length;i++){
+                        var area=arealist[i];
+                        var areaName=area.areaName;
+                        var areaId=area.id;
+                        areaStr+="<option name='modelarea' value='"+areaId+"'>"+areaName+"</option>";
+                    }
+                    $("#modelarea").html(areaStr);
+					loadArticel(1);
+                }
+            });
+        }
+		function loadArticel(page)
+		{
+            var title=$('#articelName').val();
+            var areaId=$('#modelarea option:selected').val();
+			var serviceType=$('#serviceType option:selected').val();
+			var projectStatue=$('#projectStatue option:selected').val();
+			var signArea=$('#signArea option:selected').val();
+			var serviceTo=$('#serviceTo option:selected').val();
+			var projectManNum=$('#projectManNum option:selected').val();
+			var startDate=$('#startDate').val();
+			var endDate=$('#endDate').val();
+			var url="/volunteerProject/getVolunteerProject?title="+title+"&areaId="+areaId+"&serviceType="
+                +serviceType+"&projectStatue="+projectStatue+"&signArea="+signArea+"&serviceTo="+serviceTo+
+                "&projectManNum="+projectManNum+"&startDate="+startDate+"&endDate="+endDate+"&page="+page;
+			var tdstr="";
+			var pagestr="";
+			$.ajax({
+				url:url,
+				type:'post',
+				async:'false',
+				success:function(data)
+				{
+					var pageinfo=eval(data);
+					var artlist=pageinfo.result;
+					for(var i=0;i<artlist.length;i++)
+					{
+						var stationslist=artlist[i].stations;
+						var stationStr='<table class="table table-bordered">';
+						stationStr+='<thead><tr><th>岗位名称</th><th>岗位描述</th><th>岗位条件</th><th>招聘人数</th></tr></thead>';
+						stationStr+='<tbody>'
+						for(var j=0;j<stationslist.length;j++){
+							stationStr+='<tr>';
+							stationStr+='<td>'+stationslist[j].stationName+'</td>';
+							stationStr+='<td>'+stationslist[j].stationDesc+'</td>';
+							stationStr+='<td>'+stationslist[j].stationConds+'</td>';
+							stationStr+='<td>'+stationslist[j].planSignNum+'</td>';
+							stationStr+='</tr>';
+						}
+						stationStr+='</tbody></table>';
+						tdstr+="<tr class='' id=''>";
+						tdstr+="<td id='volunteerId' style='word-wrap:break-word;'>"+artlist[i].id+"</td>";
+                        tdstr+="<td id='title' style='word-wrap:break-word;'><a href='javascript:showpopover("+artlist[i].id+");' data-toggle='popover' data-placement='top' data-html='true' data-content='"+stationStr+"' data-original-title='岗位信息' id='popover"+artlist[i].id+"'>"+artlist[i].title+"</a></td>";
+                        tdstr+="<td id='areaName' style='word-wrap:break-word;'>"+artlist[i].areaName+"</td>";
+                        tdstr+="<td id='serviceTypeName' style='word-wrap:break-word;'>"+artlist[i].serviceTypeName+"</td>";
+                        tdstr+="<td id='projectStatueName' style='word-wrap:break-word;'>"+artlist[i].projectStatueName+"</td>";
+                        tdstr+="<td id='signAreaName' style='word-wrap:break-word;'>"+artlist[i].signAreaName+"</td>";
+                        tdstr+="<td id='serviceToName' style='word-wrap:break-word;'>"+artlist[i].serviceToName+"</td>";
+						if(parseInt(artlist[i].projectManNum) == 1){
+							tdstr+="<td id='projectManNum' style='word-wrap:break-word;'>1-100</td>";
+						}else if(parseInt(artlist[i].projectManNum) == 2){
+							tdstr+="<td id='projectManNum' style='word-wrap:break-word;'>101-200</td>";
+						}else if(parseInt(artlist[i].projectManNum) == 3){
+							tdstr+="<td id='projectManNum' style='word-wrap:break-word;'>201-500</td>";
+						}else if(parseInt(artlist[i].projectManNum) == 4){
+							tdstr+="<td id='projectManNum' style='word-wrap:break-word;'>501-1000</td>";
+						}else if(parseInt(artlist[i].projectManNum) == 5){
+							tdstr+="<td id='projectManNum' style='word-wrap:break-word;'>1000以上</td>";
+						}else{
+							tdstr+="<td id='projectManNum' style='word-wrap:break-word;'>数据异常</td>";
+						}
+                        tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
+                        tdstr+="<td id='endDate' style='word-wrap:break-word;'>"+artlist[i].endDate+"</td>";
+						tdstr+="<td id='signNum' style='word-wrap:break-word;'><a href='signnum.html?projectId="+artlist[i].id+"' target='_blank' data-toggle='tooltip' title='点击此处查看报名人数！' data-placement='top'>"+artlist[i].signNum+"</a></td>";
+						tdstr+="<td id='operation' style='word-wrap:break-word;'><a id='updatebtn' class='btn btn-primary' href='/editzyxm.html?id="+artlist[i].id+"' target='_blank' type='button' onclick='updateArt("+artlist[i].id+")'><i class='icon-edit icon-white'></i>修改</a>&nbsp;<button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
+						tdstr+="</tr>";
+					}
+					var pagelist=pageinfo.pageStr;
+					if(pageinfo.pagenum==1)
+					{
+						pagestr+="<li class='disabled'><a href='#'>&laquo;</a></li>";
+					}else
+					{
+						pagestr+="<li class=''><a href='javascript:loadArticel("+pageinfo.prev+")'>&laquo;</a></li>";
+					}
+					for(var i=0;i<pagelist.length;i++)
+					{
+								
+						if(pagelist[i] == pageinfo.pagenum+'')
+						{
+							pagestr+="<li class='disabled'><a href='#'>"+pagelist[i]+"</a></li>";
+						}else
+						{
+							pagestr+="<li><a href='javascript:loadArticel("+pagelist[i]+")'>"+pagelist[i]+"</a></li>";
+						}
+
+					}
+					if(pageinfo.pagenum==pageinfo.lastpage)
+					{
+						pagestr+="<li class='disabled'><a href='#'>&raquo;</a></li>";
+					}else
+					{
+						pagestr+="<li class=''><a href='javascript:loadArticel("+pageinfo.next+")'>&raquo;</a></li>";
+					}
+					$('#articelBody').html(tdstr);
+					$('#pageinfo').html(pagestr);
+					toltip();
+				}
+			});			
+		}
+		function changeA(pagenum)
+		{
+			$('#jumptopage').attr("href","javascript:loadArticel("+pagenum+")");
+		}
+        function getDate(date){
+            var t = new Date(date).toLocaleString();
+            var year = t.getFullYear(),
+                month = t.getMonth() + 1,//月份是从0开始的
+                day = t.getDate(),
+                hour = t.getHours(),
+                min = t.getMinutes(),
+                sec = t.getSeconds();
+            var newTime = year + '-' +
+                month + '-' +
+                day + ' ' +
+                hour + ':' +
+                min + ':' +
+                sec;
+            return newTime;
+        }
+		function deleteArt(id)
+		{
+			$('#deleteModal').modal({backdrop: 'static', keyboard: false});
+			$('#deleteModal #artId').attr('value',id);
+		}
+		$('#modal_deleteAr').click(function (){
+			var id=$('#deleteModal #artId').val();
+			var	posturl="/volunteerProject/delProject/"+id;
+			$.ajax({
+	 			url:posturl,
+	 			type:'post',
+	 			async:'false',
+	 			success:function(data)
+	 			{
+					var msg=eval(data);
+					if(msg.code == "success")
+					{
+                        // loadArticel(1);
+						window.location.reload();
+					}else
+					{	
+						$('#deleteModal').modal('hide');
+						$('#messageModal').modal({backdrop: 'static', keyboard: false});
+						$("#messageModal #myModalLabel").html("错误！");
+						$("#messageModal #myModalContent").html(msg.message+"!");
+					}
+	 			}
+	 		});
+		});
+		function toltip() {
+		  $('[data-toggle="tooltip"]').tooltip();
+		}
+		//$('[data-toggle="popover"]').popover('toggle');
+		function showpopover(id){
+			$('#popover'+id).popover();
+		}
+    </script>
+  </body>
+</html>
+
+

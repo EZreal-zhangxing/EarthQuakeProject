@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>新闻资讯</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="介绍如何搭建Bootstrap里面HTML基本元素，并利用可扩展的class增强其展示效果。">
+    <meta name="keywords" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/docs.css" rel="stylesheet">
+    <link href="css/prettify.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/bootstrap-select.css">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.js"></script>
+    <![endif]-->
+    <!-- Le fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="img/favicon.png">
+
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
+
+    <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+		  <div class="nav-collapse collapse">
+            <ul class="nav">
+             
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Subhead
+================================================== -->
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h1>点评信息查看</h1>
+    <p class="lead">点评信息查看。</p>
+  </div>
+</header>
+
+
+  <div class="container">
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="width:100%">
+        <!-- Forms
+        ================================================== -->
+        <section id="price">
+          <!--<div class="page-header">-->
+            <!--<h1>报名信息查看</h1>-->
+          <!--</div>-->
+		  <!--<div class="bs-docs-example">-->
+		  	<!--<form id="queryPrice" class="form-inline" align="center" action="" method="post">-->
+			  	<!--<input type="text" id="articelName" name="articelName" placeholder="文章名" autocomplete="off" value="">-->
+				<!--<select class="span2" id="model">-->
+					<!--<option id="default" value="" selected>请选择所属模块：</option>-->
+				<!--</select>-->
+				<!--<button id="queryPrice_btn" class="btn btn-primary" type="button" onclick="loadArticel(1)"><i class="icon-search icon-white"></i> 查询</button>&nbsp;-->
+				<!--<button id="queryPrice_reset" class="btn btn-warning" type="button" onclick="reset()"><i class="icon-repeat icon-white"></i> 重置</button>-->
+			<!--</form>-->
+		  <!--</div>-->
+		 
+          <div class="bs-docs-example">
+            <table class="table table-hover table-bordered" style="table-layout:fixed;">
+              <thead>
+                <tr>
+                  <th width="2px">#</th>
+				  <th width="60px">所属模块</th>
+				  <th width="60px">文章标题</th>
+                  <th width="80px">文章描述</th>
+                  <th width="30px">评论人姓名</th>
+                  <th width="80px">评论内容</th>
+                  <th width="50px">评论时间</th>
+                </tr>
+              </thead>
+              <tbody id="articelBody">
+              	
+              </tbody>
+            </table>
+			<div class="form-inline">
+				<div class="pagination" align="center">
+				 	<ul id="pageinfo">
+				 		
+				 	</ul>
+				</div>
+				<div class="pagination" align="right">
+				<ul>
+					<li>
+						<a id="jumptopage" href="">跳转至：</a>
+						<input type="text" style="width:20px;" placeholder="" autocomplete="off" onkeyup="changeA($(this).val())">
+					</li>
+				</ul>
+			</div>
+			</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+
+  <!--消息model-->
+	<div id="messageModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel"></h3>
+	  </div>
+	  <div class="modal-body">
+		<p><h4 align="center" id="myModalContent"></h4></p>
+	  </div>
+	  <div class="modal-footer" id="message_buttons">
+		<button id="message_button_no" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">关闭</button>
+	  </div>
+	</div>
+	 <!--删除文章信息model-->
+	<div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel1">提示！</h3>
+	  </div>
+	  <div class="modal-body">
+		<h4 align="center">确认删除？</h4>
+		<form id="deletePrFomr" method="POST" action="">
+			<input type="text" name="artId" id="artId" placeholder="" autocomplete="off"/>
+		</form>
+		<div class="modal-footer">
+			<button id="modal_deleteAr" class="btn btn-primary">确认</button>
+			<button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">取消</button>
+		 </div>
+	  </div>
+	</div>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+    <script src="js/bootstrap-affix.js"></script>
+
+    <script src="js/holder.js"></script>
+    <script src="js/prettify.js"></script>
+    <script src="js/application.js"></script>
+	
+	<script type="text/javascript">
+		$(function(){
+			var urlId=getQueryString("id");
+			var ajaxUrl=getQueryString("ajaxUrl");
+			loadArticel(ajaxUrl+"/"+urlId);
+		});
+		function getQueryString(name) { 
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+			var r = window.location.search.substr(1).match(reg); 
+			if (r != null) return unescape(r[2]); return null; 
+		} 
+	</script>
+    <script type="text/javascript">
+	    function reset()
+	    {
+			$('#articelName').attr("value","");
+	    }
+
+		function loadArticel(url)
+		{
+			var tdstr="";
+			$.ajax({
+				url:url,
+				type:'post',
+				async:'false',
+				success:function(data)
+				{
+					var artlist=eval(data);
+					console.log(artlist);
+					for(var i=0;i<artlist.length;i++)
+					{
+						tdstr+="<tr class='' id=''>";
+						tdstr+="<td id='articelId' style='word-wrap:break-word;'>"+artlist[i].id+"</td>";
+						tdstr+="<td id='articelId' style='word-wrap:break-word;'>"+artlist[i].modelName+"</td>";
+                        tdstr+="<td id='articelTitle' style='word-wrap:break-word;'>"+artlist[i].title+"</td>";
+						if(artlist[i].description == null){
+							tdstr+="<td id='articelDesc' style='word-wrap:break-word;'>无</td>";
+						}else{
+							tdstr+="<td id='articelDesc' style='word-wrap:break-word;'>"+artlist[i].description+"</td>";
+						}               
+                        tdstr+="<td id='userName' style='word-wrap:break-word;'>"+artlist[i].userName+"</td>";
+                        tdstr+="<td id='userName' style='word-wrap:break-word;'>"+artlist[i].content+"</td>";
+                        tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
+						tdstr+="</tr>";
+					}
+					$('#articelBody').html(tdstr);
+					toltip();
+				}
+			});			
+		}
+		function toltip() {
+		  $('[data-toggle="tooltip"]').tooltip();
+		}
+    </script>
+  </body>
+</html>
+
+

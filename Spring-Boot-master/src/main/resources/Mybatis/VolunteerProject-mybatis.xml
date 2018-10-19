@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.Dao.VolunteerProjectMapper">
+    <sql id="VolunteerProjectColoum">
+        a.id,
+        a.url,
+        a.show_image as showImage,
+        a.title,
+        a.description,
+        a.content,
+        a.area_id as areaId,
+        a.service_type as serviceType,
+        a.service_type_name as serviceTypeName,
+        a.project_statue as projectStatue,
+        a.project_statue_name as projectStatueName,
+        a.sign_area as signArea,
+        a.sign_area_name as signAreaName,
+        a.service_to as serviceTo,
+        a.service_to_name as serviceToName,
+        a.project_man_num as projectManNum,
+        DATE_FORMAT(a.create_date,'%Y-%m-%d %H:%i:%s') as createDate,
+        DATE_FORMAT(a.end_date,'%Y-%m-%d %H:%i:%s') as endDate,
+        IFNULL(a.sign_num,'0') as signNum,
+        a.create_man as createMan,
+        a.project_man as projectMan,
+        a.project_man_tel as projectManTel,
+        a.project_man_email as projectManEmail,
+        a.project_address as projectAddress
+    </sql>
+
+    <select id="getCountOfVolunteerProject" parameterType="com.zx.Pojo.VolunteerProject" resultType="int">
+        select count(id) as num from volunteer_project where 1=1
+        <if test="title != null and title != ''">
+            and title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="areaId != null and areaId != ''">
+            and area_id=#{areaId}
+        </if>
+        <if test="serviceType != null and serviceType != ''">
+            and service_type=#{serviceType}
+        </if>
+        <if test="projectStatue != null and projectStatue != ''">
+            and project_statue=#{projectStatue}
+        </if>
+        <if test="signArea != null and signArea != ''">
+            and sign_area=#{signArea}
+        </if>
+        <if test="serviceTo != null and serviceTo != ''">
+            and service_to=#{serviceTo}
+        </if>
+        <if test="projectManNum != null and projectManNum != ''">
+            and project_man_num=#{projectManNum}
+        </if>
+        <if test="createDate != null and createDate != ''">
+            and DATE_FORMAT(create_date,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createDate},'%Y-%m-%d')
+        </if>
+        <if test="endDate != null and endDate != ''">
+            and DATE_FORMAT(end_date,'%Y-%m-%d') &gt;= DATE_FORMAT(#{createDate},'%Y-%m-%d')
+        </if>
+    </select>
+
+    <select id="getListVolunteerProject" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.VolunteerProject">
+        select b.id,b.show_image as showImage,b.title,b.description,b.content,b.area_id as areaId,a.area_name as areaName,b.service_type as serviceType
+        ,b.service_type_name as serviceTypeName,b.project_statue as projectStatue,b.project_statue_name as projectStatueName,
+        b.sign_area as signArea,b.sign_area_name as signAreaName,b.service_to as serviceTo,b.service_to_name as serviceToName,
+        b.project_man_num as projectManNum,DATE_FORMAT(b.create_date,'%Y-%m-%d %H:%i:%s') as createDate,DATE_FORMAT(b.end_date,'%Y-%m-%d %H:%i:%s') as endDate,IFNULL(b.sign_num,'0') as signNum
+        from volunteer_project b
+        left join area a on b.area_id=a.id
+        where 1=1
+        <if test="conditionVolunteerProject.title != null and conditionVolunteerProject.title != ''">
+            and b.title like CONCAT('%',#{conditionVolunteerProject.title},'%')
+        </if>
+        <if test="conditionVolunteerProject.areaId != null and conditionVolunteerProject.areaId != ''">
+            and b.area_id=#{conditionVolunteerProject.areaId}
+        </if>
+        <if test="conditionVolunteerProject.serviceType != null and conditionVolunteerProject.serviceType != ''">
+            and b.service_type=#{conditionVolunteerProject.serviceType}
+        </if>
+        <if test="conditionVolunteerProject.projectStatue != null and conditionVolunteerProject.projectStatue != ''">
+            and b.project_statue=#{conditionVolunteerProject.projectStatue}
+        </if>
+        <if test="conditionVolunteerProject.signArea != null and conditionVolunteerProject.signArea != ''">
+            and b.sign_area=#{conditionVolunteerProject.signArea}
+        </if>
+        <if test="conditionVolunteerProject.serviceTo != null and conditionVolunteerProject.serviceTo != ''">
+            and b.service_to=#{conditionVolunteerProject.serviceTo}
+        </if>
+        <if test="conditionVolunteerProject.projectManNum != null and conditionVolunteerProject.projectManNum != ''">
+            and b.project_man_num=#{conditionVolunteerProject.projectManNum}
+        </if>
+        <if test="conditionVolunteerProject.createDate != null and conditionVolunteerProject.createDate != ''">
+            and DATE_FORMAT(b.create_date,'%Y-%m-%d') &lt;= DATE_FORMAT(#{createDate},'%Y-%m-%d')
+        </if>
+        <if test="conditionVolunteerProject.endDate != null and conditionVolunteerProject.endDate != ''">
+            and DATE_FORMAT(b.end_date,'%Y-%m-%d') &gt;= DATE_FORMAT(#{createDate},'%Y-%m-%d')
+        </if>
+        limit #{begin},#{shownum}
+    </select>
+
+    <select id="getListofProjectArea" resultType="com.zx.Pojo.ProjectArea">
+        select * from area
+    </select>
+
+    <insert id="saveVolunteerProject" parameterType="com.zx.Pojo.VolunteerProject">
+        insert into volunteer_project(id,url,show_image,title,description,content,area_id,service_type,service_type_name,
+        project_statue,project_statue_name,
+        sign_area,sign_area_name,service_to,service_to_name,project_man_num,create_date,end_date,
+        create_man,project_man,project_man_tel,project_man_email,project_address)
+        values(#{id},#{url},#{showImage},#{title},#{description},#{content},#{areaId},#{serviceType},#{serviceTypeName},
+        #{projectStatue},#{projectStatueName},
+        #{signArea},#{signAreaName},#{serviceTo},#{serviceToName},#{projectManNum},str_to_date(#{createDate},'%Y-%m-%d %H:%i:%s'),str_to_date(#{endDate},'%Y-%m-%d %H:%i:%s'),
+        #{createMan},#{projectMan},#{projectManTel},#{projectManEmail},#{projectAddress})
+    </insert>
+
+    <update id="updateVolunteerProject" parameterType="com.zx.Pojo.VolunteerProject">
+        update volunteer_project set url=#{url},show_image=#{showImage},title=#{title},description=#{description},
+        content=#{content},area_id=#{areaId},service_type=#{serviceType},service_type_name=#{serviceTypeName},project_statue=#{projectStatue},
+        project_statue_name=#{projectStatueName},sign_area=#{signArea},sign_area_name=#{signAreaName},service_to=#{serviceTo},service_to_name=#{serviceToName},
+        project_man_num=#{projectManNum},create_date=str_to_date(#{createDate},'%Y-%m-%d %H:%i:%s'),end_date=str_to_date(#{endDate},'%Y-%m-%d %H:%i:%s'),
+        create_man=#{createMan},project_man=#{projectMan},project_man_tel=#{projectManTel},project_man_email=#{projectManEmail},project_address=#{projectAddress}
+        where id=#{id}
+    </update>
+    <select id="getNextId" resultType="int">
+        select max(id)+1 as num from volunteer_project
+    </select>
+    <update id="updateVolunteerProjectStatue" parameterType="hashMap">
+        update volunteer_project set statue=#{statue} where id=#{id}
+    </update>
+
+    <delete id="delProjectByid" parameterType="int">
+        delete from volunteer_project where id=#{id}
+    </delete>
+
+    <delete id="delStationByprojectId" parameterType="int">
+        delete from station where project_id=#{projectId}
+    </delete>
+    <delete id="delProjectSignInfo" parameterType="int">
+        delete from project_sign where project_id=#{projectId}
+    </delete>
+
+    <insert id="addProjectSign" parameterType="com.zx.Pojo.ProjectSign">
+        insert into project_sign(project_id,station_id,user_id,sign_date) values(#{projectId},#{stationId},#{userId},NOW())
+    </insert>
+
+    <update id="addSignNumByprojectId" parameterType="com.zx.Pojo.ProjectSign">
+        update volunteer_project set sign_num += 1 where id=#{projectId}
+    </update>
+
+    <update id="addSignNumBystationId" parameterType="com.zx.Pojo.ProjectSign">
+        update station set sign_num += 1 where id=#{stationId}
+    </update>
+
+    <delete id="delProjectSign" parameterType="com.zx.Pojo.ProjectSign">
+        delete from project_sign where station_id=#{stationId} and user_id=#{userId}
+    </delete>
+    <update id="reduceSignNumByprojectId" parameterType="com.zx.Pojo.ProjectSign">
+        update volunteer_project set sign_num -= 1 where id=#{projectId}
+    </update>
+    <update id="reduceSignNumBystationId" parameterType="com.zx.Pojo.ProjectSign">
+        update station set sign_num -= 1 where id=#{stationId}
+    </update>
+
+    <select id="getListofSign" parameterType="int" resultType="com.zx.Pojo.ProjectSign">
+        select a.id,a.user_id as userId,a.project_id as projectId,b.user_name as userName,
+        b.telphone as userPhone,c.title as projectTitle,c.description as projectDesc,
+        str_to_date(a.sign_date,'%Y-%m-%d %H:%i:%s') as signDate,d.station_name as stationName
+        from project_sign a
+        left join `user` b on a.user_id=b.id
+        left join volunteer_project c on a.project_id=c.id
+        left join station d on a.station_id = d.id
+        where 1=1 and a.project_id=#{projectId}
+    </select>
+
+    <select id="getProjectByid" parameterType="int" resultType="com.zx.Pojo.VolunteerProject">
+        select <include refid="VolunteerProjectColoum"/>
+        from volunteer_project a where a.id=#{id}
+    </select>
+
+    <insert id="addProjectStation" parameterType="com.zx.Pojo.Station">
+        insert into station(project_id,station_name,station_desc,station_conds,plan_sign_num,sign_num)
+        values(#{projectId},#{stationName},#{stationDesc},#{stationConds},#{planSignNum},#{SignNum})
+    </insert>
+    <delete id="delProjectStationsByprojectId" parameterType="int">
+        delete from station where project_id=#{projectId}
+    </delete>
+    <sql id="StationsColoum">
+        id,
+        project_id as projectId,
+        station_name as stationName,
+        station_desc as stationDesc,
+        station_conds as stationConds,
+        plan_sign_num as planSignNum,
+        sign_num as signNum
+    </sql>
+    <select id="getStationsByProjectId" parameterType="int" resultType="com.zx.Pojo.Station">
+        select <include refid="StationsColoum"/> from station where project_id = #{projectId}
+    </select>
+
+    <insert id="saveArrange" parameterType="com.zx.Pojo.ProjectSignArrange">
+        insert into project_sign_arrange(project_sign_id,user_id,user_name,start_date,end_date,hours)
+        values(#{projectSignId},#{userId},#{userName},#{startTime},#{endTime},#{hours})
+    </insert>
+
+    <select id="getArrangeInfoByUserId" parameterType="int" resultType="com.zx.Pojo.ProjectSignArrange">
+        select psa.id,DATE_FORMAT(psa.start_date,'%Y-%m-%d %H:%i:%s') as startDate,DATE_FORMAT(psa.end_date,'%Y-%m-%d %H:%i:%s') as endDate,
+        vp.title as projectName,s.station_name as stationName,u.telphone,u.user_name as userName,psa.hours
+        from project_sign_arrange psa
+        left join project_sign ps on psa.project_sign_id=ps.id
+        left join volunteer_project vp ON ps.project_id=vp.id
+        left join station s on ps.station_id=s.id
+        left join `user` u on psa.user_id=u.id
+        where 1=1 and psa.user_id=#{userId}
+    </select>
+</mapper>

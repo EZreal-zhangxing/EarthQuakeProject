@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>志愿政策</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="介绍如何搭建Bootstrap里面HTML基本元素，并利用可扩展的class增强其展示效果。">
+    <meta name="keywords" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/docs.css" rel="stylesheet">
+    <link href="css/prettify.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/bootstrap-select.css">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.js"></script>
+    <![endif]-->
+    <!-- Le fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="img/favicon.png">
+
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" onload="getModel()">
+
+    <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+		  <div class="nav-collapse collapse">
+            <ul class="nav">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">新闻资讯 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminyfc.html">新闻资讯</a></li>
+					  <li><a href="editnews.html" target="_blank">新闻添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿故事 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzygs.html">志愿故事</a></li>
+					  <li><a href="editzygs.html" target="_blank">志愿故事添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿团体 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzytt.html">志愿团体</a></li>
+					  <li><a href="editzytt.html" target="_blank">志愿团体添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿项目 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzyxm.html">志愿项目</a></li>
+					  <li><a href="editzyxm.html" target="_blank">志愿项目添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿之星 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzyzx.html">志愿之星</a></li>
+					  <li><a href="editzyzx.html" target="_blank">志愿之星添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿政策 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzyzc.html">志愿政策</a></li>
+					  <li><a href="editzyzc.html" target="_blank">志愿政策添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">在线培训 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzxpx.html">课程预览</a></li>
+					  <li><a href="editzxpx.html" target="_blank">课程配置</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">在线考试 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzxks.html">考试试卷预览</a></li>
+					  <li><a href="editQuestion.html" target="_blank">考试配置</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">文件资源 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminfile.html">文件资源预览</a></li>
+					  <li><a href="editQuestion.html" target="_blank">考试配置</a></li>
+					</ul>
+				</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Subhead
+================================================== -->
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h1>志愿政策</h1>
+    <p class="lead">志愿政策管理。</p>
+  </div>
+</header>
+
+
+  <div class="container">
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="width:100%">
+        <!-- Forms
+        ================================================== -->
+        <section id="price">
+          <div class="page-header">
+            <h1>文章信息维护</h1>
+          </div>
+		  <div class="bs-docs-example">
+		  	<form id="queryPrice" class="form-inline" align="center" action="" method="post">
+			  	<input type="text" id="articelName" name="articelName" placeholder="文章名" autocomplete="off" value="">
+				<select class="span2" id="model">
+					<option id="default" value="" selected>请选择所属模块：</option>
+				</select>
+				<button id="queryPrice_btn" class="btn btn-primary" type="button" onclick="loadArticel(1)"><i class="icon-search icon-white"></i> 查询</button>&nbsp;
+				<button id="queryPrice_reset" class="btn btn-warning" type="button" onclick="reset()"><i class="icon-repeat icon-white"></i> 重置</button>
+			</form>
+		  </div>
+		 
+          <div class="bs-docs-example">
+            <table class="table table-hover table-bordered" style="table-layout:fixed;">
+              <thead>
+                <tr>
+                  <th width="2px">#</th>
+				  <th width="50px">文章标题</th>
+                  <th width="50px">文章模块</th>
+                  <th width="100px">文章描述</th>
+				  <th width="65px">文章外链</th>
+                  <th width="65px">展示图片</th>
+				  <th width="60px">发布时间</th>
+				  <th width="70px">操作</th>
+                </tr>
+              </thead>
+              <tbody id="articelBody">
+              	
+              </tbody>
+            </table>
+			<div class="form-inline">
+				<div class="pagination" align="center">
+				 	<ul id="pageinfo">
+				 		
+				 	</ul>
+				</div>
+				<div class="pagination" align="right">
+				<ul>
+					<li>
+						<a id="jumptopage" href="">跳转至：</a>
+						<input type="text" style="width:20px;" placeholder="" autocomplete="off" onkeyup="changeA($(this).val())">
+					</li>
+				</ul>
+			</div>
+			</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+
+  <!--消息model-->
+	<div id="messageModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel"></h3>
+	  </div>
+	  <div class="modal-body">
+		<p><h4 align="center" id="myModalContent"></h4></p>
+	  </div>
+	  <div class="modal-footer" id="message_buttons">
+		<button id="message_button_no" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">关闭</button>
+	  </div>
+	</div>
+	 <!--删除文章信息model-->
+	<div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel1">提示！</h3>
+	  </div>
+	  <div class="modal-body">
+		<h4 align="center">确认删除？</h4>
+		<form id="deletePrFomr" method="POST" action="">
+			<input type="text" name="artId" id="artId" placeholder="" autocomplete="off"/>
+		</form>
+		<div class="modal-footer">
+			<button id="modal_deleteAr" class="btn btn-primary">确认</button>
+			<button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">取消</button>
+		 </div>
+	  </div>
+	</div>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+    <script src="js/bootstrap-affix.js"></script>
+
+    <script src="js/holder.js"></script>
+    <script src="js/prettify.js"></script>
+
+    <script src="js/application.js"></script>
+    <script type="text/javascript">
+	    function reset()
+	    {
+			$('#articelName').attr("value","");
+	    }
+		//加载模块
+    	function getModel()
+	 	{
+	 		var optionStr=$('#model').html();
+	 		$.ajax({
+	 			url:'/news/getArtModel/6',
+	 			type:'post',
+	 			async:'false',
+	 			success:function(data)
+	 			{
+	 				var model=eval(data);
+	 				for(var i=0;i<model.length;i++)
+	 				{
+	 					var modelName=model[i].modelName;
+	 					var modelId=model[i].id;
+	 					optionStr+="<option name='model' value='"+modelId+"'>"+modelName+"</option>";
+	 				}
+	 				$('#model').html(optionStr);
+					loadArticel(1);
+	 			}
+	 		});
+	 	}
+		//页面加载内容
+		function loadArticel(page)
+		{
+
+			var modelId=$('#model option:selected').val();
+			var articelName=$('#articelName').val();
+			var url="/volunteerPolicy/getVolunteerPolicy?title="+articelName+"&modelId="+modelId+"&page="+page;
+			console.log(url);
+			var tdstr="";
+			var pagestr="";
+			$.ajax({
+				url:url,
+				type:'post',
+				async:'false',
+				success:function(data)
+				{
+					var pageinfo=eval(data);
+					var artlist=pageinfo.result;
+					console.log(data);
+					for(var i=0;i<artlist.length;i++)
+					{
+						tdstr+="<tr class='' id=''>";
+						tdstr+="<td id='articelId' style='word-wrap:break-word;'>"+artlist[i].id+"</td>";
+                        tdstr+="<td id='articelTitle' style='word-wrap:break-word;'><a href='common.html?id="+artlist[i].id+"&ajaxUrl=/volunteerPolicy/getListOfCommon' target="_blank" data-toggle='tooltip' title='点击此处查看评论信息！' data-placement='top'>"+artlist[i].title+"</a></td>";
+                        tdstr+="<td id='modelName' style='word-wrap:break-word;'>"+artlist[i].modelName+"</td>";
+                        tdstr+="<td id='description' style='word-wrap:break-word;'>"+artlist[i].description+"</td>";
+                        tdstr+="<td id='outUrl' style='word-wrap:break-word;'>"+artlist[i].outUrl+"</td>";
+                        tdstr+="<td id='imageUrl' style='word-wrap:break-word;'>"+artlist[i].imageUrl+"</td>";	
+                        tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
+						tdstr+="<td id='operation' style='word-wrap:break-word;'><a id='updatebtn' class='btn btn-primary' href='/editzyzc.html?id="+artlist[i].id+"' target='_blank' type='button' ><i class='icon-edit icon-white'></i>修改</a>&nbsp;<button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
+						tdstr+="</tr>";
+					}
+					var pagelist=pageinfo.pageStr;
+					if(pageinfo.pagenum==1)
+					{
+						pagestr+="<li class='disabled'><a href='#'>&laquo;</a></li>";
+					}else
+					{
+						pagestr+="<li class=''><a href='javascript:loadArticel("+pageinfo.prev+")'>&laquo;</a></li>";
+					}
+					for(var i=0;i<pagelist.length;i++)
+					{
+								
+						if(pagelist[i] == pageinfo.pagenum+'')
+						{
+							pagestr+="<li class='disabled'><a href='#'>"+pagelist[i]+"</a></li>";
+						}else
+						{
+							pagestr+="<li><a href='javascript:loadArticel("+pagelist[i]+")'>"+pagelist[i]+"</a></li>";
+						}
+
+					}
+					if(pageinfo.pagenum==pageinfo.lastpage)
+					{
+						pagestr+="<li class='disabled'><a href='#'>&raquo;</a></li>";
+					}else
+					{
+						pagestr+="<li class=''><a href='javascript:loadArticel("+pageinfo.next+")'>&raquo;</a></li>";
+					}
+					$('#articelBody').html(tdstr);
+					$('#pageinfo').html(pagestr);
+					toltip();
+				}
+			});			
+		}
+		function changeA(pagenum)
+		{
+			$('#jumptopage').attr("href","javascript:loadArticel("+pagenum+")");
+		}
+        function getDate(date){
+	        console.log(date);
+            var t = new Date(date).toLocaleString();
+            var year = t.getFullYear(),
+                month = t.getMonth() + 1,//月份是从0开始的
+                day = t.getDate(),
+                hour = t.getHours(),
+                min = t.getMinutes(),
+                sec = t.getSeconds();
+            var newTime = year + '-' +
+                month + '-' +
+                day + ' ' +
+                hour + ':' +
+                min + ':' +
+                sec;
+            return newTime;
+        }
+		//删除文章
+		function deleteArt(id)
+		{
+			$('#deleteModal').modal({backdrop: 'static', keyboard: false});
+			$('#deleteModal #artId').attr('value',id);
+		}
+		$('#modal_deleteAr').click(function (){
+			var id=$('#deleteModal #artId').val();
+			var	posturl="/volunteerPolicy/delVolunteerPolicy/"+id;
+			$.ajax({
+	 			url:posturl,
+	 			type:'post',
+	 			async:'false',
+	 			success:function(data)
+	 			{
+					var msg=eval(data);
+					console.log(msg);
+					console.log(msg.code=="success");
+					if(msg.code == "success")
+					{
+                        // loadArticel(1);
+						window.location.reload();
+					}else
+					{	
+						$('#deleteModal').modal('hide');
+						$('#messageModal').modal({backdrop: 'static', keyboard: false});
+						$("#messageModal #myModalLabel").html("错误！");
+						$("#messageModal #myModalContent").html(msg.message+"!");
+					}
+	 			}
+	 		});
+		});
+		function toltip() {
+		  $('[data-toggle="tooltip"]').tooltip();
+		}
+    </script>
+  </body>
+</html>
+
+

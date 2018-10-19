@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE
+mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.zx.Dao.UserMapper">
+	<select id="getUserNum" resultType="int" parameterType="com.zx.Pojo.User">
+		select count(1) as num from user where id=#{id} and password=#{password}
+	</select>
+
+	<select id="getCountOfCommonsByUserId" parameterType="int" resultType="int">
+		select count(id) as num from common where user_id=#{userId}
+	</select>
+	<select id="getCommonListByuserId" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.Common">
+		select id,type,artical_id as articalId,user_id as userId,user_name as userName,
+		content, DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+		from common where user_id=#{conditionCommon.userId}
+		limit #{begin},#{shownum}
+	</select>
+
+	<select id="getCountofProjectByuserid" parameterType="int" resultType="int">
+		select count(id) as num from project_sign where user_id=#{userId}
+	</select>
+	<select id="getProjectListByuserId" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.ProjectSign">
+		select a.id,a.project_id as projectId,a.station_id as stationId,
+		a.user_id as userId,DATE_FORMAT(a.sign_date,'%Y-%m-%d %H:%i:%s') as signDate,
+		b.title as projectTitle,b.description as projectDesc,
+		c.user_name as userName,
+		d.station_name as stationName
+		from project_sign a
+		left join volunteer_project b on a.project_id = b.id
+		left join user c on a.user_id=c.id
+		left join station d on a.station_id = d.id
+		where 1=1 and a.user_id=#{conditionProjectSign.userId}
+		limit #{begin},#{shownum}
+	</select>
+
+	<select id="getUserNameByuserId" parameterType="int" resultType="String">
+		select user_name as userName from user where id=#{id}
+	</select>
+
+	<select id="getArrangeCountByUserId" parameterType="int" resultType="int">
+		select count(id) as num from project_sign_arrange where user_id=#{userId}
+	</select>
+
+	<select id="getArrangeInfoByUserId" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.ProjectSignArrange">
+		select psa.id,DATE_FORMAT(psa.start_date,'%Y-%m-%d %H:%i:%s') as startDate,DATE_FORMAT(psa.end_date,'%Y-%m-%d %H:%i:%s') as endDate,
+        vp.title as projectName,s.station_name as stationName,u.telphone,u.user_name as userName,psa.hours
+        from project_sign_arrange psa
+        left join project_sign ps on psa.project_sign_id=ps.id
+        left join volunteer_project vp ON ps.project_id=vp.id
+        left join station s on ps.station_id=s.id
+        left join `user` u on psa.user_id=u.id
+        where 1=1 and psa.user_id=#{conditionProjectSign.userId}
+        limit #{begin},#{shownum}
+	</select>
+
+	<insert id="addUserAccount" parameterType="com.zx.Pojo.User">
+		insert into user(user_name,password,telphone,user_email,statue,code)
+		values(#{userName},#{password},#{telphone},#{userEmail},#{statue},#{code})
+	</insert>
+
+	<select id="getUserInfoByTelOrEmail" parameterType="com.zx.Pojo.User" resultType="com.zx.Pojo.User">
+		select * from user where 1=1
+		<if test="telphone != null">
+			and telphone=#{telphone}
+		</if>
+		<if test="userEmail != null">
+			and user_email=#{userEmail}
+		</if>
+	</select>
+
+	<update id="updateUserCodeByUserid" parameterType="com.zx.Pojo.User">
+		update user set code=#{code} where id=#{id}
+	</update>
+
+	<select id="checkCode" parameterType="com.zx.Pojo.User" resultType="com.zx.Pojo.User">
+		select * from user where 1=1 and code=#{code}
+		<if test="telphone != null">
+			and telphone=#{telphone}
+		</if>
+		<if test="userEmail != null">
+			and user_email=#{userEmail}
+		</if>
+	</select>
+
+	<update id="changeUserStatue" parameterType="int">
+		update user set statue=1 where id=#{userId}
+	</update>
+
+	<update id="changePassword" parameterType="com.zx.Pojo.User">
+		update user set password=#{password} where id=#{Id}
+	</update>
+
+	<select id="getUserTeamInfo" parameterType="int" resultType="int">
+		select count(id) as num from team_sign where user_id=#{userId}
+	</select>
+
+	<select id="getListUserTeamInfo" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.TeamSign">
+		select u.user_name as userName,u.id as userId,u.telphone as userPhone,
+		vt.title as teamName,vt.description as teamDesc,vt.id as teamId,ts.id,
+		DATE_FORMAT(ts.sign_date,'%Y-%m-%d %H:%i:%s') as signDate
+		from team_sign ts
+		left join volunteer_team vt on ts.team_id=vt.id
+		left join `user` u on ts.user_id=u.id
+		where 1=1 and ts.user_id=#{conditionTeamSign.userId}
+		limit #{begin},#{shownum}
+	</select>
+
+	<select id="checkIsexist" parameterType="com.zx.Pojo.UserApply" resultType="int">
+		select count(id) as num from user_apply where user_id=#{userId} and apply_type=#{applyType}
+	</select>
+	<insert id="insertUserApply" parameterType="com.zx.Pojo.UserApply">
+		insert into user_apply(user_id,apply_type) values(#{userId},#{applyType})
+	</insert>
+
+	<select id="getUserApplyById" parameterType="String" resultType="com.zx.Pojo.UserApply">
+		select id,user_id as userId,apply_type as applyType,status, DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+		from user_apply where user_id=#{userId}
+	</select>
+
+
+	<select id="getCountUserApply"  parameterType="int" resultType="int">
+		select count(id) as num
+		from user_apply where status=#{status}
+	</select>
+	<select id="getAllUserApply" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.UserApply">
+		select id,user_id as userId,apply_type as applyType,status, DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+		from user_apply where status=#{conditionUserApply.status}
+		 limit #{begin},#{shownum}
+	</select>
+</mapper>

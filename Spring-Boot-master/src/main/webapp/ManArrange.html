@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>排班信息查看</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="介绍如何搭建Bootstrap里面HTML基本元素，并利用可扩展的class增强其展示效果。">
+    <meta name="keywords" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/docs.css" rel="stylesheet">
+    <link href="css/prettify.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/bootstrap-select.css">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.js"></script>
+    <![endif]-->
+    <!-- Le fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="img/favicon.png">
+
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" onload="loadpage()">
+
+    <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+		  <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">新闻资讯 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminyfc.html">新闻资讯</a></li>
+					  <li><a href="editnews.html" target="_blank">新闻添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿故事 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzygs.html">志愿故事</a></li>
+					  <li><a href="editzygs.html" target="_blank">志愿故事添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿团体 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzytt.html">志愿团体</a></li>
+					  <li><a href="editzytt.html" target="_blank">志愿团体添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿项目 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzyxm.html">志愿项目</a></li>
+					  <li><a href="editzyxm.html" target="_blank">志愿项目添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿之星 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzyzx.html">志愿之星</a></li>
+					  <li><a href="editzyzx.html" target="_blank">志愿之星添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿政策 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzyzc.html">志愿政策</a></li>
+					  <li><a href="editzyzc.html" target="_blank">志愿政策添加</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">在线培训 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzxpx.html">课程预览</a></li>
+					  <li><a href="editzxpx.html" target="_blank">课程配置</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">在线考试 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminzxks.html">考试试卷预览</a></li>
+					  <li><a href="editQuestion.html" target="_blank">考试配置</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">文件资源 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <li><a href="adminfile.html">文件资源预览</a></li>
+					  <li><a href="editQuestion.html" target="_blank">考试配置</a></li>
+					</ul>
+				</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Subhead
+================================================== -->
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h1>排班信息查看</h1>
+    <p class="lead">排班信息查看。</p>
+  </div>
+</header>
+
+
+  <div class="container">
+    <!-- Docs nav
+    ================================================== -->
+    <div class="row">
+      <div class="width:100%">
+        <!-- Forms
+        ================================================== -->
+        <section id="price">
+          <!--<div class="page-header">-->
+            <!--<h1>报名信息查看</h1>-->
+          <!--</div>-->
+		  <!--<div class="bs-docs-example">-->
+		  	<!--<form id="queryPrice" class="form-inline" align="center" action="" method="post">-->
+			  	<!--<input type="text" id="articelName" name="articelName" placeholder="文章名" autocomplete="off" value="">-->
+				<!--<select class="span2" id="model">-->
+					<!--<option id="default" value="" selected>请选择所属模块：</option>-->
+				<!--</select>-->
+				<!--<button id="queryPrice_btn" class="btn btn-primary" type="button" onclick="loadArticel(1)"><i class="icon-search icon-white"></i> 查询</button>&nbsp;-->
+				<!--<button id="queryPrice_reset" class="btn btn-warning" type="button" onclick="reset()"><i class="icon-repeat icon-white"></i> 重置</button>-->
+			<!--</form>-->
+		  <!--</div>-->
+		 
+          <div class="bs-docs-example">
+            <table class="table table-hover table-bordered" style="table-layout:fixed;">
+              <thead>
+                <tr>
+                  <th width="2px">#</th>
+				  <th width="60px">项目名</th>
+                  <th width="145px">岗位名</th>
+                  <th width="30px">报名人姓名</th>
+				  <th width="50px">电话</th>
+                  <th width="50px">开始时间</th>
+				  <th width="50px">结束时间</th>
+                  <th width="50px">工作时长(H)</th>
+                </tr>
+              </thead>
+              <tbody id="articelBody">
+              	
+              </tbody>
+            </table>
+			<div class="form-inline">
+				<div class="pagination" align="center">
+				 	<ul id="pageinfo">
+				 		
+				 	</ul>
+				</div>
+				<div class="pagination" align="right">
+				<ul>
+					<li>
+						<a id="jumptopage" href="">跳转至：</a>
+						<input type="text" style="width:20px;" placeholder="" autocomplete="off" onkeyup="changeA($(this).val())">
+					</li>
+				</ul>
+			</div>
+			</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+
+  <!--消息model-->
+	<div id="messageModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel"></h3>
+	  </div>
+	  <div class="modal-body">
+		<p><h4 align="center" id="myModalContent"></h4></p>
+	  </div>
+	  <div class="modal-footer" id="message_buttons">
+		<button id="message_button_no" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">关闭</button>
+	  </div>
+	</div>
+	 <!--删除文章信息model-->
+	<div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel1">提示！</h3>
+	  </div>
+	  <div class="modal-body">
+		<h4 align="center">确认删除？</h4>
+		<form id="deletePrFomr" method="POST" action="">
+			<input type="text" name="artId" id="artId" placeholder="" autocomplete="off"/>
+		</form>
+		<div class="modal-footer">
+			<button id="modal_deleteAr" class="btn btn-primary">确认</button>
+			<button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">取消</button>
+		 </div>
+	  </div>
+	</div>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script>
+    <script src="js/bootstrap-affix.js"></script>
+
+    <script src="js/holder.js"></script>
+    <script src="js/prettify.js"></script>
+
+    <script src="js/application.js"></script>
+    <script type="text/javascript">
+	    function reset()
+	    {
+			$('#articelName').attr("value","");
+	    }
+
+        function loadpage()
+        {
+            var url = location.search; //获取url中"?"符后的字串
+            if (url.indexOf("?") != -1) {    //判断是否有参数
+                var str = url.substr(1); //从第一个字符开始 因为第0个是?号 获取所有除问号的所有符串
+                strs = str.split("=");   //用等号进行分隔 （因为知道只有一个参数 所以直接用等号进分隔 如果有多个参数 要用&号分隔 再用等号进行分隔）
+                //alert(strs[1]);          //直接弹出第一个参数 （如果有多个参数 还要进行循环的）
+                articeiId=strs[1];
+                loadArticel(strs[1]);
+            }
+        }
+
+		function loadArticel(id)
+		{
+			var url="/volunteerProject/getProjectArrangeList/"+id;
+			var tdstr="";
+			$.ajax({
+				url:url,
+				type:'post',
+				async:'false',
+				success:function(data)
+				{
+					var artlist=eval(data);
+					var list=artlist;
+					console.log(artlist);
+					for(var i=0;i<artlist.length;i++)
+					{
+						tdstr+="<tr class='' id=''>";
+						tdstr+="<td id='articelId' style='word-wrap:break-word;'>"+artlist[i].id+"</td>";
+                        tdstr+="<td id='projectName' style='word-wrap:break-word;'>"+artlist[i].projectName+"</td>";
+                        tdstr+="<td id='stationName' style='word-wrap:break-word;'>"+artlist[i].stationName+"</td>";
+                        tdstr+="<td id='userName' style='word-wrap:break-word;'>"+artlist[i].userName+"</td>";
+                        tdstr+="<td id='userPhone' style='word-wrap:break-word;'>"+artlist[i].telphone+"</td>";
+                        tdstr+="<td id='startDate' style='word-wrap:break-word;'>"+artlist[i].startDate+"</td>";
+						tdstr+="<td id='endDate' style='word-wrap:break-word;'>"+artlist[i].endDate+"</td>";
+						tdstr+="<td id='hours' style='word-wrap:break-word;'>"+artlist[i].hours+"</td>";
+						tdstr+="</tr>";
+					}
+					$('#articelBody').html(tdstr);
+					toltip();
+				}
+			});			
+		}
+		function toltip() {
+		  $('[data-toggle="tooltip"]').tooltip();
+		}
+    </script>
+  </body>
+</html>
+
+

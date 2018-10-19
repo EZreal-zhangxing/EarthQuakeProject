@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>志愿项目添加</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="opensource rich wysiwyg text editor jquery bootstrap execCommand html5" />
+    <meta name="description" content="This tiny jQuery Bootstrap WYSIWYG plugin turns any DIV into a HTML5 rich text editor" />
+    <link rel="icon" href="bootstrap-3.3.5/fonts/favicon.ico"/>
+    <link href="bootstrap-3.3.5/external/google-code-prettify/prettify.css" rel="stylesheet"/>
+    <link href="css/bootstrap-combined.no-icons.min.css" rel="stylesheet"/>
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet"/>
+	<link href="css/font-awesome.css" rel="stylesheet"/>
+	
+	<!-- bootstrap css -->
+	<link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/docs.css" rel="stylesheet">
+    <link href="css/prettify.css" rel="stylesheet">
+    <link href="css/datetimepicker.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/bootstrap-select.css">
+	
+	<script src="bootstrap-3.3.5/js/tests/vendor/jquery.min.js"></script>
+	<script src="bootstrap-3.3.5/external/jquery.hotkeys.js"></script>
+    <script src="bootstrap-3.3.5/dist/js/bootstrap.min.js"></script>
+    <script src="bootstrap-3.3.5/external/google-code-prettify/prettify.js"></script>
+	<link href="bootstrap-3.3.5/index.css" rel="stylesheet"/>
+    <script src="bootstrap-3.3.5/js/bootstrap-wysiwyg.js"></script>
+	<link href="css/datetimepicker.css" rel="stylesheet">
+	<script src="js/bootstrap-datetimepicker.min.js"></script>
+  </head>
+<body onload="getarea();getserviceType();getTeamtype();">
+<div class="container">
+  <div class="hero-unit">
+  <div class="pull-right">
+	<div class="fb-like" data-href="http://facebook.com/mindmupapp" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div><br/>
+  </div>
+	<h1>添加志愿团体 <br/></h1>
+	<hr/>
+	<form id="editForm" action="/volunteerTeam/addVolunteerTeam" method="post" enctype="multipart/form-data">
+	<div class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">标题</label>
+			<div class="controls">
+				<input id="title" type="text" name="title" placeholder="标题" autocomplete="off"/>
+			</div>
+		</div>
+		<!--
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">内容模块</label>
+			<div class="controls">
+				<input id="subModel" type="hidden" name="model" />
+				<select id="modelOne" onchange="changeTwo('modelOne','modelTwo')">
+					<option id="default" value="0">一级模块</option>
+				</select>
+				&nbsp;&nbsp;&nbsp;
+				
+				<select id="modelTwo">
+					<option id="default1" value="0">二级模块</option>
+				</select>
+				&nbsp;&nbsp;&nbsp;
+				<select id="modelThree">
+					<option id="default2" value="0">三级模块</option>
+				</select>
+			</div>
+		</div>
+		-->
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">文章外链</label>
+			<div class="controls">
+				<input type="text" id="outUrl" name="outUrl" placeholder="文章外链" autocomplete="off" value="">
+			</div>
+
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="articelDesc">文章介绍</label>
+			<div class="controls">
+				<input type="text" id="articelDesc" name="articelDesc" placeholder="文章介绍" autocomplete="off" value="">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="teamNum">团队人数</label>
+			<div class="controls">
+				<input type="text" id="teamNum" name="teamNum" placeholder="团队人数" autocomplete="off" value="">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">封面图片</label>
+			<div class="controls">
+				 <div>
+			   		<input id="lefile" type="file" name="filepath" style="display:none"></input>
+					<div class="input-append">
+						<input id="photoCover" type="text" class="input-large"></input>
+						<a class="btn btn-success" onclick="$('input[id=lefile]').click();"><i class="icon-white icon-folder-open"></i> Browse</a>
+					</div>
+				 </div>			
+			</div>
+		</div>
+		<!-- 属性选择 -->
+		<div class="control-inline">
+			<div class="control-group">
+				<input type="hidden" id="modelareatext" name="modelarea" value="" data=""/>
+				<label class="control-label" for="serviceType">项目区域</label>
+				<div class="controls">
+					<select class="span2" id="modelarea" onchange="changeValue('modelarea','modelareatext')">
+						<option value="" selected>请选择地区：</option>
+					</select>
+				</div>
+			</div>
+			
+			
+			<div class="control-group">
+				<input type="hidden" name="serviceType" id="serviceTypetext" value="" data=""/>
+				<label class="control-label" for="serviceType">服务类别</label>
+				<div class="controls">
+					<select class="span2" id="serviceType" onchange="changeValue('serviceType','serviceTypetext')">
+						<option value="" selected>请选择服务类别：</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<input type="hidden" name="teamType" id="teamTypetext" value="" data=""/>
+				<label class="control-label" for="teamType">团队类型</label>
+				<div class="controls">
+					<select class="span2" id="teamType" onchange="changeValue('teamType','teamTypetext')">
+						<option value="" selected>请选择团队类型：</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div class="control-group">
+			<label class="control-label" for="projectMan">项目联系人</label>
+			<div class="controls">
+				<input type="text" id="projectMan" name="projectMan" placeholder="项目联系人" autocomplete="off" value="">
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="projectManTel">项目联系人电话</label>
+			<div class="controls">
+				<input type="text" id="projectManTel" name="projectManTel" placeholder="项目联系人电话" autocomplete="off" value="">
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="projectManEmail">项目联系人邮箱</label>
+			<div class="controls">
+				<input type="text" id="projectManEmail" name="projectManEmail" placeholder="项目联系人邮箱" autocomplete="off" value="">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="projectAddress">项目地址</label>
+			<div class="controls">
+				<input type="text" id="projectAddress" name="projectAddress" placeholder="项目地址" autocomplete="off" value="">
+			</div>
+		</div>
+		
+		<!--
+		<div class="control-group">
+			<label class="control-label" for="inputEmail">视频文件</label>
+			<div class="controls">
+				 <div class="bs-docs-example">
+			   		<input id="lefileV" type="file" name="filepathVideo" style="display:none"></input>
+					<div class="input-append">
+						<input id="photoCoverV" type="text" class="input-large"></input>
+						<a class="btn btn-success" onclick="$('input[id=lefileV]').click();"><i class="icon-white icon-folder-open"></i> Browse</a>
+					</div>
+				 </div>			
+			</div>
+		</div>
+		-->
+	</div>
+	
+    <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+      <div class="btn-group">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="icon-font"></i><b class="caret"></b></a>
+          <ul class="dropdown-menu">
+          </ul>
+        </div>
+      <div class="btn-group">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+          <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+          <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+          <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+          </ul>
+      </div>
+      <div class="btn-group">
+        <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
+        <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
+        <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="icon-strikethrough"></i></a>
+        <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+      </div>
+      <div class="btn-group">
+        <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="icon-list-ul"></i></a>
+        <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="icon-list-ol"></i></a>
+        <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="icon-indent-left"></i></a>
+        <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="icon-indent-right"></i></a>
+      </div>
+      <div class="btn-group">
+        <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+        <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+        <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+        <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+      </div>
+      <div class="btn-group">
+		  <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="icon-link"></i></a>
+		    <div class="dropdown-menu input-append">
+			    <input class="span2" placeholder="URL" type="text" data-edit="createLink"/>
+			    <button class="btn" type="button">Add</button>
+        </div>
+        <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="icon-cut"></i></a>
+
+      </div>
+      
+      <div class="btn-group">
+        <a class="btn" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="icon-picture"></i></a>
+        <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
+      </div>
+      <div class="btn-group">
+        <a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="icon-undo"></i></a>
+        <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="icon-repeat"></i></a>
+      </div>
+      <input type="text" data-edit="inserttext" id="voiceBtn" x-webkit-speech=""/>
+    </div>
+     <input type="hidden" name="arttext" id="z"/>
+    <div id="editor">
+     
+    </div>
+	</form>
+  	<button class="btn btn-primary btn-lg" id="clearbutton" style="float: right;margin-top: 10px; width: 80px;">
+    		Clear
+  	</button>
+  	<button class="btn btn-primary btn-lg" id="submitbutton" style="float: right;margin-top: 10px;margin-right: 20px;width: 80px;">
+    		Add
+  	</button>
+  </div>
+</div>
+ <!--消息model-->
+	<div id="messageModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel"></h3>
+	  </div>
+	  <div class="modal-body">
+		<p><h4 align="center" id="myModalContent"></h4></p>
+	  </div>
+	  <div class="modal-footer" id="message_buttons">
+		<button id="message_button_no" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">关闭</button>
+	  </div>
+	</div>
+	
+	
+<script type="text/javascript">
+	$("#submitbutton").click(function(){
+	    var result=true;
+		var content=$("#editor").html(); 
+		$("#z").attr("value",content);
+		var modelarea=$("#modelarea option:selected").val();
+		if(modelarea == ""){
+            result=false;
+            $('#messageModal').modal({backdrop: 'static', keyboard: false});
+            $("#messageModal #myModalLabel").html("错误！");
+            $("#messageModal #myModalContent").html("请选择项目区域");
+            return;
+		}
+        var serviceType=$("#serviceType option:selected").val();
+        if(serviceType == ""){
+            result=false;
+            $('#messageModal').modal({backdrop: 'static', keyboard: false});
+            $("#messageModal #myModalLabel").html("错误！");
+            $("#messageModal #myModalContent").html("请选择服务类别");
+            return;
+        }
+        var teamType=$("#teamType option:selected").val();
+        if(teamType == ""){
+            result=false;
+            $('#messageModal').modal({backdrop: 'static', keyboard: false});
+            $("#messageModal #myModalLabel").html("错误！");
+            $("#messageModal #myModalContent").html("请选择团队类型");
+            return;
+        }
+		
+        var projectMan=$("#projectMan option:selected").val();
+        if(projectMan == ""){
+            result=false;
+            $('#messageModal').modal({backdrop: 'static', keyboard: false});
+            $("#messageModal #myModalLabel").html("错误！");
+            $("#messageModal #myModalContent").html("请输入团队联系人");
+            return;
+        }
+        var projectManTel=$("#projectManTel option:selected").val();
+        if(projectManTel == ""){
+            result=false;
+            $('#messageModal').modal({backdrop: 'static', keyboard: false});
+            $("#messageModal #myModalLabel").html("错误！");
+            $("#messageModal #myModalContent").html("请输入团队联系人电话");
+            return;
+        }
+		
+        var projectManEmail=$("#projectManEmail option:selected").val();
+        if(projectManEmail == ""){
+            result=false;
+            $('#messageModal').modal({backdrop: 'static', keyboard: false});
+            $("#messageModal #myModalLabel").html("错误！");
+            $("#messageModal #myModalContent").html("请输入团队联系人邮箱");
+            return;
+        }
+		
+		var projectAddress=$("#projectAddress option:selected").val();
+        if(projectAddress == ""){
+            result=false;
+            $('#messageModal').modal({backdrop: 'static', keyboard: false});
+            $("#messageModal #myModalLabel").html("错误！");
+            $("#messageModal #myModalContent").html("请输入团队地址");
+            return;
+        }
+		
+        if(result){
+            $("#editForm").submit();
+		}
+	});
+	$("#clearbutton").click(function(){
+		$("#editor").html("");
+	});
+	
+	function changeValue(name,id){
+		var option= $('#'+name+' option:selected');
+		$('#'+id).val(option.val());
+		$('#'+id).attr("data",option.html());
+	}
+</script>
+<script>
+  $(function(){
+    function initToolbarBootstrapBindings() {
+      var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier', 
+            'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+            'Times New Roman', 'Verdana'],
+            fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+      $.each(fonts, function (idx, fontName) {
+          fontTarget.append($('<li><a data-edit="fontName ' + fontName +'" style="font-family:\''+ fontName +'\'">'+fontName + '</a></li>'));
+      });
+      $('a[title]').tooltip({container:'body'});
+    	$('.dropdown-menu input').click(function() {return false;})
+		    .change(function () {$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');})
+        .keydown('esc', function () {this.value='';$(this).change();});
+
+      $('[data-role=magic-overlay]').each(function () { 
+        var overlay = $(this), target = $(overlay.data('target')); 
+        overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+      });
+      if ("onwebkitspeechchange"  in document.createElement("input")) {
+        var editorOffset = $('#editor').offset();
+        $('#voiceBtn').css('position','absolute').offset({top: editorOffset.top, left: editorOffset.left+$('#editor').innerWidth()-35});
+      } else {
+        $('#voiceBtn').hide();
+      }
+	};
+	function showErrorAlert (reason, detail) {
+		var msg='';
+		if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+		else {
+			console.log("error uploading file", reason, detail);
+		}
+		$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
+		 '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+	};
+    initToolbarBootstrapBindings();  
+	$('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
+    window.prettyPrint && prettyPrint();
+  });
+</script>
+<a href="javascript:window.history.go(-1)"><img style="position: absolute; top: 0; right: 0; border: 0;" src="img/forkme_right_gray_6d6d6d.png" alt="返回"></a>
+<div id="fb-root"></div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','js/analytics.js','ga');
+  ga('create', 'UA-37452180-6', 'github.io');
+  ga('send', 'pageview');
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "";
+  fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+ </script>
+<script type="text/javascript">
+	$(".form_datetime").datetimepicker({
+		format: "yyyy-mm-dd hh:ii:ss"
+	});
+</script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+ 	$('input[id=lefile]').change(function() {
+		$('#photoCover').val($(this).val());
+	});
+	$('input[id=lefileV]').change(function() {
+		$('#photoCoverV').val($(this).val());
+	});
+
+	function getarea(){
+		var optionStr=$('#modelarea').html();
+		$.ajax({
+			url:'/volunteerProject/getListofArea',
+			type:'POST',
+			async:'false',
+			success:function(data){
+				var area=eval(data);
+				for(var i=0;i<area.length;i++){
+					var areaName=area[i].areaName;
+					var areaId=area[i].id;
+					optionStr+="<option value="+areaId+">"+areaName+"</option>";
+				}
+				$('#modelarea').html(optionStr);
+			}
+		});
+	}
+	
+	function getserviceType(){
+			var areaStr=$("#serviceType").html();
+			$.ajax({
+				url:"/volunteerTeam/getteamServiceType",
+				type:"POST",
+				async:"false",
+				success:function(data){
+					for(var i=0;i<data.length;i++){
+						var servicetype=data[i];
+						areaStr+="<option name='serviceType' value='"+servicetype.id+"'>"+servicetype.serviceName+"</option>";
+					}
+					$("#serviceType").html(areaStr);
+				}
+			});
+		}
+		
+		function getTeamtype(){
+			var areaStr=$("#teamType").html();
+			$.ajax({
+				url:"/volunteerTeam/getTeamType",
+				type:"POST",
+				async:"false",
+				success:function(data){
+					for(var i=0;i<data.length;i++){
+						var teamtype=data[i];
+						areaStr+="<option name='teamType' value='"+teamtype.id+"'>"+teamtype.teamType+"</option>";
+					}
+					$("#teamType").html(areaStr);
+				}
+			});
+		}
+ </script>
+</html>

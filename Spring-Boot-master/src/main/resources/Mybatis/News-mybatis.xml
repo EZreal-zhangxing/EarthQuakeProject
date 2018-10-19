@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.Dao.NewsMapper">
+
+    <select id="getCountOfNews" parameterType="com.zx.Pojo.News" resultType="int">
+        select count(id) as num from news where 1=1
+        <if test="newsType != null  and newsType!= ''">
+           and news_type=#{newsType}
+        </if>
+        <if test="title != null and title != ''">
+            and title like concat('%', #{title}, '%')
+        </if>
+    </select>
+
+    <select id="getListofNewsByCondition" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.News">
+        select id,news_type as newsType,title,content,image_url as imageUrl,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate from news where 1=1
+        <if test="conditionNews.newsType != null  and conditionNews.newsType!= ''">
+            and news_type=#{conditionNews.newsType}
+        </if>
+        <if test="conditionNews.title != null and conditionNews.title != ''">
+            and title like concat('%', #{conditionNews.title}, '%')
+        </if>
+        order by create_date DESC
+        limit #{begin},#{shownum}
+    </select>
+
+    <select id="getChildModelByid" parameterType="String" resultType="com.zx.Pojo.Model">
+        select * from model where parent_model=#{id}
+    </select>
+
+    <delete id="delNewsByid" parameterType="int">
+        delete from news where id=#{id}
+    </delete>
+
+    <select id="getOneLevelModel" parameterType="String" resultType="com.zx.Pojo.Model">
+        select * from model where parent_model=#{id}
+    </select>
+
+    <insert id="saveNews" parameterType="com.zx.Pojo.News">
+        insert into news(news_type,title,content,url,image_url)
+        values(#{newsType},#{title},#{content},#{url},#{imageUrl})
+    </insert>
+
+    <update id="updateNews" parameterType="com.zx.Pojo.News">
+        update news
+        set news_type=#{newsType},
+        title=#{title},
+        content=#{content},
+        url=#{url},
+        image_url=#{imageUrl}
+        where id=#{id}
+    </update>
+
+    <select id="getNewsByid" parameterType="int" resultType="com.zx.Pojo.News">
+        select a.*,b.model_name as modelName
+        from news a
+        left join model b on a.news_type=b.id
+        where 1=1 and a.id=#{id}
+    </select>
+
+    <insert id="AddNewsCommon" parameterType="com.zx.Pojo.Common">
+        insert into common(artical_id,type,user_id,user_name,content)
+        values(#{articalId},#{type},#{userId},#{userName},#{content})
+    </insert>
+
+    <select id="getnewCommons" parameterType="int" resultType="com.zx.Pojo.Common">
+        select a.id,
+        a.artical_id as articalId,
+        a.user_id as userId,
+        a.user_name as userName,
+        a.content,
+        DATE_FORMAT(a.create_date,'%Y-%m-%d %H:%i:%s') as createDate,
+        b.title,
+        c.model_name as modelName
+        from common a
+        left join news b on a.artical_id=b.id
+        left join model c on b.news_type=c.id
+        where 1=1 and a.artical_id=#{articalId} and a.type=1
+    </select>
+
+    <delete id="deleteNewsCommonsByarticalId" parameterType="int">
+        delete from common where type=1 and artical_id=#{articalId}
+    </delete>
+</mapper>

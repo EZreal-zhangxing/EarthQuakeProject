@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.Dao.VolunteerMapper">
+    <select id="getCountByCondition" parameterType="com.zx.Pojo.Volunteer" resultType="int">
+        select count(id) as num from volunteer where 1=1
+        <if test="title != null and title != ''">
+            and title like concat('%', #{title}, '%')
+        </if>
+        <if test="title != null and title != ''">
+            and type =#{type}
+        </if>
+    </select>
+
+    <select id="getListofVolunteer" resultType="com.zx.Pojo.Volunteer" parameterType="com.zx.Pojo.Pageinfo">
+        select id,title,type,description,content,show_image_url as showImageUrl,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+        from volunteer where 1=1
+        <if test="conditionVolunteer.title != null and conditionVolunteer.title != ''">
+            and title like concat('%', #{conditionVolunteer.title}, '%')
+        </if>
+        <if test="conditionVolunteer.type != null and conditionVolunteer.type != ''">
+            and type =#{conditionVolunteer.type}
+        </if>
+        limit #{begin},#{shownum}
+    </select>
+
+    <delete id="delVolunteerByid" parameterType="int">
+        delete from volunteer where id=#{id}
+    </delete>
+
+    <insert id="addVolunteerInfo" parameterType="com.zx.Pojo.Volunteer">
+        insert into volunteer(title,type,description,content,url,show_image_url,create_date)
+        values(#{title},#{type},#{description},#{content},#{url},#{showImageUrl},NOW())
+    </insert>
+
+    <select id="getVolunteerByid" parameterType="int" resultType="com.zx.Pojo.Volunteer">
+        select a.*,b.model_name as modelName from volunteer a
+        left join model b on b.id=a.type
+        where a.id=#{id}
+    </select>
+
+    <update id="updateVolunteer" parameterType="com.zx.Pojo.Volunteer">
+        update volunteer
+        set title=#{title},
+        type=#{type},
+        description=#{description},
+        content=#{content},
+        url=#{url},
+        show_image_url=#{showImageUrl}
+        where id=#{id}
+    </update>
+
+    <insert id="addVolunteerCommon" parameterType="com.zx.Pojo.Common">
+        insert into common(artical_id,type,user_id,user_name,content)
+        values(#{articalId},#{type},#{userId},#{userName},#{content})
+    </insert>
+
+    <select id="getvolunteerCommons" parameterType="int" resultType="com.zx.Pojo.Common">
+        select a.id,
+        a.artical_id as articalId,
+        a.user_id as userId,
+        a.user_name as userName,
+        a.content,
+        DATE_FORMAT(a.create_date,'%Y-%m-%d %H:%i:%s') as createDate,
+        b.title,
+        b.description,
+        c.model_name as modelName
+        from common a
+        left join volunteer b on a.artical_id=b.id
+        left join model c on b.type=c.id
+        where 1=1 and a.artical_id=#{articalId} and a.type=2
+    </select>
+
+    <delete id="delVolunteerCommonsByarticalId" parameterType="int">
+        delete from common where type=2 and artical_id=#{articalId}
+    </delete>
+</mapper>

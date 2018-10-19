@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.Dao.VolunteerStarMapper">
+    <select id="getCountOfVolunteerStar" parameterType="com.zx.Pojo.VolunteerStar" resultType="int">
+        select count(id) as num from volunteer_star
+        where 1=1
+        <if test="title != null and title != ''">
+            and title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+    </select>
+    <sql id="base_coloum">
+        vs.id,
+        vs.model_id as modelId,
+        vs.title,
+        vs.out_url as outUrl,
+        vs.image_url as imageUrl,
+        vs.description,
+        vs.content,
+        IFNULL(vs.area_id,'') as areaId,
+        DATE_FORMAT(vs.create_date,'%Y-%m-%d %H:%i:%s') as createDate,
+        vs.common_num as commonNum,
+        vs.view_num as viewNum,
+        IFNULL(vs.num,'') as articalNum
+    </sql>
+    <select id="getListOfVolunteerStar" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.VolunteerStar">
+        select <include refid="base_coloum"/>,
+        a.area_name as areaName,
+        m.model_name as modelName
+        from volunteer_star vs
+        left join area a on vs.area_id = a.id
+        left join model m on vs.model_id = m.id
+        where 1=1
+        <if test="conditionVolunteerStar.title != null and conditionVolunteerStar.title != ''">
+            and title like CONCAT('%',#{conditionVolunteerStar.title},'%')
+        </if>
+        <if test="conditionVolunteerStar.modelId != null and conditionVolunteerStar.modelId != ''">
+            and model_id = #{conditionVolunteerStar.modelId}
+        </if>
+        limit #{begin},#{shownum}
+    </select>
+
+    <delete id="delVolunteerStar" parameterType="int">
+        delete from volunteer_star where id=#{id}
+    </delete>
+
+    <select id="getVolunteerStarByid" parameterType="int" resultType="com.zx.Pojo.VolunteerStar">
+        select <include refid="base_coloum"/>,
+        a.area_name as areaName,
+        m.model_name as modelName
+        from volunteer_star vs
+        left join area a on vs.area_id = a.id
+        left join model m on vs.model_id = m.id
+        where 1=1 and vs.id=#{id}
+    </select>
+
+    <insert id="addVolunteerStar" parameterType="com.zx.Pojo.VolunteerStar">
+        insert into volunteer_star(model_id,title,out_url,image_url,description,content,area_id,common_num,view_num,num)
+        values(#{modelId},#{title},#{outUrl},#{imageUrl},#{description},#{content},#{areaId},#{commonNum},#{viewNum},#{articalNum})
+    </insert>
+
+    <select id="getListofVolunteerBymodelId" resultType="com.zx.Pojo.VolunteerStar" parameterType="int">
+        select <include refid="base_coloum"/>,
+        a.area_name as areaName,
+        m.model_name as modelName
+        from volunteer_star vs
+        left join area a on vs.area_id = a.id
+        left join model m on vs.model_id = m.id
+        where 1=1 and vs.model_id=#{modelId}
+    </select>
+
+    <insert id="addStarCommon" parameterType="com.zx.Pojo.Common">
+        insert into common(artical_id,type,user_id,user_name,content)
+        values(#{articalId},#{type},#{userId},#{userName},#{content})
+    </insert>
+
+    <delete id="delStarCommonByid" parameterType="int">
+        delete from common where id=#{id}
+    </delete>
+    <delete id="delStarCommonsByarticalId" parameterType="int">
+        delete from common where type=3 and artical_id=#{articalId}
+    </delete>
+    <select id="getStarCommon" parameterType="int" resultType="com.zx.Pojo.Common">
+        select a.id,
+        a.artical_id as articalId,
+        a.user_id as userId,
+        a.user_name as userName,
+        a.content,DATE_FORMAT(a.create_date,'%Y-%m-%d %H:%i:%s') as createDate,
+        b.title,
+        b.description,
+        c.model_name as modelName
+        from common a
+        left join volunteer_star b on a.artical_id=b.id
+        left join model c on b.model_id=c.id
+        where 1=1 and artical_id=#{articalId} and a.type=3
+    </select>
+
+    <update id="updateAddViewNumByid" parameterType="int">
+        update volunteer_star set view_num+=1 where id=#{articalId}
+    </update>
+    <update id="updateReduceViewNumByid" parameterType="int">
+        update volunteer_star set view_num-=1 where id=#{articalId}
+    </update>
+    <update id="updateAddCommonNumByid" parameterType="int">
+        update volunteer_star set common_num+=1 where id=#{articalId}
+    </update>
+    <update id="updateReduceCommonNumByid" parameterType="int">
+        update volunteer_star set common_num-=1 where id=#{articalId}
+    </update>
+</mapper>

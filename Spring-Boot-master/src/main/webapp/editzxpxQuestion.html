@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>在线培训</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="opensource rich wysiwyg text editor jquery bootstrap execCommand html5" />
+    <meta name="description" content="This tiny jQuery Bootstrap WYSIWYG plugin turns any DIV into a HTML5 rich text editor" />
+    <link rel="icon" href="bootstrap-3.3.5/fonts/favicon.ico"/>
+    <link href="bootstrap-3.3.5/external/google-code-prettify/prettify.css" rel="stylesheet"/>
+    <link href="css/bootstrap-combined.no-icons.min.css" rel="stylesheet"/>
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet"/>
+	<link href="css/font-awesome.css" rel="stylesheet"/>
+	<script src="bootstrap-3.3.5/js/tests/vendor/jquery.min.js"></script>
+	<script src="bootstrap-3.3.5/external/jquery.hotkeys.js"></script>
+    <script src="bootstrap-3.3.5/dist/js/bootstrap.min.js"></script>
+    <script src="bootstrap-3.3.5/external/google-code-prettify/prettify.js"></script>
+	<link href="bootstrap-3.3.5/index.css" rel="stylesheet"/>
+    <script src="bootstrap-3.3.5/js/bootstrap-wysiwyg.js"></script>
+  </head>
+<body>
+<div class="container">
+  <div class="hero-unit">
+  <div class="pull-right">
+	<div class="fb-like" data-href="http://facebook.com/mindmupapp" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div><br/>
+  </div>
+	<h1>课后练习配置 <br/></h1>
+	<hr/>
+	<form id="editForm" action="/traning/addQuestion" method="post" enctype="multipart/form-data">
+	<input id="articalId" type="text" name="articalId" placeholder="文章ID" autocomplete="off" readonly/>
+	<input id="questionjson" type="text" name="questionjson" placeholder="题目JSON" autocomplete="off" readonly/>
+	<div class="bs-docs-example">
+		<input type="text" placeholder="" name="stationStr" id="stationStr" />
+		<button class="btn btn-primary" type="button" id="addQuestion">新增题目</button>
+		<!--<button class="btn btn-success" type="button" id="saveStation">保存岗位</button>-->
+		<div  id="questionArea">
+            <!--
+			<div class="well" id="question" name="question">
+				<div class="form-inline">
+					<!--<h id="seqNo">1</h>:-->
+					<!--
+					<input type="text" class="input-big" placeholder="题目" name="questioninfo" />
+					<input type="text" class="input-big" placeholder="答案信息" name="answer" />
+					<button class="btn btn-danger" type="button" id="delQuestion" onclick="deleteQuestionode(this)">删除题目</button>
+					<!--<button class="btn btn-info" type="button" id="addSelect" onclick="">增加选项信息</button>-->
+			<!--
+				</div>
+				<br/>
+				<div class="bs-docs-example" id="answersArea">
+					<div class="form-inline" id="answerinfoA">
+						<h id="answerSeq">A</h>:
+						<input type="text" class="input-big" placeholder="选项内容" name="selectinfo" data-seq="A" />
+						<h id="answerSeq">B</h>:
+						<input type="text" class="input-big" placeholder="选项内容" name="selectinfo" data-seq="B"/>
+					</div>
+					<div class="form-inline" id="answerinfoC">
+						<h id="answerSeq">C</h>:
+						<input type="text" class="input-big" placeholder="选项内容" name="selectinfo" data-seq="C"/>
+						<h id="answerSeq">D</h>:
+						<input type="text" class="input-big" placeholder="选项内容" name="selectinfo" data-seq="D"/>
+					</div>
+				</div>
+			</div>
+			-->
+		</div>
+	</div>
+	</form>
+  	<button class="btn btn-primary btn-lg" id="clearbutton" style="float: right;margin-top: 10px; width: 80px;">
+    		Clear
+  	</button>
+  	<button class="btn btn-primary btn-lg" id="submitbutton" style="float: right;margin-top: 10px;margin-right: 20px;width: 80px;">
+    		Add
+  	</button>
+	<!--
+	<button class="btn btn-primary btn-lg" id="addCommonTest" value="添加评论测试按钮">添加评论测试按钮</button>
+	-->
+  </div>
+</div>
+ <!--消息model-->
+	<div id="messageModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel"></h3>
+	  </div>
+	  <div class="modal-body">
+		<p><h4 align="center" id="myModalContent"></h4></p>
+	  </div>
+	  <div class="modal-footer" id="message_buttons">
+		<button id="message_button_no" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">关闭</button>
+	  </div>
+	</div>
+<script type="text/javascript">
+	var num=1;
+	function getquestionNode(num){
+        var questionnode='<div class="well" id="question" name="question">\n' +
+            '\t\t\t\t<div class="form-inline">\n' +
+            '\t\t\t\t\t<!--<h id="seqNo">1</h>:-->\n' +
+            '\t\t\t\t\t<input type="text" class="input-big" placeholder="题目" id="questioninfo'+num+'" name="questioninfo'+num+'" />\n' +
+            '\t\t\t\t\t<input type="text" class="input-big" placeholder="答案信息" id="answer'+num+'"  name="answer'+num+'" />\n' +
+            '\t\t\t\t\t<button class="btn btn-danger" type="button" id="delQuestion" onclick="deleteQuestionode(this)">删除题目</button>\n' +
+            '\t\t\t\t\t<!--<button class="btn btn-info" type="button" id="addSelect" onclick="">增加选项信息</button>-->\n' +
+            '\t\t\t\t</div>\n' +
+            '\t\t\t\t<br/>\n' +
+            '\t\t\t\t<div class="bs-docs-example" id="answersArea">\n' +
+            '\t\t\t\t\t<div class="form-inline" id="answerinfoA">\n' +
+            '\t\t\t\t\t\t<h id="answerSeq">A</h>:\n' +
+            '\t\t\t\t\t\t<input type="text" class="input-big" placeholder="选项内容" name="selectinfo'+num+'" data-seq="A" />\n' +
+            '\t\t\t\t\t\t<h id="answerSeq">B</h>:\n' +
+            '\t\t\t\t\t\t<input type="text" class="input-big" placeholder="选项内容" name="selectinfo'+num+'" data-seq="B"/>\n' +
+            '\t\t\t\t\t</div>\n' +
+            '\t\t\t\t\t<div class="form-inline" id="answerinfoC">\n' +
+            '\t\t\t\t\t\t<h id="answerSeq">C</h>:\n' +
+            '\t\t\t\t\t\t<input type="text" class="input-big" placeholder="选项内容" name="selectinfo'+num+'" data-seq="C"/>\n' +
+            '\t\t\t\t\t\t<h id="answerSeq">D</h>:\n' +
+            '\t\t\t\t\t\t<input type="text" class="input-big" placeholder="选项内容" name="selectinfo'+num+'" data-seq="D"/>\n' +
+            '\t\t\t\t\t</div>\n' +
+            '\t\t\t\t</div>\n' +
+            '\t\t\t</div>';
+        return questionnode;
+	}
+
+	// $("#submitbutton").click(function(){
+	// 	var modelOne=$('#modelOne option:selected').val();
+	// 	var finalStr="";
+	// 	if(modelOne == '0')
+	// 	{
+	// 		$('#messageModal').modal({backdrop: 'static', keyboard: false});
+	// 		$("#messageModal #myModalLabel").html("错误！");
+	// 		$("#messageModal #myModalContent").html("请至少选择一级目录");
+	// 		return;
+	// 	}else
+	// 	{
+	// 		finalStr=modelOne;
+	// 	}
+     //    $('#subModel').attr("value",finalStr);
+     //    $("#editForm").submit();
+	// });
+	$("#clearbutton").click(function(){
+		$("#editor").html("");
+	});
+
+	$("#addQuestion").click(function(){
+	    var questionStr=$("#question").html();
+	    $("#questionArea").append(getquestionNode(num));
+	    num++;
+	});
+
+	function deleteQuestionode(node){
+        node.parentElement.parentElement.remove();
+	};
+
+	//提交题目
+	$("#submitbutton").click(function(){
+	    var qnum=$("[name=question]").length;
+        var nodeStr=[];
+		for(var i=1;i<=qnum;i++){
+		    var questionnode={};
+		    var question=$("#questioninfo"+i).val();
+            questionnode.questioninfo=question;
+		    var answer=$("#answer"+i).val();
+            questionnode.answer=answer;
+		    var answerinfos=$("[name=selectinfo"+i+"]");
+		    var answerJsonArray=[];
+		    for(var j=0;j<answerinfos.length;j++){
+		        var answers={};
+		        if(answerinfos[j].dataset.seq=='A'){
+                    answers.select="A";
+                    answers.content=answerinfos[j].value;
+                    answerJsonArray.push(answers);
+                }else if(answerinfos[j].dataset.seq=='B'){
+                    answers.select="B";
+                    answers.content=answerinfos[j].value;
+                    answerJsonArray.push(answers);
+                }else if(answerinfos[j].dataset.seq=='C'){
+                    answers.select="C";
+                    answers.content=answerinfos[j].value;
+                    answerJsonArray.push(answers);
+                }else if(answerinfos[j].dataset.seq=='D'){
+                    answers.select="D";
+                    answers.content=answerinfos[j].value;
+                    answerJsonArray.push(answers);
+                }
+			}
+            questionnode.selectinfo=answerJsonArray;
+            nodeStr.push(questionnode);
+		}
+		$("#questionjson").val(JSON.stringify(nodeStr));
+		$("#editForm").submit();
+    });
+	/*
+	$("#addCommonTest").click(function(){
+		var json={
+					'userId':'1',
+					'articalId':'1',
+					'userName':'zx',
+					'content':'this is test content!'
+				};
+		$.ajax({
+			url:'/volunteerStar/addStarCommon',
+			type:'POST',
+			async:'false',
+			data:JSON.stringify(json),
+			contentType:'application/json;charset=utf-8',
+			success:function(data){
+				alert(data)
+			}
+		});
+	});*/
+</script>
+<script>
+  $(function(){
+    function initToolbarBootstrapBindings() {
+      var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier', 
+            'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+            'Times New Roman', 'Verdana'],
+            fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+      $.each(fonts, function (idx, fontName) {
+          fontTarget.append($('<li><a data-edit="fontName ' + fontName +'" style="font-family:\''+ fontName +'\'">'+fontName + '</a></li>'));
+      });
+      $('a[title]').tooltip({container:'body'});
+    	$('.dropdown-menu input').click(function() {return false;})
+		    .change(function () {$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');})
+        .keydown('esc', function () {this.value='';$(this).change();});
+
+      $('[data-role=magic-overlay]').each(function () { 
+        var overlay = $(this), target = $(overlay.data('target')); 
+        overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+      });
+      if ("onwebkitspeechchange"  in document.createElement("input")) {
+        var editorOffset = $('#editor').offset();
+        $('#voiceBtn').css('position','absolute').offset({top: editorOffset.top, left: editorOffset.left+$('#editor').innerWidth()-35});
+      } else {
+        $('#voiceBtn').hide();
+      }
+	};
+	function showErrorAlert (reason, detail) {
+		var msg='';
+		if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+		else {
+			console.log("error uploading file", reason, detail);
+		}
+		$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
+		 '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+	};
+    initToolbarBootstrapBindings();  
+	$('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
+    window.prettyPrint && prettyPrint();
+  });
+</script>
+<a href="javascript:window.history.go(-1)"><img style="position: absolute; top: 0; right: 0; border: 0;" src="img/forkme_right_gray_6d6d6d.png" alt="返回"></a>
+<div id="fb-root"></div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','js/analytics.js','ga');
+  ga('create', 'UA-37452180-6', 'github.io');
+  ga('send', 'pageview');
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "";
+  fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+ </script>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+ 	$('input[id=imagefile]').change(function() {
+		$('#imagephotoCover').val($(this).val());
+	});
+	$('input[id=videofile]').change(function() {
+		$('#videophotoCover').val($(this).val());
+	});
+	$('input[id=classfile]').change(function() {
+		$('#classphotoCover').val($(this).val());
+	});
+	$('input[id=teacherfile]').change(function() {
+		$('#teacherphotoCover').val($(this).val());
+	});
+ 	
+ </script>
+ <!-- 获取培训信息 -->
+ <script type="text/javascript">
+	$(function(){
+		var urlId=getQueryString("projectId");
+		//包含id信息
+		if(urlId != null){
+			$("#articalId").val(urlId);
+			
+		}
+	});
+	function getQueryString(name) { 
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+		var r = window.location.search.substr(1).match(reg); 
+		if (r != null) return unescape(r[2]); return null; 
+	} 
+</script>
+</html>
