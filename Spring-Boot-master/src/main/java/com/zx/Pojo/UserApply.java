@@ -9,10 +9,28 @@ import java.io.Serializable;
 public class UserApply implements Serializable {
     private Integer id;
     private Integer userId;
+    private String userName;
+    private String userPhone;
     private Integer applyType;
     private String applyName;
     private Integer status;
     private String createDate;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
 
     public Integer getId() {
         return id;
@@ -54,6 +72,17 @@ public class UserApply implements Serializable {
     }
 
     public void setApplyType(Integer applyType) {
+        if(applyType == 1){
+            this.applyName="一星志愿者";
+        }else if (applyType == 2){
+            this.applyName="二星志愿者";
+        }else if (applyType == 3){
+            this.applyName="三星志愿者";
+        }else if (applyType == 4){
+            this.applyName="四星志愿者";
+        }else if (applyType == 5){
+            this.applyName="五星志愿者";
+        }
         this.applyType = applyType;
     }
 

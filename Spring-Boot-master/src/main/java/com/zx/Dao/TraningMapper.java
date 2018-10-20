@@ -42,4 +42,6 @@ public interface TraningMapper {
     List<Question> getQuestionByExamId(String examId);
 
     List<Answer> getAnswerbyQid(String questionId);
+
+    void addReadNumbyTraningId(Integer id);
 }

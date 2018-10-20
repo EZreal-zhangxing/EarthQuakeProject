@@ -86,6 +86,10 @@
         where id=#{id}
     </select>
 
+    <update id="addReadNumbyTraningId" parameterType="int">
+        update from online_traning set read_num+=1 where id=#{id}
+    </update>
+
     <insert id="addTraningQuestion" parameterType="com.zx.Pojo.TraningQuestion">
         insert into traning_question(id,traning_id,title,type,seq_no,answer)
         value(#{id},#{traningId},#{title},#{type},#{seqNo},#{answer})

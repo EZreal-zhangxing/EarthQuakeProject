@@ -30,6 +30,11 @@ public class TraningService {
 		return traningMapper.getListofinfoBytype(pageinfo);
 	}
 
+	/**
+	 * 获取在线培训信息
+	 * @param id
+	 * @return
+	 */
 	public OnlineTraning getTraningByid(Integer id){
 		OnlineTraning onlineTraning=traningMapper.getTraningInfoByid(id);
 		List<TraningQuestion> list = traningMapper.getQuestioninfoByArticalId(id);
@@ -38,6 +43,8 @@ public class TraningService {
 			traningQuestion.setAnswers(answerList);
 		}
 		onlineTraning.setQuestionList(list);
+		//阅读数加一
+		traningMapper.addReadNumbyTraningId(id);
 		return onlineTraning;
 	}
 

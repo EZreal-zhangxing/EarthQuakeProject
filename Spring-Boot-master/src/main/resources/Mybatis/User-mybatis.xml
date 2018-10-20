@@ -119,13 +119,29 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 
-	<select id="getCountUserApply"  parameterType="int" resultType="int">
-		select count(id) as num
-		from user_apply where status=#{status}
+	<select id="getCountUserApply"  parameterType="com.zx.Pojo.UserApply" resultType="int">
+		select count(ua.id) as num
+		from user_apply ua
+		left join user u on ua.user_id=u.id
+		where 1=1 and status=#{status}
+		<if test="userName!=null and userName!=''">
+			and u.user_name like CONCAT("%",#{userName},"%")
+		</if>
 	</select>
+
 	<select id="getAllUserApply" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.UserApply">
-		select id,user_id as userId,apply_type as applyType,status, DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
-		from user_apply where status=#{conditionUserApply.status}
-		 limit #{begin},#{shownum}
+		select ua.id, ua.user_id as userId,u.user_name as userName,u.telphone as userPhone
+		, ua.apply_type as applyType,
+		ua.status, DATE_FORMAT(ua.create_date,'%Y-%m-%d %H:%i:%s') as createDate
+		from user_apply ua
+		left join user u on ua.user_id=u.id
+		where 1=1 and ua.status=#{conditionUserApply.status}
+		<if test="conditionUserApply.userName!=null and conditionUserApply.userName!=''">
+			and u.user_name like CONCAT("%",#{conditionUserApply.userName},"%")
+		</if>
+		order by ua.create_date
+		limit #{begin},#{shownum}
 	</select>
+
+	<select id="getHours"></select>
 </mapper>

@@ -315,11 +315,20 @@ public class UserController extends BaseController{
 		return new Message(MessageCode.MSG_SUCCESS);
 	}
 
+	/**
+	 * 获取用户申请列表
+	 * @param statue
+	 * @param pageSize
+	 * @param page
+	 * @return
+	 */
 	@RequestMapping("/getListofApply")
-	public Pageinfo getListofApply(@RequestParam(value = "statue") Integer statue,
+	public Pageinfo getListofApply(@RequestParam(value = "username") String name,
+								   @RequestParam(value = "statue" ,defaultValue = "0") Integer statue,
 								   @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
 								   @RequestParam(value = "page",defaultValue = "1") String page){
 		UserApply userApply=new UserApply();
+		userApply.setUserName(name);
 		Integer num=userService.getCountListofUserApply(statue);
 		Pageinfo pageinfo=initpage(num,page,pageSize);
 		userApply.setStatus(statue);

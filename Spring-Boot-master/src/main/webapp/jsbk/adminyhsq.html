@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>在线考试试卷预览</title>
+    <title>用户申请预览</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="介绍如何搭建Bootstrap里面HTML基本元素，并利用可扩展的class增强其展示效果。">
@@ -95,6 +95,7 @@
 					<ul class="dropdown-menu">
 					  <li><a href="adminzxks.html">考试试卷预览</a></li>
 					  <li><a href="editQuestion.html" target="_blank">考试配置</a></li>
+						<li><a href="adminyhsq.html">用户申请</a></li>
 					</ul>
 				</li>
 				<li class="dropdown">
@@ -114,8 +115,8 @@
 ================================================== -->
 <header class="jumbotron subhead" id="overview">
   <div class="container">
-    <h1>在线考试试卷预览</h1>
-    <p class="lead">在线考试试卷预览。</p>
+    <h1>用户申请预览</h1>
+    <p class="lead">用户申请预览。</p>
   </div>
 </header>
 
@@ -129,11 +130,16 @@
         ================================================== -->
         <section id="price">
           <div class="page-header">
-            <h1>文章信息维护</h1>
+            <h1>用户申请维护</h1>
           </div>
 		  <div class="bs-docs-example">
 		  	<form id="queryPrice" class="form-inline" align="center" action="" method="post">
-			  	<input type="text" id="articelName" name="articelName" placeholder="试卷名" autocomplete="off" value="">
+				<input type="text" id="name" name="name" placeholder="用户名" autocomplete="off" value="">
+				<select class="span2" id="model">
+					<option id="default" value="" selected>请选择状态：</option>
+					<option value="0">未通过</option>
+					<option value="1">已通过</option>
+				</select>
 				<button id="queryPrice_btn" class="btn btn-primary" type="button" onclick="loadArticel(1)"><i class="icon-search icon-white"></i> 查询</button>&nbsp;
 				<button id="queryPrice_reset" class="btn btn-warning" type="button" onclick="reset()"><i class="icon-repeat icon-white"></i> 重置</button>
 			</form>
@@ -143,9 +149,13 @@
             <table class="table table-hover table-bordered" style="table-layout:fixed;">
               <thead>
                 <tr>
-                  <th width="2px">#</th>
-				  <th width="60px">试卷标题</th>
-                  <th width="30px">发布时间</th>
+                  	<th width="2px">#</th>
+				  	<th width="60px">用户ID</th>
+                  	<th width="30px">用户名</th>
+                  	<th width="30px">电话</th>
+                  	<th width="30px">志愿服务时常</th>
+					<th width="30px">申请类别</th>
+					<th width="30px">状态</th>
 				  <th width="60px">操作</th>
                 </tr>
               </thead>
@@ -234,9 +244,9 @@
 	    }
 		function loadArticel(page)
 		{
-
-			var articelName=$('#articelName').val();
-			var url="/traning/getExaminationList?title="+articelName+"&page="+page;
+			var name=$("#name").val();
+            var modelId=$('#model option:selected').val();
+			var url="/user/getListofApply?statue="+modelId+"&name="+name+"&page="+page;
 			var tdstr="";
 			var pagestr="";
 			$.ajax({
@@ -251,8 +261,11 @@
 					for(var i=0;i<artlist.length;i++)
 					{
 						tdstr+="<tr class='' id=''>";
-						tdstr+="<td id='articelId' style='word-wrap:break-word;' hidden>"+artlist[i].examId+"</td>";
-						tdstr+="<td id='articelId' style='word-wrap:break-word;'>"+(i+1)+"</td>";
+						tdstr+="<td id='articelId' style='word-wrap:break-word;' hidden>"+artlist[i].id+"</td>";
+						tdstr+="<td id='userId' style='word-wrap:break-word;' hidden>"+artlist[i].userId+"</td>";
+						tdstr+="<td id='userName' style='word-wrap:break-word;' hidden>"+artlist[i].userName+"</td>";
+						tdstr+="<td id='userPhone' style='word-wrap:break-word;' hidden>"+artlist[i].userPhone+"</td>";
+						tdstr+="<td id='applyName' style='word-wrap:break-word;' hidden>"+artlist[i].applyName+"</td>";
                         tdstr+="<td id='articelTitle' style='word-wrap:break-word;'><a href='examQuestion.html?examId="+artlist[i].examId+"' target='_blank' data-toggle='tooltip' title='点击此处查看信息！' data-placement='top'>"+artlist[i].title+"</a></td>";
                         tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
 						tdstr+="<td id='operation' style='word-wrap:break-word;'><button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].examId+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
