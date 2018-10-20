@@ -1,5 +1,7 @@
 package com.zx.Pojo;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
@@ -13,8 +15,29 @@ public class UserApply implements Serializable {
     private String userPhone;
     private Integer applyType;
     private String applyName;
+    @ApiModelProperty(value = "0 未通过 1 已通过")
     private Integer status;
+
+    private Integer serviceHours; //用户服务时长
+    private Integer projectNum; //参与项目数量
+
     private String createDate;
+
+    public Integer getProjectNum() {
+        return projectNum;
+    }
+
+    public void setProjectNum(Integer projectNum) {
+        this.projectNum = projectNum;
+    }
+
+    public Integer getServiceHours() {
+        return serviceHours;
+    }
+
+    public void setServiceHours(Integer serviceHours) {
+        this.serviceHours = serviceHours;
+    }
 
     public String getUserName() {
         return userName;

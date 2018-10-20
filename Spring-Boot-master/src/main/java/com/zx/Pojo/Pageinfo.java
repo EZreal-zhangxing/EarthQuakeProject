@@ -23,8 +23,26 @@ public class Pageinfo {
     private TeamSign conditionTeamSign;
     private OnlineTraning conditionOnlineTraning;
     private UserApply conditionUserApply;
+    private PartFile conditionFile;
+    private UserTraning conditionUserTraning;
 
     private Object result;
+
+    public UserTraning getConditionUserTraning() {
+        return conditionUserTraning;
+    }
+
+    public void setConditionUserTraning(UserTraning conditionUserTraning) {
+        this.conditionUserTraning = conditionUserTraning;
+    }
+
+    public PartFile getConditionFile() {
+        return conditionFile;
+    }
+
+    public void setConditionFile(PartFile conditionFile) {
+        this.conditionFile = conditionFile;
+    }
 
     public UserApply getConditionUserApply() {
         return conditionUserApply;

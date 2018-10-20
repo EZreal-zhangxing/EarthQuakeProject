@@ -41,70 +41,7 @@
           </button>
 		  <div class="nav-collapse collapse">
             <ul class="nav">
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">新闻资讯 <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-					  <li><a href="adminyfc.html">新闻资讯</a></li>
-					  <li><a href="editnews.html" target="_blank">新闻添加</a></li>
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿故事 <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-					  <li><a href="adminzygs.html">志愿故事</a></li>
-					  <li><a href="editzygs.html" target="_blank">志愿故事添加</a></li>
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿团体 <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-					  <li><a href="adminzytt.html">志愿团体</a></li>
-					  <li><a href="editzytt.html" target="_blank">志愿团体添加</a></li>
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿项目 <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-					  <li><a href="adminzyxm.html">志愿项目</a></li>
-					  <li><a href="editzyxm.html" target="_blank">志愿项目添加</a></li>
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿之星 <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-					  <li><a href="adminzyzx.html">志愿之星</a></li>
-					  <li><a href="editzyzx.html" target="_blank">志愿之星添加</a></li>
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">志愿政策 <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-					  <li><a href="adminzyzc.html">志愿政策</a></li>
-					  <li><a href="editzyzc.html" target="_blank">志愿政策添加</a></li>
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">在线培训 <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-					  <li><a href="adminzxpx.html">课程预览</a></li>
-					  <li><a href="editzxpx.html" target="_blank">课程配置</a></li>
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">在线考试 <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-					  <li><a href="adminzxks.html">考试试卷预览</a></li>
-					  <li><a href="editQuestion.html" target="_blank">考试配置</a></li>
-						<li><a href="adminyhsq.html">用户申请</a></li>
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">文件资源 <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-					  <li><a href="adminfile.html">文件资源预览</a></li>
-					  <li><a href="editQuestion.html" target="_blank">考试配置</a></li>
-					</ul>
-				</li>
+				
             </ul>
           </div>
         </div>
@@ -153,10 +90,12 @@
 				  	<th width="60px">用户ID</th>
                   	<th width="30px">用户名</th>
                   	<th width="30px">电话</th>
+					<th width="30px">参与项目数</th>
                   	<th width="30px">志愿服务时常</th>
 					<th width="30px">申请类别</th>
 					<th width="30px">状态</th>
-				  <th width="60px">操作</th>
+					<th width="30px">申请时间</th>
+					<th width="60px">操作</th>
                 </tr>
               </thead>
               <tbody id="articelBody">
@@ -207,7 +146,7 @@
 	  <div class="modal-body">
 		<h4 align="center">确认删除？</h4>
 		<form id="deletePrFomr" method="POST" action="">
-			<input type="text" name="artId" id="artId" placeholder="" autocomplete="off"/>
+			<input type="text" name="artId" id="artId" placeholder="" autocomplete="off" hidden/>
 		</form>
 		<div class="modal-footer">
 			<button id="modal_deleteAr" class="btn btn-primary">确认</button>
@@ -219,6 +158,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
+	<script>$(".nav").load('head.html');</script>
     <script src="js/bootstrap-transition.js"></script>
     <script src="js/bootstrap-alert.js"></script>
     <script src="js/bootstrap-modal.js"></script>
@@ -246,7 +186,7 @@
 		{
 			var name=$("#name").val();
             var modelId=$('#model option:selected').val();
-			var url="/user/getListofApply?statue="+modelId+"&name="+name+"&page="+page;
+			var url="/user/getListofApply?statue="+modelId+"&username="+name+"&page="+page;
 			var tdstr="";
 			var pagestr="";
 			$.ajax({
@@ -261,14 +201,22 @@
 					for(var i=0;i<artlist.length;i++)
 					{
 						tdstr+="<tr class='' id=''>";
-						tdstr+="<td id='articelId' style='word-wrap:break-word;' hidden>"+artlist[i].id+"</td>";
-						tdstr+="<td id='userId' style='word-wrap:break-word;' hidden>"+artlist[i].userId+"</td>";
-						tdstr+="<td id='userName' style='word-wrap:break-word;' hidden>"+artlist[i].userName+"</td>";
-						tdstr+="<td id='userPhone' style='word-wrap:break-word;' hidden>"+artlist[i].userPhone+"</td>";
-						tdstr+="<td id='applyName' style='word-wrap:break-word;' hidden>"+artlist[i].applyName+"</td>";
-                        tdstr+="<td id='articelTitle' style='word-wrap:break-word;'><a href='examQuestion.html?examId="+artlist[i].examId+"' target='_blank' data-toggle='tooltip' title='点击此处查看信息！' data-placement='top'>"+artlist[i].title+"</a></td>";
-                        tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
-						tdstr+="<td id='operation' style='word-wrap:break-word;'><button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].examId+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
+						tdstr+="<td id='articelId' style='word-wrap:break-word;'>"+artlist[i].id+"</td>";
+						tdstr+="<td id='userId' style='word-wrap:break-word;'>"+artlist[i].userId+"</td>";
+						tdstr+="<td id='userName' style='word-wrap:break-word;'>"+artlist[i].userName+"</td>";
+						tdstr+="<td id='userPhone' style='word-wrap:break-word;'>"+artlist[i].userPhone+"</td>";
+						tdstr+="<td id='projectNum' style='word-wrap:break-word;'>"+artlist[i].projectNum+"</td>";
+						tdstr+="<td id='serviceHours' style='word-wrap:break-word;'>"+artlist[i].serviceHours+"</td>";
+						tdstr+="<td id='applyName' style='word-wrap:break-word;'>"+artlist[i].applyName+"</td>";
+						 if(parseInt(artlist[i].status) == 0){
+                            tdstr+="<td id='status' style='word-wrap:break-word;'>未通过</td>";
+                        }else if(parseInt(artlist[i].status) == 1){
+                            tdstr+="<td id='status' style='word-wrap:break-word;'>通过</td>";
+                        }else{
+							tdstr+="<td id='status' style='word-wrap:break-word;'>异常状态</td>";
+						}
+						tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
+						tdstr+="<td id='operation' style='word-wrap:break-word;'><button id='updatebtn' class='btn btn-primary' type='button' onclick='pass("+artlist[i].id+")'><i class='icon-edit icon-white'></i>通过</button><button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
 						tdstr+="</tr>";
 					}
 					var pagelist=pageinfo.pageStr;
@@ -317,9 +265,34 @@
 			$('#deleteModal').modal({backdrop: 'static', keyboard: false});
 			$('#deleteModal #artId').attr('value',id);
 		}
+		
+		function pass(id){
+			var	posturl="/user/applyPass/"+id;
+			$.ajax({
+	 			url:posturl,
+	 			type:'post',
+	 			async:'false',
+	 			success:function(data)
+	 			{
+					var msg=eval(data);
+					if(msg.code == "success")
+					{
+					    //loadArtical(1);
+						window.location.reload();
+					}else
+					{	
+						$('#deleteModal').modal('hide');
+						$('#messageModal').modal({backdrop: 'static', keyboard: false});
+						$("#messageModal #myModalLabel").html("错误！");
+						$("#messageModal #myModalContent").html(msg.message+"!");
+					}
+	 			}
+	 		});
+		}
+		
 		$('#modal_deleteAr').click(function (){
 			var id=$('#deleteModal #artId').val();
-			var	posturl="/news/deleteNews/"+id;
+			var	posturl="/user/deleteUserApply/"+id;
 			$.ajax({
 	 			url:posturl,
 	 			type:'post',

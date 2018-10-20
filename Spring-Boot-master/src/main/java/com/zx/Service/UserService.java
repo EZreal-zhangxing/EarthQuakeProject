@@ -79,10 +79,40 @@ public class UserService {
 		}
 	}
 
-	public Integer getCountListofUserApply(Integer status){
-		return userMapper.getCountUserApply(status);
+	public Integer getCountListofUserApply(UserApply userApply){
+		return userMapper.getCountUserApply(userApply);
 	}
+
 	public List<UserApply> getListofUserApply(Pageinfo pageinfo){
-		return userMapper.getAllUserApply(pageinfo);
+		List<UserApply> list=userMapper.getAllUserApply(pageinfo);
+		for(UserApply userApply:list){
+			userApply.setProjectNum(userMapper.getprojectNum(userApply.getUserId()));
+			userApply.setServiceHours(userMapper.getServicehours(userApply.getUserId()));
+		}
+		return list;
+	}
+
+	public void deleteApply(Integer id){
+		userMapper.deleteApplyByid(id);
+	}
+
+	public void updateUserApply(Integer id){
+		userMapper.updateStatuByid(id);
+	}
+
+	public List<UserApply> getListOfuserApplylist(Integer userId) {
+		return userMapper.getUserApplyListById(userId);
+	}
+
+	public Integer getCountofMyclass(UserTraning userTraning){
+		return userMapper.getMyClassNum(userTraning);
+	}
+
+	public List<UserTraning> getlistofMyTraning(Pageinfo pageinfo){
+		return userMapper.getMyClass(pageinfo);
+	}
+
+	public void saveMyClass(UserTraning userTraning){
+		userMapper.addMyclass(userTraning);
 	}
 }

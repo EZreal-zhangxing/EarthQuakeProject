@@ -12,11 +12,13 @@ public interface PartFileMapper {
      */
     List<PartFile> getPartFileList(Pageinfo pageinfo);
 
-    Integer getCountofFIle();
+    Integer getCountofFIle(PartFile partFile);
 
     void addFile(PartFile partFile);
 
     PartFile getFIleByid(Integer id);
 
     void deleteFileById(Integer id);
+
+    void updateFileByid(PartFile partFile);
 }

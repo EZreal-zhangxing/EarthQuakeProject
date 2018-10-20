@@ -4,6 +4,8 @@ import com.zx.Pojo.*;
 import com.zx.Service.PartFileService;
 import com.zx.Util.EncoderHandler;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -40,11 +43,20 @@ public class FileController extends BaseController {
     private PartFileService partFileService;
 
     @ApiOperation(value = "获取文件列表" ,response = Pageinfo.class,httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name",required = false, value = "文件名",dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "页面条数",defaultValue = "10", dataType = "int"),
+            @ApiImplicitParam(name = "page", value = "标题",defaultValue = "1", dataType = "string")
+    })
     @RequestMapping("/getfilelist")
-    public Pageinfo getFileList(@RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
+    public Pageinfo getFileList(@RequestParam(value = "name",required = false,defaultValue = "") String name,
+                                @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
                                 @RequestParam(value = "page",defaultValue = "1") String page){
-        Integer num=partFileService.getCountFilelist();
+        PartFile partFile=new PartFile();
+        partFile.setFileName(name);
+        Integer num=partFileService.getCountFilelist(partFile);
         Pageinfo pageinfo=initpage(num,page,pageSize);
+        pageinfo.setConditionFile(partFile);
         List<PartFile> list=partFileService.getFilelist(pageinfo);
         pageinfo.setResult(list);
         return pageinfo;
@@ -53,30 +65,65 @@ public class FileController extends BaseController {
     @RequestMapping("/addpartFile")
     public void addpartFile(HttpServletRequest request, HttpServletResponse response,
                              @RequestParam(value = "efile") MultipartFile efile){
-
+        String fileId = request.getParameter("fileId");
         String score=request.getParameter("score");
-        //封面图片处理
-        String imagefileName=efile.getOriginalFilename();
-        if(StringUtils.isNotEmpty(imagefileName)){
+        String title=request.getParameter("title");
+        if (StringUtils.isNotBlank(fileId)) {
+            //更新文件
+            PartFile partFile1 = partFileService.getFIleByid(Integer.parseInt(fileId));
+            //删除文件
+            delFileByfilePath(partFile1.getFilePath());
+            partFile1.setDownloadScore(Integer.parseInt(score));
+            //封面图片处理
+            String imagefileName=efile.getOriginalFilename();
+            if(StringUtils.isNotEmpty(imagefileName)){
+
+                partFile1.setFileName(StringUtils.isBlank(title)?imagefileName:title);
+
+                String md5Filepath=getMD5Filepath(imagefileName);
+                File file=new File(md5Filepath);
+                try {
+                    saveFile(file,efile.getInputStream(),getfilepath());
+                    partFile1.setFilePath(md5Filepath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            partFileService.updateFile(partFile1);
+        }else{
             PartFile partFile=new PartFile();
-            String ffname=imagefileName.substring(imagefileName.lastIndexOf("/"),imagefileName.length());
-            partFile.setFileName(ffname);
-            partFile.setDownloadScore(Integer.parseInt(score));
-            String md5Filepath=getMD5Filepath(imagefileName);
-            File file=new File(md5Filepath);
-            try {
-                saveFile(file,efile.getInputStream(),getfilepath());
-                partFile.setFilePath(md5Filepath);
-            } catch (IOException e) {
-                e.printStackTrace();
+            //封面图片处理
+            String imagefileName=efile.getOriginalFilename();
+            if(StringUtils.isNotEmpty(imagefileName)){
+
+                partFile.setDownloadScore(Integer.parseInt(score));
+                partFile.setFileName(StringUtils.isBlank(title)?imagefileName:title);
+
+                String md5Filepath=getMD5Filepath(imagefileName);
+                File file=new File(md5Filepath);
+                try {
+                    saveFile(file,efile.getInputStream(),getfilepath());
+                    partFile.setFilePath(md5Filepath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             partFileService.savepartFile(partFile);
         }
+
         try {
-            jumpPage(response,1,"editzxpx.html");
+            jumpPage(response,1,"adminfile.html");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @ApiOperation(value = "通过文件ID获取文件信息",httpMethod = "GET",notes = "返回文件流")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "文件ID", dataType = "int")
+    })
+    @RequestMapping("/getFileInfoByid/{id}")
+    public PartFile getFileInfoByid(@PathVariable(value = "id") Integer id){
+        return partFileService.getFIleByid(id);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.zx.Dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.zx.Pojo.*;
@@ -54,5 +55,32 @@ public interface UserMapper{
 	 * @return
 	 */
 	List<UserApply> getAllUserApply(Pageinfo pageinfo);
-	Integer getCountUserApply(Integer status);
+
+	Integer getCountUserApply(UserApply userApply);
+
+	/**
+	 * 更具userId获取用户项目书
+	 * @param userId
+	 * @return
+	 */
+	Integer getprojectNum(Integer userId);
+
+	/**
+	 * 更具用户ID获取
+	 * @param userId
+	 * @return
+	 */
+	Integer getServicehours(Integer userId);
+
+	void deleteApplyByid(Integer id);
+
+	void updateStatuByid(Integer id);
+
+	List<UserApply> getUserApplyListById(Integer userId);
+
+	Integer getMyClassNum(UserTraning userTraning);
+
+	List<UserTraning> getMyClass(Pageinfo pageinfo);
+
+	void addMyclass(UserTraning userTraning);
 }

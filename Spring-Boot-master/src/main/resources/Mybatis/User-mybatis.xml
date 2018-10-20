@@ -123,7 +123,10 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(ua.id) as num
 		from user_apply ua
 		left join user u on ua.user_id=u.id
-		where 1=1 and status=#{status}
+		where 1=1
+		<if test="status!=null and status!='-1'">
+			and ua.status=#{status}
+		</if>
 		<if test="userName!=null and userName!=''">
 			and u.user_name like CONCAT("%",#{userName},"%")
 		</if>
@@ -135,7 +138,10 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		ua.status, DATE_FORMAT(ua.create_date,'%Y-%m-%d %H:%i:%s') as createDate
 		from user_apply ua
 		left join user u on ua.user_id=u.id
-		where 1=1 and ua.status=#{conditionUserApply.status}
+		where 1=1
+		<if test="conditionUserApply.status!=null and conditionUserApply.status!='-1'">
+			and ua.status=#{conditionUserApply.status}
+		</if>
 		<if test="conditionUserApply.userName!=null and conditionUserApply.userName!=''">
 			and u.user_name like CONCAT("%",#{conditionUserApply.userName},"%")
 		</if>
@@ -143,5 +149,52 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		limit #{begin},#{shownum}
 	</select>
 
-	<select id="getHours"></select>
+	<select id="getprojectNum" parameterType="int" resultType="int">
+		select count(id) as num
+		from project_sign where user_id=#{userId}
+		group by project_id
+	</select>
+
+	<select id="getServicehours" parameterType="int" resultType="int">
+		select SUM(psa.hours) as hours
+		from project_sign_arrange psa
+		where psa.user_id =#{userId}
+	</select>
+
+	<delete id="deleteApplyByid" parameterType="int">
+		delete from user_apply where id=#{id}
+	</delete>
+
+	<update id="updateStatuByid" parameterType="int">
+		update user_apply set status=1 where id=#{id}
+	</update>
+
+
+	<select id="getUserApplyListById" parameterType="int" resultType="com.zx.Pojo.UserApply">
+		select id,user_id as userId,apply_type as applyType,status,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+		from user_apply where user_id=#{userId}
+	</select>
+
+	<!--我得课程部分 start-->
+	<select id="getMyClassNum" parameterType="com.zx.Pojo.UserTraning" resultType="int">
+		select count(ut.id) as num
+		from user_traning ut
+		where 1=1 and ut.user_id=#{userId} and ut.type=#{type}
+	</select>
+
+	<select id="getMyClass" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.UserTraning">
+		select ut.id,ut.user_id as userId,ut.traning_id as traningId,
+		ot.title as traningTitle,ot.image_url as traningimgUrl,ot.read_num as traningReadNum,
+		ot.collection_num as collectionNum,ut.havewatch_time as havewatchTime,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+		from user_traning ut
+		left join user u on ut.user_id=u.id
+		left join online_traning ot on ut.traning_id=ot.id
+		where 1=1 and ut.user_id=#{conditionUserTraning.userId} and ut.type=#{conditionUserTraning.type}
+	</select>
+
+	<insert id="addMyclass" parameterType="com.zx.Pojo.UserTraning">
+		insert into user_traning(user_id,traning_id,havewatch_time,type)
+		values(#{userId},#{traningId},#{havewatchTime},#{type})
+	</insert>
+	<!--end-->
 </mapper>

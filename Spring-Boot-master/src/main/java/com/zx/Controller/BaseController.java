@@ -1,6 +1,9 @@
 package com.zx.Controller;
 
+import com.zx.Pojo.Message;
+import com.zx.Pojo.MessageCode;
 import com.zx.Pojo.Pageinfo;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -128,5 +131,10 @@ public class BaseController {
         fos.flush();
         fos.close();
         is.close();
+    }
+
+    @RequestMapping("/error")
+    public Message error(){
+        return new Message(MessageCode.MSG_FAIL);
     }
 }

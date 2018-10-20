@@ -170,7 +170,7 @@ public class UserController extends BaseController{
 	 * @param fileicon
 	 * @return
 	 */
-	@ApiOperation(value = "密码修改",response = Message.class,httpMethod = "POST")
+	@ApiOperation(value = "头像修改",response = Message.class,httpMethod = "POST")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "headfilepath", value = "头像修改（此处为表单提交enctype=\"multipart/form-data\"）",dataType = "MultipartFile")
 	})
@@ -293,14 +293,23 @@ public class UserController extends BaseController{
 		return pageinfo;
 	}
 
+	@ApiOperation(value = "更具用户ID (考核模块使用)获取该用户所申请的星级列表",response = UserApply.class,httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int")
+	})
+	@RequestMapping("/getListofUserApply/{userId}")
+	public List<UserApply> getListofUserApply(@PathVariable(value = "userId") Integer userId){
+		return userService.getListOfuserApplylist(userId);
+	}
+
 
 	/**
-	 * 添加用户申请信息
+	 * 添加用户申请星级信息
 	 * @param userId
 	 * @param apply
 	 * @return
 	 */
-	@ApiOperation(value = "添加用户申请信息",response = Message.class,httpMethod = "GET")
+	@ApiOperation(value = "添加用户申请星级信息",response = Message.class,httpMethod = "GET")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
 			@ApiImplicitParam(name = "apply", value = "申请类型 1 一星 2 二星 3三星 4 四星 5 五星",dataType = "int")
@@ -323,20 +332,84 @@ public class UserController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping("/getListofApply")
-	public Pageinfo getListofApply(@RequestParam(value = "username") String name,
-								   @RequestParam(value = "statue" ,defaultValue = "0") Integer statue,
+	public Pageinfo getListofApply(@RequestParam(value = "username",required = false) String name,
+								   @RequestParam(value = "statue" ,defaultValue = "-1") Integer statue,
 								   @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
 								   @RequestParam(value = "page",defaultValue = "1") String page){
 		UserApply userApply=new UserApply();
 		userApply.setUserName(name);
-		Integer num=userService.getCountListofUserApply(statue);
-		Pageinfo pageinfo=initpage(num,page,pageSize);
 		userApply.setStatus(statue);
+		Integer num=userService.getCountListofUserApply(userApply);
+		Pageinfo pageinfo=initpage(num,page,pageSize);
 		pageinfo.setConditionUserApply(userApply);
 		List<UserApply> list=userService.getListofUserApply(pageinfo);
 		pageinfo.setResult(list);
 		return pageinfo;
 	}
+
+	@RequestMapping("/deleteUserApply/{id}")
+	public Message deleteUserApply(@PathVariable(value = "id") Integer id){
+		userService.deleteApply(id);
+		return new Message(MessageCode.MSG_SUCCESS);
+	}
+
+	@RequestMapping("/applyPass/{id}")
+	public Message applyPass(@PathVariable(value = "id") Integer id){
+		userService.updateUserApply(id);
+		return new Message(MessageCode.MSG_SUCCESS);
+	}
+
+
+	@ApiOperation(value = "获取用户看过的视频列表",response = Pageinfo.class,httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
+			@ApiImplicitParam(name = "type", value = "0 未完成 1 已完成",dataType = "int")
+	})
+	@RequestMapping("/getListofMyclass")
+	public Pageinfo getListofMyclass(@RequestParam(value = "userId") Integer userId,
+									 @RequestParam(value = "type") Integer type,
+									 @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
+									 @RequestParam(value = "page",defaultValue = "1") String page){
+		UserTraning userTraning = new UserTraning();
+		userTraning.setUserId(userId);
+		userTraning.setType(type);
+		Integer num=userService.getCountofMyclass(userTraning);
+		Pageinfo pageinfo=initpage(num,page,pageSize);
+		pageinfo.setConditionUserTraning(userTraning);
+		List<UserTraning> list = userService.getlistofMyTraning(pageinfo);
+		pageinfo.setResult(list);
+		return pageinfo;
+	}
+
+	/**
+	 * 增加用户看过的视频信息
+	 * @param userId
+	 * @param type
+	 * @param traningId
+	 * @param haveSeeTime
+	 * @return
+	 */
+	@ApiOperation(value = "获取用户看过的视频列表",response = Message.class,httpMethod = "GET")
+	@ApiImplicitParams({
+					@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
+					@ApiImplicitParam(name = "type", value = "0 未完成 1 已完成",dataType = "int"),
+					@ApiImplicitParam(name = "traningId",required = true,value = "视频文章ID",dataType = "int"),
+					@ApiImplicitParam(name = "haveSeeTime",required = false, value = "已看时间",dataType = "String")
+	})
+	@RequestMapping("/AddMyClass")
+	public Message AddMyClass(@RequestParam(value = "userId",required = true) Integer userId,
+							  @RequestParam(value = "type",required = true) Integer type,
+							  @RequestParam(value = "traningId",required = true) Integer traningId,
+							  @RequestParam(value = "haveSeeTime",required = false) String haveSeeTime){
+		UserTraning userTraning=new UserTraning();
+		userTraning.setUserId(userId);
+		userTraning.setType(type);
+		userTraning.setTraningId(traningId);
+		userTraning.setHavewatchTime(haveSeeTime);
+		userService.saveMyClass(userTraning);
+		return new Message(MessageCode.MSG_SUCCESS);
+	}
+
 	/**
 	 * 获取当前路径下的系统环境
 	 * @return

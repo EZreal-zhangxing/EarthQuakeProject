@@ -175,9 +175,10 @@ public class NewsController extends BaseController {
      * @param id
      * @return
      */
-    @ApiOperation(value = "获取文章信息以及评论信息",response = News.class,httpMethod = "GET")
+
+    @ApiOperation(value = "通过新闻ID 获取详细信息" ,response = News.class,httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "新闻ID", dataType = "Integer")
+            @ApiImplicitParam(name = "id", value = "新闻ID",dataType = "int")
     })
     @RequestMapping("/getNewsByid/{id}")
     public News getNewsByid(@PathVariable(value = "id") Integer id){
@@ -230,7 +231,12 @@ public class NewsController extends BaseController {
         return newsService.getListOfNewsCommon(articalId);
     }
 
+
     //通过流读取文件
+    @ApiOperation(value = "通过流读取文件",httpMethod = "GET",notes = "返回文件流")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "filepath", value = "文件物理路径", dataType = "Strig")
+    })
     @RequestMapping("/readpicFile")
     public void readpicFile(HttpServletResponse response,@RequestParam(value = "filepath")  String filepath) throws IOException
     {

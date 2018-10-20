@@ -12,8 +12,8 @@ import java.util.List;
 public class PartFileService {
 	@Autowired
 	private PartFileMapper fileMapper;
-	public Integer getCountFilelist(){
-		return fileMapper.getCountofFIle();
+	public Integer getCountFilelist(PartFile filename){
+		return fileMapper.getCountofFIle(filename);
 	}
 
 	public List<PartFile> getFilelist(Pageinfo pageinfo){
@@ -31,5 +31,9 @@ public class PartFileService {
 
 	public void deletefileByid(Integer id){
 		fileMapper.deleteFileById(id);
+	}
+
+	public void updateFile(PartFile partFile) {
+		fileMapper.updateFileByid(partFile);
 	}
 }
