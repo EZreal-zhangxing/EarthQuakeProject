@@ -406,7 +406,7 @@ public class UserController extends BaseController{
 
 	@ApiOperation(value = "获取用户信息",response = User.class,httpMethod = "GET")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int")
+			@ApiImplicitParam(name = "id",required = true, value = "用户ID",dataType = "int")
 	})
 	@RequestMapping("/getUserInfoByid/{id}")
 	public User getUserInfoByid(@PathVariable(value = "id") Integer id){
@@ -469,6 +469,10 @@ public class UserController extends BaseController{
 	 * @return
 	 */
 	public String getCode(){
-		return (int) (Math.random()*10000%10000)+"";
+		StringBuffer stringBuffer=new StringBuffer();
+		for(int i=0;i<4;i++){
+			stringBuffer.append((int)(Math.random()*1000%10));
+		}
+		return stringBuffer.toString();
 	}
 }
