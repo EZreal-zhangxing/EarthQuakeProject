@@ -3,6 +3,7 @@ package com.zx.Dao;
 import com.zx.Pojo.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public interface TraningMapper {
@@ -12,6 +13,8 @@ public interface TraningMapper {
     List<OnlineTraning> getListOfTraning(Pageinfo pageinfo);
 
     Integer addTraningInfo(OnlineTraning onlineTraning);
+
+    Integer updateTraningInfo(OnlineTraning onlineTraning);
 
     List<OnlineTraning> getListofinfoBytype(Pageinfo pageinfo);
 
@@ -43,5 +46,32 @@ public interface TraningMapper {
 
     List<Answer> getAnswerbyQid(String questionId);
 
+    List<String> getAnswerIdByQid(String questionId);
+
     void addReadNumbyTraningId(Integer id);
+
+    void delExamationByid(String examId);
+
+    void delQuestionById(String examId);
+
+    void delQuetionByQid(String examId);
+
+    void BatchdelAnswerById(LinkedList linkedList);
+
+    void delTraningQuestionByid(String id);
+
+    void delTraningAnswerByid(String id);
+
+    void deleteOnlineTraningByid(Integer id);
+
+    void delTraningQuestionBytraningId(Integer id);
+
+    void updateFavorite(Integer id);
+
+    void updateUnFavorite(Integer id);
+
+    Integer getFavoriteTraningCount();
+
+    List<OnlineTraning> getFavoriteTraningList(Pageinfo pageinfo);
+
 }

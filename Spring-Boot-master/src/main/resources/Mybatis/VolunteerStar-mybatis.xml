@@ -98,15 +98,15 @@
     </select>
 
     <update id="updateAddViewNumByid" parameterType="int">
-        update volunteer_star set view_num+=1 where id=#{articalId}
+        update volunteer_star set view_num=view_num+1 where id=#{articalId}
     </update>
     <update id="updateReduceViewNumByid" parameterType="int">
-        update volunteer_star set view_num-=1 where id=#{articalId}
+        update volunteer_star set view_num=view_num-1 where id=#{articalId}
     </update>
     <update id="updateAddCommonNumByid" parameterType="int">
-        update volunteer_star set common_num+=1 where id=#{articalId}
+        update volunteer_star set common_num=common_num+1 where id=#{articalId}
     </update>
     <update id="updateReduceCommonNumByid" parameterType="int">
-        update volunteer_star set common_num-=1 where id=#{articalId}
+        update volunteer_star set common_num=common_num-1 where id=#{articalId}
     </update>
 </mapper>

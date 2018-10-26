@@ -1,10 +1,14 @@
 package com.zx.Controller;
 
+import com.github.pagehelper.Page;
 import com.zx.Pojo.*;
 import com.zx.Service.NewsService;
+import com.zx.Service.PreviewClassService;
 import com.zx.Util.EncoderHandler;
 import io.swagger.annotations.*;
 import io.swagger.models.HttpMethod;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Api(tags = "志愿新闻模块")
@@ -24,6 +29,9 @@ import java.util.List;
 public class NewsController extends BaseController {
     @Autowired
     private NewsService newsService;
+
+    @Autowired
+    private PreviewClassService previewClassService;
 
     @Autowired
     private EncoderHandler encoderHandler;
@@ -231,11 +239,59 @@ public class NewsController extends BaseController {
         return newsService.getListOfNewsCommon(articalId);
     }
 
+    /**
+     * 增加推荐课程
+     * @param request
+     * @param response
+     */
+    @RequestMapping("/addPreviewClass")
+    public void addPreviewClass(HttpServletRequest request,HttpServletResponse response){
+        String previewClassStr=request.getParameter("jsonstr");
+        JSONArray jsonArray =JSONArray.fromObject(previewClassStr);
+        LinkedList<PreviewClass> linkedList=new LinkedList<PreviewClass>();
+        for(int i=0;i<jsonArray.size();i++){
+            PreviewClass previewClass =new PreviewClass();
+            JSONObject jsonObject=jsonArray.getJSONObject(i);
+            previewClass.setClassName(jsonObject.optString("title"));
+            previewClass.setAddress(jsonObject.optString("address"));
+            previewClass.setStartDate(jsonObject.optString("startDate"));
+            linkedList.add(previewClass);
+        }
+        previewClassService.BatchInsertPreviewClass(linkedList);
+
+        try {
+            jumpPage(response,1,"editPreviewClass.html");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ApiOperation(value = "查询课程推荐列表信息",httpMethod = "GET",response = Pageinfo.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageSize", value = "页面条数",defaultValue = "10", dataType = "int"),
+            @ApiImplicitParam(name = "page", value = "标题",defaultValue = "1", dataType = "string")
+    })
+    @RequestMapping("/getPrevieClassList")
+    public Pageinfo getPrevieClassList(@RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
+                                       @RequestParam(value="page",defaultValue="1") String page){
+        Integer num=previewClassService.getNumofClass();
+        Pageinfo pageinfo=initpage(num,page,pageSize);
+        List<PreviewClass> list = previewClassService.getListofClass(pageinfo);
+        pageinfo.setResult(list);
+        return pageinfo;
+    }
+
+    @RequestMapping("/delPreviewClass/{id}")
+    public Message delPreviewClass(@PathVariable(value = "id") Integer id){
+        previewClassService.delPreviewClass(id);
+        return new Message(MessageCode.MSG_SUCCESS);
+    }
+
 
     //通过流读取文件
     @ApiOperation(value = "通过流读取文件",httpMethod = "GET",notes = "返回文件流")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "filepath", value = "文件物理路径", dataType = "Strig")
+            @ApiImplicitParam(name = "filepath", value = "文件物理路径", dataType = "String")
     })
     @RequestMapping("/readpicFile")
     public void readpicFile(HttpServletResponse response,@RequestParam(value = "filepath")  String filepath) throws IOException

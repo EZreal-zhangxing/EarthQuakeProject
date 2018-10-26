@@ -23,7 +23,9 @@ public class VolunteerProject {
 
     private String createDate;
     private String endDate;
-    private Integer signNum;
+    private Integer signNum; //报名人数
+    private Long leftTime; //剩余天数
+
 
     private String createMan; //项目发起人
     private String projectMan; //项目联系人
@@ -33,6 +35,14 @@ public class VolunteerProject {
 
     //岗位列表
     private List<Station> stations;
+
+    public Long getLeftTime() {
+        return leftTime;
+    }
+
+    public void setLeftTime(Long leftTime) {
+        this.leftTime = leftTime;
+    }
 
     public Integer getId() {
         return id;

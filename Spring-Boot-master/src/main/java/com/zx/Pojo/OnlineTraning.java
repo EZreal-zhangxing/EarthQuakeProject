@@ -24,9 +24,19 @@ public class OnlineTraning implements Serializable {
     private Integer readNum;
     private Integer collectionNum;
 
+    private Integer isFavorite;
+
     private String createDate;
 
     private List<TraningQuestion> questionList;
+
+    public Integer getIsFavorite() {
+        return isFavorite;
+    }
+
+    public void setIsFavorite(Integer isFavorite) {
+        this.isFavorite = isFavorite;
+    }
 
     public List<TraningQuestion> getQuestionList() {
         return questionList;

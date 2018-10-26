@@ -1,6 +1,5 @@
 package com.zx.Dao;
 
-import java.util.HashMap;
 import java.util.List;
 
 import com.zx.Pojo.*;
@@ -24,13 +23,13 @@ public interface UserMapper{
 
 	Integer addUserAccount(User user);
 
-	User getUserInfoByTelOrEmail(User user);
+	User getUserInfoByTel(User user);
 
 	Integer updateUserCodeByUserid(User user);
 
 	User checkCode(User user);
 
-	void changeUserStatue(Integer userId);
+	void changeUserStatue(User user);
 
 	Integer changePassword(User user);
 
@@ -83,4 +82,12 @@ public interface UserMapper{
 	List<UserTraning> getMyClass(Pageinfo pageinfo);
 
 	void addMyclass(UserTraning userTraning);
+
+	Integer getServiceHoursByprojectSignId(Integer id);
+
+	User getUserInfobyid(Integer id);
+
+	void updateUserInfo(User user);
+
+	Integer insertUserVolunteerInfo(UserVolunteer userVolunteer);
 }

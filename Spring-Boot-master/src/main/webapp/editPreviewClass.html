@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>推荐课程配置</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="opensource rich wysiwyg text editor jquery bootstrap execCommand html5" />
+    <meta name="description" content="This tiny jQuery Bootstrap WYSIWYG plugin turns any DIV into a HTML5 rich text editor" />
+    <link rel="icon" href="bootstrap-3.3.5/fonts/favicon.ico"/>
+    <link href="bootstrap-3.3.5/external/google-code-prettify/prettify.css" rel="stylesheet"/>
+    <link href="css/bootstrap-combined.no-icons.min.css" rel="stylesheet"/>
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet"/>
+	<link href="css/font-awesome.css" rel="stylesheet"/>
+	<script src="bootstrap-3.3.5/js/tests/vendor/jquery.min.js"></script>
+	<script src="bootstrap-3.3.5/external/jquery.hotkeys.js"></script>
+    <script src="bootstrap-3.3.5/dist/js/bootstrap.min.js"></script>
+    <script src="bootstrap-3.3.5/external/google-code-prettify/prettify.js"></script>
+	<link href="bootstrap-3.3.5/index.css" rel="stylesheet"/>
+    <script src="bootstrap-3.3.5/js/bootstrap-wysiwyg.js"></script>
+	
+	<link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/docs.css" rel="stylesheet">
+    <link href="css/prettify.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/bootstrap-select.css">
+	<link href="css/datetimepicker.css" rel="stylesheet">
+	<script src="js/bootstrap-datetimepicker.min.js"></script>
+  </head>
+<body>
+<div class="container">
+  <div class="hero-unit">
+  <div class="pull-right">
+	<div class="fb-like" data-href="http://facebook.com/mindmupapp" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div><br/>
+  </div>
+	<h1>推荐课程配置 <br/></h1>
+	<hr/>
+	<form id="editForm" action="/news/addPreviewClass" method="post" enctype="multipart/form-data">
+	<input id="questionjson" type="text" name="jsonstr" placeholder="课程JSON" autocomplete="off" readonly/>
+	<div class="bs-docs-example">
+		<button class="btn btn-primary" type="button" id="addQuestion">新增课程</button>
+		<div  id="questionArea">
+            
+		</div>
+	</div>
+	</form>
+  	<button class="btn btn-primary btn-lg" id="clearbutton" style="float: right;margin-top: 10px; width: 80px;">
+    		Clear
+  	</button>
+  	<button class="btn btn-primary btn-lg" id="submitbutton" style="float: right;margin-top: 10px;margin-right: 20px;width: 80px;">
+    		Add
+  	</button>
+	<!--
+	<button class="btn btn-primary btn-lg" id="addCommonTest" value="添加评论测试按钮">添加评论测试按钮</button>
+	-->
+  </div>
+</div>
+ <!--消息model-->
+	<div id="messageModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel"></h3>
+	  </div>
+	  <div class="modal-body">
+		<p><h4 align="center" id="myModalContent"></h4></p>
+	  </div>
+	  <div class="modal-footer" id="message_buttons">
+		<button id="message_button_no" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">关闭</button>
+	  </div>
+	</div>
+<script type="text/javascript">
+	var num=1;
+	function getquestionNode(num){
+        var questionnode='<div class="well" id="question" name="question">\n' +
+            '\t\t\t\t<div class="form-inline">\n' +
+            '\t\t\t\t\t<!--<h id="seqNo">1</h>:-->\n' +
+            '\t\t\t\t\t<input type="text" class="input-big" placeholder="标题" id="title'+num+'" name="title'+num+'" />\n' +
+            '\t\t\t\t\t<input type="text" class="input-big" placeholder="地址" id="address'+num+'"  name="address'+num+'" />\n' +
+			'\t\t\t\t\t<div class="control-group"><label class="control-label" for="serviceType">开始时间</label><div class="controls"><div class="input-append date form_datetime"><input id="startDate'+num+'" name="startDate'+num+'" size="16" type="text" value="" placeholder="开始时间" readonly><span class="add-on"><i class="icon-th"></i></span></div></div></div>' +
+            '\t\t\t\t\t<button class="btn btn-danger" type="button" id="delQuestion" onclick="deleteQuestionode(this)">删除课程</button>\n' +
+            '\t\t\t\t\t<!--<button class="btn btn-info" type="button" id="addSelect" onclick="">增加选项信息</button>-->\n' +
+            '\t\t\t\t</div>\n' +
+            '\t\t\t</div>';
+        return questionnode;
+	}
+	$("#addQuestion").click(function(){
+	    var questionStr=$("#question").html();
+	    $("#questionArea").append(getquestionNode(num));
+		initCilcidate();
+	    num++;
+	});
+
+	function deleteQuestionode(node){
+        node.parentElement.parentElement.remove();
+	};
+
+	//提交题目
+	$("#submitbutton").click(function(){
+	    var qnum=$("[name=question]").length;
+        var nodeStr=[];
+		for(var i=1;i<=qnum;i++){
+		    var questionnode={};
+		    var title=$("#title"+i).val();
+            questionnode.title=title;
+		    var address=$("#address"+i).val();
+            questionnode.address=address;
+			var startDate=$("#startDate"+i).val();
+            questionnode.startDate=startDate;
+            nodeStr.push(questionnode);
+		}
+		$("#questionjson").val(JSON.stringify(nodeStr));
+		$("#editForm").submit();
+    });
+	/*
+	$("#addCommonTest").click(function(){
+		var json={
+					'userId':'1',
+					'articalId':'1',
+					'userName':'zx',
+					'content':'this is test content!'
+				};
+		$.ajax({
+			url:'/volunteerStar/addStarCommon',
+			type:'POST',
+			async:'false',
+			data:JSON.stringify(json),
+			contentType:'application/json;charset=utf-8',
+			success:function(data){
+				alert(data)
+			}
+		});
+	});*/
+</script>
+<script>
+  $(function(){
+    function initToolbarBootstrapBindings() {
+      var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier', 
+            'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+            'Times New Roman', 'Verdana'],
+            fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+      $.each(fonts, function (idx, fontName) {
+          fontTarget.append($('<li><a data-edit="fontName ' + fontName +'" style="font-family:\''+ fontName +'\'">'+fontName + '</a></li>'));
+      });
+      $('a[title]').tooltip({container:'body'});
+    	$('.dropdown-menu input').click(function() {return false;})
+		    .change(function () {$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');})
+        .keydown('esc', function () {this.value='';$(this).change();});
+
+      $('[data-role=magic-overlay]').each(function () { 
+        var overlay = $(this), target = $(overlay.data('target')); 
+        overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+      });
+      if ("onwebkitspeechchange"  in document.createElement("input")) {
+        var editorOffset = $('#editor').offset();
+        $('#voiceBtn').css('position','absolute').offset({top: editorOffset.top, left: editorOffset.left+$('#editor').innerWidth()-35});
+      } else {
+        $('#voiceBtn').hide();
+      }
+	};
+	function showErrorAlert (reason, detail) {
+		var msg='';
+		if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+		else {
+			console.log("error uploading file", reason, detail);
+		}
+		$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
+		 '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+	};
+    initToolbarBootstrapBindings();  
+	$('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
+    window.prettyPrint && prettyPrint();
+  });
+</script>
+<a href="javascript:window.history.go(-1)"><img style="position: absolute; top: 0; right: 0; border: 0;" src="img/forkme_right_gray_6d6d6d.png" alt="返回"></a>
+<div id="fb-root"></div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','js/analytics.js','ga');
+  ga('create', 'UA-37452180-6', 'github.io');
+  ga('send', 'pageview');
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "";
+  fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+ </script>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+ 	$('input[id=imagefile]').change(function() {
+		$('#imagephotoCover').val($(this).val());
+	});
+	$('input[id=videofile]').change(function() {
+		$('#videophotoCover').val($(this).val());
+	});
+	$('input[id=classfile]').change(function() {
+		$('#classphotoCover').val($(this).val());
+	});
+	$('input[id=teacherfile]').change(function() {
+		$('#teacherphotoCover').val($(this).val());
+	});
+ 	
+ </script>
+ <script type="text/javascript">
+	$(".form_datetime").datetimepicker({
+		format: "yyyy-mm-dd hh:ii:ss"
+	});
+	function initCilcidate(){
+		$(".form_datetime").datetimepicker({
+			format: "yyyy-mm-dd hh:ii:ss"
+		});
+	}
+</script>
+</html>

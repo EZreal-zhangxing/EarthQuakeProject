@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>新闻资讯</title>
+    <title>用户证书信息</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="介绍如何搭建Bootstrap里面HTML基本元素，并利用可扩展的class增强其展示效果。">
@@ -27,7 +27,7 @@
                                    <link rel="shortcut icon" href="img/favicon.png">
 
   </head>
-  <body data-spy="scroll" data-target=".bs-docs-sidebar" onload="getModel()">
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" onload="loadArticel(1)">
 
     <!-- Navbar
     ================================================== -->
@@ -52,8 +52,8 @@
 ================================================== -->
 <header class="jumbotron subhead" id="overview">
   <div class="container">
-    <h1>新闻资讯</h1>
-    <p class="lead">新闻质询管理。</p>
+    <h1>用户证书信息</h1>
+    <p class="lead">用户证书信息。</p>
   </div>
 </header>
 
@@ -67,14 +67,12 @@
         ================================================== -->
         <section id="price">
           <div class="page-header">
-            <h1>文章信息维护</h1>
+            <h1>用户证书信息</h1>
           </div>
 		  <div class="bs-docs-example">
 		  	<form id="queryPrice" class="form-inline" align="center" action="" method="post">
-			  	<input type="text" id="articelName" name="articelName" placeholder="文章名" autocomplete="off" value="">
-				<select class="span2" id="model">
-					<option id="default" value="" selected>请选择所属模块：</option>
-				</select>
+			  	<input type="text" id="username" name="username" placeholder="姓名" autocomplete="off" value="">
+				<input type="text" id="certificateno" name="certificateno" placeholder="证书编号" autocomplete="off" value="">
 				<button id="queryPrice_btn" class="btn btn-primary" type="button" onclick="loadArticel(1)"><i class="icon-search icon-white"></i> 查询</button>&nbsp;
 				<button id="queryPrice_reset" class="btn btn-warning" type="button" onclick="reset()"><i class="icon-repeat icon-white"></i> 重置</button>
 			</form>
@@ -85,9 +83,9 @@
               <thead>
                 <tr>
                   <th width="2px">#</th>
-				  <th width="60px">文章标题</th>
-                  <th width="60px">文章模块</th>
-                  <th width="145px">展示图片</th>
+				  <th width="60px">用户名</th>
+                  <th width="60px">证书号</th>
+                  <th width="145px">文件路径</th>
                   <th width="30px">发布时间</th>
 				  <th width="60px">操作</th>
                 </tr>
@@ -174,39 +172,15 @@
     <script type="text/javascript">
 	    function reset()
 	    {
-			$('#articelName').attr("value","");
+			$('#username').attr("value","");
+			$('#certificateno').attr("value","");
 	    }
-    	function getModel()
-	 	{
-	 		var optionStr=$('#model').html();
-	 		$.ajax({
-	 			url:'/news/getArtModel/1',
-	 			type:'post',
-	 			async:'false',
-	 			success:function(data)
-	 			{
-	 				var model=eval(data);
-	 				for(var i=0;i<model.length;i++)
-	 				{
-	 					var modelName=model[i].modelName;
-	 					var modelId=model[i].id;
-	 					optionStr+="<option name='model' value='"+modelId+"'>"+modelName+"</option>";
-	 				}
-	 				$('#model').html(optionStr);
-					loadArticel(1);
-	 			}
-	 		});
-	 	}
+
 		function loadArticel(page)
 		{
-
-			var modelId=$('#model option:selected').val();
-			// if(modelId == '')
-			// {
-			// 	modelId=8;//热点新闻模块
-			// }
-			var articelName=$('#articelName').val();
-			var url="/news/getNewsInfo?title="+articelName+"&newsType="+modelId+"&page="+page;
+			var username=$('#username').val();
+			var certificateno=$('#certificateno').val();
+			var url="/certificate/getUserCertificateList?username="+username+"&certificateno="+certificateno+"&page="+page;
 			var tdstr="";
 			var pagestr="";
 			$.ajax({
@@ -222,39 +196,11 @@
 					{
 						tdstr+="<tr class='' id=''>";
 						tdstr+="<td id='articelId' style='word-wrap:break-word;'>"+artlist[i].id+"</td>";
-                        tdstr+="<td id='articelTitle' style='word-wrap:break-word;'><a href='common.html?id="+artlist[i].id+"&ajaxUrl=/news/getListofNewsCommons' target='_blank' data-toggle='tooltip' title='点击此处查看评论信息！' data-placement='top'>"+artlist[i].title+"</a></td>";
-                        if(parseInt(artlist[i].newsType) == 8){
-                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>热点新闻</td>";
-                        }else if(parseInt(artlist[i].newsType) == 9){
-                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>志联动态</td>";
-                        }else if(parseInt(artlist[i].newsType) == 10){
-                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>志愿快讯</td>";
-                        }else if(parseInt(artlist[i].newsType) == 11){
-                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>媒体报道</td>";
-                        }else if(parseInt(artlist[i].newsType) == 21){
-                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>首页Banner_1</td>";
-                        }else if(parseInt(artlist[i].newsType) == 24){
-                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>首页Banner_2</td>";
-                        }else if(parseInt(artlist[i].newsType) == 25){
-                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>专家团队</td>";
-                        }else if(parseInt(artlist[i].newsType) == 26){
-                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>科普园地</td>";
-                        }else if(parseInt(artlist[i].newsType) == 27){
-                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>首页新闻资讯</td>";
-                        }else if(parseInt(artlist[i].newsType) == 29){
-                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>大讲堂</td>";
-                        }else{
-                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>不匹配模块</td>";
-                        }
-						//tdstr+="<td id='articelModel' style='word-wrap:break-word;'>"+artlist[i].newsType+"</td>";
-						if(artlist[i].imageUrl == null){
-							tdstr+="<td id='articelPic' style='word-wrap:break-word;'>无</td>";
-						}else
-						{
-							tdstr+="<td id='articelPic' style='word-wrap:break-word;'>"+artlist[i].imageUrl+"</td>";
-						}
+                        tdstr+="<td id='username' style='word-wrap:break-word;'>"+artlist[i].userName+"</td>";
+						tdstr+="<td id='userIdentify' style='word-wrap:break-word;'>"+artlist[i].userIdentify+"</td>";
+						tdstr+="<td id='userIdentify' style='word-wrap:break-word;'><img src='/news/readpicFile?filepath="+artlist[i].filePath+"'></td>";
                         tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
-						tdstr+="<td id='operation' style='word-wrap:break-word;'><a id='updatebtn' class='btn btn-primary' href='/editnews.html?id="+artlist[i].id+"' target='_blank' type='button' '><i class='icon-edit icon-white'></i>修改</a>&nbsp;<button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
+						tdstr+="<td id='operation' style='word-wrap:break-word;'><button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
 						tdstr+="</tr>";
 					}
 					var pagelist=pageinfo.pageStr;
@@ -305,7 +251,7 @@
 		}
 		$('#modal_deleteAr').click(function (){
 			var id=$('#deleteModal #artId').val();
-			var	posturl="/news/deleteNews/"+id;
+			var	posturl="/certificate/delUserCertificate/"+id;
 			$.ajax({
 	 			url:posturl,
 	 			type:'post',

@@ -72,6 +72,27 @@ public class OnlineTraningController extends BaseController {
     }
 
     /**
+     * 推荐
+     * @param id
+     * @return
+     */
+    @RequestMapping("/favoriteTraning/{id}")
+    public Message favoriteTraning(@PathVariable(value = "id") Integer id){
+        traningService.updateFavorite(id);
+        return new Message(MessageCode.MSG_SUCCESS);
+    }
+
+    /**
+     * 取消推荐
+     * @param id
+     * @return
+     */
+    @RequestMapping("/UnfavoriteTraning/{id}")
+    public Message UnfavoriteTraning(@PathVariable(value = "id") Integer id){
+        traningService.updateUnFavorite(id);
+        return new Message(MessageCode.MSG_SUCCESS);
+    }
+    /**
      * 添加课程信息
      * @param request
      * @param response
@@ -87,6 +108,8 @@ public class OnlineTraningController extends BaseController {
                                 @RequestParam(value = "videofilepath") MultipartFile videofilepath,
                                 @RequestParam(value = "classfilepath") MultipartFile classfilepath,
                                 @RequestParam(value = "teacherfilepath") MultipartFile teacherfilepath){
+        String traningId=request.getParameter("traningId");
+
         String title=request.getParameter("title");
         String type=request.getParameter("model");
         String outUrl=request.getParameter("outUrl");
@@ -96,6 +119,7 @@ public class OnlineTraningController extends BaseController {
         String teacherDesc=request.getParameter("teacherDesc");
 
         OnlineTraning onlineTraning=new OnlineTraning();
+
         onlineTraning.setTitle(title);
         onlineTraning.setType(Integer.parseInt(type));
         onlineTraning.setOutUrl(outUrl);
@@ -103,6 +127,12 @@ public class OnlineTraningController extends BaseController {
         onlineTraning.setOutline(outline);
         onlineTraning.setClassfileDesc(classfile);
         onlineTraning.setTeacherDesc(teacherDesc);
+        OnlineTraning oldonlineTraning=null;
+        if(StringUtils.isNotBlank(traningId)){
+            onlineTraning.setId(Integer.parseInt(traningId));
+            //获取原始文件信息
+            oldonlineTraning = traningService.getOnlineTraningByid(onlineTraning.getId());
+        }
 
         //封面图片处理
         String imagefileName=imagefilepath.getOriginalFilename();
@@ -112,8 +142,15 @@ public class OnlineTraningController extends BaseController {
             try {
                 saveFile(file,imagefilepath.getInputStream(),getfilepath());
                 onlineTraning.setImageUrl(md5Filepath);
+                if(oldonlineTraning!=null){
+                    delFileByfilePath(oldonlineTraning.getImageUrl());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }else{
+            if(oldonlineTraning!=null){
+                onlineTraning.setImageUrl(oldonlineTraning.getImageUrl());
             }
         }
         //视频文件处理
@@ -124,8 +161,16 @@ public class OnlineTraningController extends BaseController {
             try {
                 saveFile(file,videofilepath.getInputStream(),getfilepath());
                 onlineTraning.setVideoUrl(md5Filepath);
+
+                if(oldonlineTraning!=null){
+                    delFileByfilePath(oldonlineTraning.getVideoUrl());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }else{
+            if(oldonlineTraning!=null) {
+                oldonlineTraning.setVideoUrl(oldonlineTraning.getVideoUrl());
             }
         }
         //课堂资料信息处理
@@ -136,8 +181,16 @@ public class OnlineTraningController extends BaseController {
             try {
                 saveFile(file,classfilepath.getInputStream(),getfilepath());
                 onlineTraning.setClassfile(md5Filepath);
+
+                if(oldonlineTraning!=null){
+                    delFileByfilePath(oldonlineTraning.getClassfile());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }else{
+            if(oldonlineTraning!=null) {
+                onlineTraning.setClassfile(oldonlineTraning.getClassfile());
             }
         }
         //讲师视频介绍
@@ -148,18 +201,55 @@ public class OnlineTraningController extends BaseController {
             try {
                 saveFile(file,teacherfilepath.getInputStream(),getfilepath());
                 onlineTraning.setTeacherDescVideo(md5Filepath);
+
+                if(oldonlineTraning!=null){
+                    delFileByfilePath(oldonlineTraning.getTeacherDescVideo());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else{
+            if(oldonlineTraning!=null) {
+                onlineTraning.setTeacherDescVideo(oldonlineTraning.getTeacherDescVideo());
+            }
         }
-        Integer result=traningService.saveOnlineTraning(onlineTraning);
+        Integer result=0;
+        if(StringUtils.isBlank(traningId)){
+            //insert
+            result=traningService.saveOnlineTraning(onlineTraning);
+        }else{
+            //update
+            result=traningService.updateTraningInfo(onlineTraning);
+        }
         try {
-            jumpPage(response,result,"editzxpx.html");
+            if(StringUtils.isBlank(traningId)){
+                jumpPage(response,result,"editzxpx.html");
+            }else{
+                jumpPage(response,result,"editzxpx.html?id="+traningId);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    @RequestMapping("/deleteOnlineTraningInfo/{id}")
+    public Message deleteOnlineTraningInfo(@PathVariable(value = "id") Integer id){
+        OnlineTraning onlineTraning = traningService.getTraningByid(id);
+        if(StringUtils.isNotBlank(onlineTraning.getImageUrl())){
+            delFileByfilePath(onlineTraning.getImageUrl());
+        }
+        if(StringUtils.isNotBlank(onlineTraning.getClassfile())){
+            delFileByfilePath(onlineTraning.getClassfile());
+        }
+        if(StringUtils.isNotBlank(onlineTraning.getTeacherDescVideo())){
+            delFileByfilePath(onlineTraning.getTeacherDescVideo());
+        }
+        if(StringUtils.isNotBlank(onlineTraning.getVideoUrl())){
+            delFileByfilePath(onlineTraning.getVideoUrl());
+        }
+        traningService.deleteOnlineTraningByid(id);
+        return new Message(MessageCode.MSG_SUCCESS);
+    }
     /**
      * 更具type查询各个模块 视频信息
      * @param type
@@ -187,18 +277,42 @@ public class OnlineTraningController extends BaseController {
         return pageinfo;
     }
 
+    @ApiOperation(value = "获取推荐课程" ,response = Pageinfo.class,httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageSize", value = "页面条数",defaultValue = "10", dataType = "int"),
+            @ApiImplicitParam(name = "page", value = "标题",defaultValue = "1", dataType = "string")
+    })
+    @RequestMapping("/getFavoriteTraning")
+    public Pageinfo getFavoriteTraning(@RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
+                                       @RequestParam(value = "page",defaultValue = "1") String page){
+        Integer num=traningService.getCountFt();
+        Pageinfo pageinfo = initpage(num,page,pageSize);
+        List<OnlineTraning> list = traningService.getListFt(pageinfo);
+        pageinfo.setResult(list);
+        return pageinfo;
+    }
     /**
-     * 通过ID 查询时评详细信息
+     * 通过ID 查询时评详细信息 带题目信息
      * @param id
      * @return
      */
     @ApiOperation(value = "通过ID 查询时评详细信息" ,response = OnlineTraning.class,httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "文章ID",required = true,dataType = "int")
+            @ApiImplicitParam(name = "id", value = "文章ID",dataType = "int")
     })
     @RequestMapping("/getTraningInfoById/{id}")
     public OnlineTraning getTraningInfoById(@PathVariable(value = "id") Integer id){
         return traningService.getTraningByid(id);
+    }
+
+    /**
+     * 通过ID 查询时评详细信息 不带题目信息
+     * @param id
+     * @return
+     */
+    @RequestMapping("/getTraningUnQuestion/{id}")
+    public OnlineTraning getTraningUnQuestion(@PathVariable(value = "id") Integer id){
+        return traningService.getOnlineTraningByid(id);
     }
 
     /**
@@ -251,7 +365,7 @@ public class OnlineTraningController extends BaseController {
             }
         }
         try {
-            jumpPage(response,1,"adminzxpx.html");
+            jumpPage(response,1,"editzxpxQuestion.html?projectId="+articalId);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -264,7 +378,7 @@ public class OnlineTraningController extends BaseController {
      * @return
      */
     @RequestMapping("/saveQuestion")
-    public Message saveQuestion(HttpServletRequest request,HttpServletResponse response){
+    public void saveQuestion(HttpServletRequest request,HttpServletResponse response){
         String examName=request.getParameter("examName");
         String questionJson=request.getParameter("questionjson");
         String examId=UUID.randomUUID().toString().replaceAll("-","");
@@ -310,11 +424,10 @@ public class OnlineTraningController extends BaseController {
             }
         }
         try {
-            jumpPage(response,1,"exitQuestion.html");
+            jumpPage(response,1,"editQuestion.html");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     /**
@@ -384,6 +497,44 @@ public class OnlineTraningController extends BaseController {
         return traningService.getlistofQuestion(examId);
     }
 
+
+    /**
+     * 删除试卷
+     * @return
+     */
+    @RequestMapping("/delexamation/{examId}")
+    public Message delExamition(@PathVariable(value = "examId") String examId){
+        traningService.deleteExamination(examId);
+        return new Message(MessageCode.MSG_SUCCESS);
+    }
+
+    /**
+     * 删除试卷的问题
+     * @param id
+     * @return
+     */
+    @RequestMapping("/delquestion/{id}")
+    public Message delQuestion(@PathVariable(value = "id") String id){
+        traningService.deleteQuestion(id);
+        return new Message(MessageCode.MSG_SUCCESS);
+    }
+
+    /**
+     * 获取在线匹培训
+     * @param id
+     * @return
+     */
+    @RequestMapping("/getQuestionByPriticeId/{id}")
+    public List<TraningQuestion> getQuestionByPriticeId(@PathVariable(value = "id") Integer id){
+        return traningService.getlistofTraningWithAnswer(id);
+    }
+
+    @RequestMapping("/delTraningQuestion/{id}")
+    public Message delTraningQuestion(@PathVariable(value = "id") String traningQuestionId){
+        traningService.delTraningQuestions(traningQuestionId);
+        return new Message(MessageCode.MSG_SUCCESS);
+
+    }
 
     /**
      * 将文件名 转换成md5文件路径

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.Dao.PreviewClassMapper">
+    <insert id="BatchInsertPreviewClass" parameterType="linkedList">
+      insert into preview_class(class_name,address,start_date)
+      VALUES
+        <foreach collection="list" item="item" index="i" separator=",">
+            (#{item.className},#{item.address},STR_TO_DATE(#{item.startDate},"%Y-%m-%d %H:%i:%s"))
+        </foreach>
+    </insert>
+
+    <select id="getCountPreviewClass" resultType="int">
+        select count(id) as num from preview_class
+    </select>
+
+    <select id="getListofPreviewClass" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.PreviewClass">
+        select id,class_name as className,address,DATE_FORMAT(start_date,'%Y-%m-%d %H:%i:%s') as startDate,
+        DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+        from preview_class
+        ORDER by create_date DESC
+        limit #{begin},#{shownum}
+    </select>
+
+    <delete id="delPreviewClassById" parameterType="int">
+        delete from preview_class where id=#{id}
+    </delete>
+</mapper>

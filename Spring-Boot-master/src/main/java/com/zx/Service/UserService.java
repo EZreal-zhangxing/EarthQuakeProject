@@ -26,7 +26,13 @@ public class UserService {
 
 	public Integer getCountOfProject(Integer userId) { return userMapper.getCountofProjectByuserid(userId); }
 
-	public List<ProjectSign> getListOfproject(Pageinfo pageinfo){ return userMapper.getProjectListByuserId(pageinfo); }
+	public List<ProjectSign> getListOfproject(Pageinfo pageinfo){
+		List<ProjectSign> list =userMapper.getProjectListByuserId(pageinfo);
+		for(ProjectSign projectSign :list){
+			projectSign.setHours(userMapper.getServiceHoursByprojectSignId(projectSign.getId()));
+		}
+		return list;
+	}
 
 	@PostConstruct
 	public void init_method(){
@@ -46,7 +52,7 @@ public class UserService {
 		return count>0?true:false;
 	}
 
-	public User searchUserInfo(User user){ return userMapper.getUserInfoByTelOrEmail(user);}
+	public User searchUserInfo(User user){ return userMapper.getUserInfoByTel(user);}
 
 	public boolean updateUserCode(User user){
 		Integer num=userMapper.updateUserCodeByUserid(user);
@@ -57,7 +63,8 @@ public class UserService {
 		User num=userMapper.checkCode(user);
 		if(num != null){
 			//更新状态为注册成功！
-			userMapper.changeUserStatue(num.getId());
+			num.setPassword(user.getPassword());
+			userMapper.changeUserStatue(num);
 		}
 		return num;
 	}
@@ -114,5 +121,17 @@ public class UserService {
 
 	public void saveMyClass(UserTraning userTraning){
 		userMapper.addMyclass(userTraning);
+	}
+
+	public User getUserByid(Integer id){
+		return userMapper.getUserInfobyid(id);
+	}
+
+	public void updateUser(User user){
+		userMapper.updateUserInfo(user);
+	}
+
+	public Integer addUserVolunteer(UserVolunteer userVolunteer){
+		return userMapper.insertUserVolunteerInfo(userVolunteer);
 	}
 }

@@ -16,7 +16,8 @@
         ot.classfile,
         ot.read_num as readNum,
         ot.collection_num as collectionNum,
-        DATE_FORMAT(ot.create_date,'%Y-%m-%d %H:%i:%s') as createDate
+        DATE_FORMAT(ot.create_date,'%Y-%m-%d %H:%i:%s') as createDate,
+        ot.is_favorite as isFavorite
     </sql>
     <sql id="base_col_sub">
         ot.id,
@@ -33,7 +34,8 @@
         ot.classfile,
         ot.read_num as readNum,
         ot.collection_num as collectionNum,
-        DATE_FORMAT(ot.create_date,'%Y-%m-%d %H:%i:%s') as createDate
+        DATE_FORMAT(ot.create_date,'%Y-%m-%d %H:%i:%s') as createDate,
+        ot.is_favorite as isFavorite
     </sql>
     <select id="getCountOfTraning" parameterType="com.zx.Pojo.OnlineTraning" resultType="int">
         select count(id) as num
@@ -67,6 +69,12 @@
         #{description},#{outline},#{classfileDesc},#{classfile})
     </insert>
 
+    <update id="updateTraningInfo" parameterType="com.zx.Pojo.OnlineTraning">
+        update online_traning set type=#{type},out_url=#{outUrl},title=#{title},image_url=#{imageUrl},video_url=#{videoUrl},
+        teacher_desc=#{teacherDesc},teacher_desc_video=#{teacherDescVideo},description=#{description},outline=#{outline},
+        classfile_desc=#{classfileDesc},classfile=#{classfile},create_date=NOW() where id=#{id}
+    </update>
+
     <select id="getListofinfoBytype" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.OnlineTraning">
         select ot.id,
         ot.out_url as outUrl,
@@ -75,7 +83,7 @@
         ot.read_num as readNum,
         ot.collection_num as collectionNum
         from online_traning ot
-        where type=#{conditionOnlineTraning.type}
+        where ot.type=#{conditionOnlineTraning.type}
         order by ot.create_date DESC
         limit #{begin},#{shownum}
     </select>
@@ -87,7 +95,7 @@
     </select>
 
     <update id="addReadNumbyTraningId" parameterType="int">
-        update from online_traning set read_num+=1 where id=#{id}
+        update online_traning set read_num=read_num+1 where id=#{id}
     </update>
 
     <insert id="addTraningQuestion" parameterType="com.zx.Pojo.TraningQuestion">
@@ -161,4 +169,64 @@
         select select_name as selectName,select_content as selectContent
         from answer where question_id=#{questionId}
     </select>
+
+    <select id="getAnswerIdByQid" parameterType="String" resultType="String">
+        select id
+        from answer where question_id=#{questionId}
+    </select>
+    <!--通过试卷ID 删除试卷-->
+    <delete id="delExamationByid" parameterType="String">
+        delete from examination where exam_id=#{examId}
+    </delete>
+    <!--通过试卷ID 删除问题-->
+    <delete id="delQuestionById" parameterType="String">
+        delete from question where examation_id=#{examId}
+    </delete>
+    <!--通过试卷ID 删除答案-->
+    <delete id="BatchdelAnswerById" parameterType="linkedList">
+        delete from answer where id in (
+        <foreach collection="list" index="index" item="item" separator=",">
+            #{item}
+        </foreach>
+        )
+    </delete>
+
+    <delete id="delQuetionByQid" parameterType="String">
+        delete from question where id=#{id}
+    </delete>
+
+    <delete id="delTraningQuestionByid" parameterType="String">
+        delete from traning_question where id=#{id}
+    </delete>
+    <delete id="delTraningAnswerByid" parameterType="String">
+        delete from traning_answer where question_id=#{id}
+    </delete>
+
+    <delete id="delTraningQuestionBytraningId" parameterType="int">
+        delete from traning_question where traning_id=#{id}
+    </delete>
+
+    <delete id="deleteOnlineTraningByid" parameterType="int">
+        delete from online_traning where id=#{id}
+    </delete>
+
+    <update id="updateFavorite" parameterType="int">
+        update online_traning set is_favorite=1 where id=#{id}
+    </update>
+
+    <update id="updateUnFavorite" parameterType="int">
+        update online_traning set is_favorite=0 where id=#{id}
+    </update>
+
+    <!--推荐课程模块-->
+    <select id="getFavoriteTraningCount" resultType="int">
+        select count(id) from online_traning where is_favorite = 1
+    </select>
+    <select id="getFavoriteTraningList" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.OnlineTraning">
+        select <include refid="base_col"/> from online_traning ot
+        where is_favorite =1
+        order by ot.create_date DESC
+        limit #{begin},#{shownum}
+    </select>
+    <!---->
 </mapper>

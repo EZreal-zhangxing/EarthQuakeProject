@@ -4,7 +4,7 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
 <mapper namespace="com.zx.Dao.UserMapper">
 	<select id="getUserNum" resultType="int" parameterType="com.zx.Pojo.User">
-		select count(1) as num from user where id=#{id} and password=#{password}
+		select count(1) as num from user where telphone=#{telphone} and password=#{password}
 	</select>
 
 	<select id="getCountOfCommonsByUserId" parameterType="int" resultType="int">
@@ -59,32 +59,20 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		values(#{userName},#{password},#{telphone},#{userEmail},#{statue},#{code})
 	</insert>
 
-	<select id="getUserInfoByTelOrEmail" parameterType="com.zx.Pojo.User" resultType="com.zx.Pojo.User">
-		select * from user where 1=1
-		<if test="telphone != null">
-			and telphone=#{telphone}
-		</if>
-		<if test="userEmail != null">
-			and user_email=#{userEmail}
-		</if>
+	<select id="getUserInfoByTel" parameterType="com.zx.Pojo.User" resultType="com.zx.Pojo.User">
+		select * from user where 1=1 and telphone=#{telphone}
 	</select>
 
 	<update id="updateUserCodeByUserid" parameterType="com.zx.Pojo.User">
-		update user set code=#{code} where id=#{id}
+		update user set code=#{code},statue=0 where id=#{id}
 	</update>
 
 	<select id="checkCode" parameterType="com.zx.Pojo.User" resultType="com.zx.Pojo.User">
-		select * from user where 1=1 and code=#{code}
-		<if test="telphone != null">
-			and telphone=#{telphone}
-		</if>
-		<if test="userEmail != null">
-			and user_email=#{userEmail}
-		</if>
+		select * from user where 1=1 and code=#{code} and telphone=#{telphone}
 	</select>
 
-	<update id="changeUserStatue" parameterType="int">
-		update user set statue=1 where id=#{userId}
+	<update id="changeUserStatue" parameterType="com.zx.Pojo.User">
+		update user set statue=1,password=#{password} where id=#{id}
 	</update>
 
 	<update id="changePassword" parameterType="com.zx.Pojo.User">
@@ -185,7 +173,7 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getMyClass" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.UserTraning">
 		select ut.id,ut.user_id as userId,ut.traning_id as traningId,
 		ot.title as traningTitle,ot.image_url as traningimgUrl,ot.read_num as traningReadNum,
-		ot.collection_num as collectionNum,ut.havewatch_time as havewatchTime,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+		ot.collection_num as collectionNum,ut.havewatch_time as havewatchTime,DATE_FORMAT(ut.create_date,'%Y-%m-%d %H:%i:%s') as createDate
 		from user_traning ut
 		left join user u on ut.user_id=u.id
 		left join online_traning ot on ut.traning_id=ot.id
@@ -197,4 +185,45 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		values(#{userId},#{traningId},#{havewatchTime},#{type})
 	</insert>
 	<!--end-->
+
+	<select id="getServiceHoursByprojectSignId" parameterType="int" resultType="int">
+		select IFNULL(SUM(hours),0) as hours from project_sign_arrange where project_sign_id=#{id}
+	</select>
+
+	<select id="getUserInfobyid" parameterType="int" resultType="com.zx.Pojo.User">
+		select id,user_name as userName,telphone,user_email as userEmail,work_status as workStatus
+		from user where id=#{id}
+	</select>
+
+	<update id="updateUserInfo" parameterType="com.zx.Pojo.User">
+		update user
+		set user_name=#{userName}
+		<if test="telphone!= null">
+			,telphone=#{telphone}
+		</if>
+		<if test="password!= null">
+			,password=#{password}
+		</if>
+		<if test="userEmail!= null">
+			,user_email=#{userEmail}
+		</if>
+		<if test="workStatue!= null">
+			,work_statue=#{workStatue}
+		</if>
+		<if test="sex!= null">
+			,sex=#{sex}
+		</if>
+		<if test="birthday!= null">
+			,birthday=#{birthday}
+		</if>
+	</update>
+
+	<insert id="insertUserVolunteerInfo" parameterType="com.zx.Pojo.UserVolunteer">
+		INSERT INTO user_volunteer(user_id,country,true_name,credential_no,sex,birthday,policy_statue,nation,
+		native_place,telphone,live_area,address,education_background,work_statue,is_invitation,service_area,
+		service_type,volunteer_type,phone)
+		VALUES (#{userId},#{country},#{trueName},#{credentialNo},#{sex},#{birthday},#{policyStatue},#{nation},
+		#{nativePlace},#{telphone},#{liveArea},#{address},#{educationBackground},#{workStatue},#{isInvitaion},
+		#{serviceArea},#{serviceType},#{volunteerType},#{phone})
+	</insert>
 </mapper>

@@ -196,7 +196,7 @@
 						tdstr+="<td id='articelId' style='word-wrap:break-word;'>"+(i+1)+"</td>";
                         tdstr+="<td id='articelTitle' style='word-wrap:break-word;'><a href='examQuestion.html?examId="+artlist[i].examId+"' target='_blank' data-toggle='tooltip' title='点击此处查看信息！' data-placement='top'>"+artlist[i].title+"</a></td>";
                         tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
-						tdstr+="<td id='operation' style='word-wrap:break-word;'><button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].examId+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
+						tdstr+="<td id='operation' style='word-wrap:break-word;'><button id='updatebtn' class='btn btn-danger' type='button' data-id='"+artlist[i].examId+"' onclick='deleteArt(this)'><i class='icon-trash icon-white'></i>删除</button></td>";;
 						tdstr+="</tr>";
 					}
 					var pagelist=pageinfo.pageStr;
@@ -240,14 +240,14 @@
             var t = new Date(date).toLocaleString();
             return t;
         }
-		function deleteArt(id)
+		function deleteArt(thisobje)
 		{
 			$('#deleteModal').modal({backdrop: 'static', keyboard: false});
-			$('#deleteModal #artId').attr('value',id);
+			$('#deleteModal #artId').attr('value',thisobje.dataset.id);
 		}
 		$('#modal_deleteAr').click(function (){
 			var id=$('#deleteModal #artId').val();
-			var	posturl="/news/deleteNews/"+id;
+			var	posturl="/traning/delexamation/"+id;
 			$.ajax({
 	 			url:posturl,
 	 			type:'post',

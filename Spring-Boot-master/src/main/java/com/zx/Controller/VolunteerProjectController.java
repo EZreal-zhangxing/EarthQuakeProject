@@ -48,12 +48,12 @@ public class VolunteerProjectController extends BaseController {
     @ApiOperation(value = "获取志愿项目列表",response = Pageinfo.class,httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "title", value = "标题",required = false,dataType = "String"),
-            @ApiImplicitParam(name = "areaId", value = "区域ID",required = false,dataType = "Integer"),
-            @ApiImplicitParam(name = "serviceType", value = "服务类别",required = false,dataType = "Integer"),
-            @ApiImplicitParam(name = "projectStatue", value = "项目状态",required = false,dataType = "Integer"),
-            @ApiImplicitParam(name = "signArea", value = "报名范围",required = false,dataType = "Integer"),
-            @ApiImplicitParam(name = "serviceTo", value = "服务对象",required = false,dataType = "Integer"),
-            @ApiImplicitParam(name = "projectManNum", value = "人数范围",required = false,dataType = "Integer"),
+            @ApiImplicitParam(name = "areaId", value = "区域ID(见/volunteerProject/getListofArea接口)",required = false,dataType = "Integer"),
+            @ApiImplicitParam(name = "serviceType", value = "服务类别(1演练项目，2培训项目，3活动项目，4师资项目)",required = false,dataType = "Integer"),
+            @ApiImplicitParam(name = "projectStatue", value = "项目状态(1招募待启动，2招募中，3招募已结束，4已结项目)",required = false,dataType = "Integer"),
+            @ApiImplicitParam(name = "signArea", value = "报名范围(1公开招募，2仅招募实名志愿者，3指定志愿团体招募，4设定免审密码招募)",required = false,dataType = "Integer"),
+            @ApiImplicitParam(name = "serviceTo", value = "服务对象(1儿童，2青少年，3孤寡老，4残障人士，5优抚对象，6特困群体，7其他)",required = false,dataType = "Integer"),
+            @ApiImplicitParam(name = "projectManNum", value = "人数范围(1 01-100，2 101-200，3 201-500，4 501-1000 5 1000以上)",required = false,dataType = "Integer"),
             @ApiImplicitParam(name = "startDate", value = "开始时间",required = false,dataType = "String"),
             @ApiImplicitParam(name = "endDate", value = "结束时间",required = false,dataType = "String"),
             @ApiImplicitParam(name = "pageSize", value = "页面条数",defaultValue = "10", dataType = "int"),
@@ -70,7 +70,8 @@ public class VolunteerProjectController extends BaseController {
                                         @RequestParam(value="startDate",required = false) String startDate,
                                         @RequestParam(value="endDate",required = false) String endDate,
                                         @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
-                                        @RequestParam(value = "page",defaultValue = "1") String page){
+                                        @RequestParam(value = "page",defaultValue = "1") String page) throws ParseException {
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
         VolunteerProject volunteerProject=new VolunteerProject();
         volunteerProject.setTitle(title);
         volunteerProject.setAreaId(areaId);
@@ -87,6 +88,13 @@ public class VolunteerProjectController extends BaseController {
         List<VolunteerProject> list=volunteerProjectService.getListVolunteerProject(pi);
         //封装岗位信息
         for (VolunteerProject volunteerProject1:list){
+            Calendar startCal=Calendar.getInstance();
+            startCal.setTime(simpleDateFormat.parse(volunteerProject1.getCreateDate()));
+
+            Calendar endCal=Calendar.getInstance();
+            endCal.setTime(simpleDateFormat.parse(volunteerProject1.getEndDate()));
+            long datas=(endCal.getTimeInMillis()-startCal.getTimeInMillis())/(60*60*24);
+            volunteerProject1.setLeftTime(datas);
             volunteerProject1.setStations(volunteerProjectService.getStationsByprojectId(volunteerProject1.getId()));
         }
         pi.setResult(list);
@@ -201,8 +209,10 @@ public class VolunteerProjectController extends BaseController {
             //删除原来岗位重新添加
             volunteerProjectService.delProjectStations(volunteerProject.getId());
             //更新岗位
-            JSONArray jsonArray=JSONArray.fromObject(request.getParameter("stationStr"));
-            addProjectStation(jsonArray,volunteerProject.getId());
+            if(StringUtils.isNotBlank(request.getParameter("stationStr"))){
+                JSONArray jsonArray=JSONArray.fromObject(request.getParameter("stationStr"));
+                addProjectStation(jsonArray,volunteerProject.getId());
+            }
             volunteerProjectService.updateVolunteerProject(volunteerProject);
         }else{
             //新增操作 设置ID
@@ -264,11 +274,11 @@ public class VolunteerProjectController extends BaseController {
      * @param projectId 志愿项目ID
      * @return
      */
-    @ApiOperation(value = "用户报名",response = Message.class,httpMethod = "GET")
+    @ApiOperation(value = "用户报名参加项目某岗位",response = Message.class,httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID",required = true,dataType = "Integer"),
-            @ApiImplicitParam(name = "projectId", value = "项目ID",required = true,dataType = "Integer"),
-            @ApiImplicitParam(name = "stationId", value = "岗位ID",required = true,dataType = "Integer")
+            @ApiImplicitParam(name = "userId", value = "用户ID",dataType = "Integer"),
+            @ApiImplicitParam(name = "projectId", value = "项目ID",dataType = "Integer"),
+            @ApiImplicitParam(name = "stationId", value = "岗位ID",dataType = "Integer")
     })
     @RequestMapping("/signProject/{userId}/{projectId}/{stationId}")
     public Message signProject(@PathVariable(value = "userId") Integer userId, @PathVariable(value = "projectId") Integer projectId, @PathVariable(value = "stationId") Integer stationId){
@@ -289,9 +299,9 @@ public class VolunteerProjectController extends BaseController {
      */
     @ApiOperation(value = "用户取消报名",response = Message.class,httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID",required = true,dataType = "Integer"),
-            @ApiImplicitParam(name = "projectId", value = "项目ID",required = true,dataType = "Integer"),
-            @ApiImplicitParam(name = "stationId", value = "岗位ID",required = true,dataType = "Integer")
+            @ApiImplicitParam(name = "userId", value = "用户ID",dataType = "Integer"),
+            @ApiImplicitParam(name = "projectId", value = "项目ID",dataType = "Integer"),
+            @ApiImplicitParam(name = "stationId", value = "岗位ID",dataType = "Integer")
     })
     @RequestMapping("/cancelSign/{userId}/{projectId}/{stationId}")
     public Message cancelSign(@PathVariable(value = "userId") Integer userId, @PathVariable(value = "projectId") Integer projectId, @PathVariable(value = "stationId") Integer stationId){
@@ -308,9 +318,9 @@ public class VolunteerProjectController extends BaseController {
      * @param projectId
      * @return
      */
-    @ApiOperation(value = "更具项目ID 获取报名人数",response = ProjectSign.class,httpMethod = "GET")
+    @ApiOperation(value = "更具项目ID 获取报名人列表",response = ProjectSign.class,httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "projectId", value = "项目ID",required = true,dataType = "Integer")
+            @ApiImplicitParam(name = "projectId", value = "项目ID",dataType = "Integer")
     })
     @RequestMapping("/getSignListByprojectId/{projectId}")
     public List<ProjectSign> getSignListByprojectId(@PathVariable(value = "projectId") Integer projectId){
@@ -339,7 +349,7 @@ public class VolunteerProjectController extends BaseController {
      */
     @ApiOperation(value = "通过项目ID查询项目信息",response = VolunteerProject.class,httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "项目ID",required = true,dataType = "Integer")
+            @ApiImplicitParam(name = "id", value = "项目ID",dataType = "Integer")
     })
     @RequestMapping("/getProjectByid/{id}")
     public VolunteerProject getProjectByid(@PathVariable(value = "id") Integer id){
@@ -437,9 +447,9 @@ public class VolunteerProjectController extends BaseController {
      * @param userId
      * @return
      */
-    @ApiOperation(value = "获取用户排版记录",response = ProjectSignArrange.class,httpMethod = "GET")
+    @ApiOperation(value = "获取用户排班记录",response = ProjectSignArrange.class,httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID",required = true,dataType = "Integer")
+            @ApiImplicitParam(name = "userId", value = "用户ID",dataType = "Integer")
     })
     @RequestMapping("/getProjectArrangeList/{userId}")
     public List<ProjectSignArrange> getProjectArrangeList(@PathVariable(value = "userId") Integer userId){

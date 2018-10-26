@@ -91,7 +91,7 @@
     </delete>
 
     <select id="getVolunteerTeamByid" parameterType="int" resultType="com.zx.Pojo.VolunteerTeam">
-        select <include refid="base_colu"/>
+        select <include refid="base_colu"/>,
         a.area_name as areaName,
         tst.service_name as serviceName,
         tt.team_type as teamTypeName

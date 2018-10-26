@@ -27,6 +27,7 @@
 	<h1>在线培训 <br/></h1>
 	<hr/>
 	<form id="editForm" action="/traning/addClassInfo" method="post" enctype="multipart/form-data">
+	<input id="traningId" type="text" name="traningId" placeholder="培训ID" autocomplete="off"/>
 	<div class="form-horizontal">
 		<p>培训信息配置</p>
 		<div class="control-group">
@@ -346,4 +347,37 @@
 	});
  	
  </script>
+ <script type="text/javascript">
+	$(function(){
+		var onlineTringId=getQueryString("id");
+		var url="/traning/getTraningUnQuestion/"+onlineTringId;
+		//包含id信息
+		if(onlineTringId != null){
+			$("#traningId").val(onlineTringId);
+			$.ajax({
+				url:url,
+				async:false,
+				type:"POST",
+				success:function(data){
+					var online=eval(data);
+					$("#title").val(online.title);
+					$("#outUrl").val(online.outUrl);
+					$("#description").val(online.description);
+					$("#outline").val(online.outline);
+					$("#imagephotoCover").val(online.imageUrl);
+					$("#videophotoCover").val(online.videoUrl);
+					$("#classfile").val(online.classfileDesc);
+					$("#classphotoCover").val(online.classfile);
+					$("#teacherDesc").val(online.teacherDesc);
+					$("#teacherphotoCover").val(online.teacherDescVideo);
+				}
+			});
+		}
+	});
+	function getQueryString(name) { 
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+		var r = window.location.search.substr(1).match(reg); 
+		if (r != null) return unescape(r[2]); return null; 
+	} 
+</script>
 </html>

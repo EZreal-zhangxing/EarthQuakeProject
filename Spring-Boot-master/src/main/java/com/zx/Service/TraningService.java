@@ -4,9 +4,12 @@ import com.zx.Dao.TraningMapper;
 import com.zx.Pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -30,6 +33,13 @@ public class TraningService {
 		return traningMapper.getListofinfoBytype(pageinfo);
 	}
 
+	public OnlineTraning getOnlineTraningByid(Integer id){
+		return traningMapper.getTraningInfoByid(id);
+	}
+
+	public Integer updateTraningInfo(OnlineTraning onlineTraning){
+		return traningMapper.updateTraningInfo(onlineTraning);
+	}
 	/**
 	 * 获取在线培训信息
 	 * @param id
@@ -103,4 +113,87 @@ public class TraningService {
         }
 	    return list;
     }
+
+	/**
+	 * 删除试卷
+	 * @param examId
+	 */
+	@Transactional(propagation = Propagation.REQUIRED)
+    public void deleteExamination(String examId){
+		//答案列表
+		LinkedList<String> linkedList= new LinkedList<String>();
+		List<Question> list = traningMapper.getQuestionByExamId(examId);
+		for(Question question : list){
+			List<String> list1= traningMapper.getAnswerIdByQid(question.getId());
+			if(list1.size()>0){
+				linkedList.addAll(list1);
+			}
+		}
+		traningMapper.delExamationByid(examId);
+		//删除问题
+		traningMapper.delQuestionById(examId);
+		if(linkedList.size()>0){
+            traningMapper.BatchdelAnswerById(linkedList);
+        }
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void deleteQuestion(String qid){
+		//答案列表
+		LinkedList<String> linkedList= new LinkedList<String>();
+		List<String> list1= traningMapper.getAnswerIdByQid(qid);
+		if(list1.size()>0){
+			linkedList.addAll(list1);
+		}
+		traningMapper.delQuetionByQid(qid);
+		if(linkedList.size()>0){
+            traningMapper.BatchdelAnswerById(linkedList);
+        }
+	}
+
+    /**
+     * 更具ID查询对应的 问题信息
+     * @param id
+     * @return
+     */
+	public List<TraningQuestion> getlistofTraningWithAnswer(Integer id){
+	    List<TraningQuestion> list = traningMapper.getQuestioninfoByArticalId(id);
+	    for (TraningQuestion traningQuestion : list){
+            List<TraningAnswer> answerList = traningMapper.getAnswerbyQuestionId(traningQuestion);
+            traningQuestion.setAnswers(answerList);
+        }
+	    return list;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void delTraningQuestions(String id){
+	    traningMapper.delTraningQuestionByid(id);
+	    traningMapper.delTraningAnswerByid(id);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteOnlineTraningByid(Integer id){
+		List<TraningQuestion> list = traningMapper.getQuestioninfoByArticalId(id);
+		for (TraningQuestion traningQuestion : list){
+			traningMapper.delTraningAnswerByid(traningQuestion.getId());
+		}
+		traningMapper.delTraningQuestionBytraningId(id);
+		traningMapper.deleteOnlineTraningByid(id);
+	}
+
+	public void updateUnFavorite(Integer id){
+		traningMapper.updateUnFavorite(id);
+	}
+
+	public void updateFavorite(Integer id){
+		traningMapper.updateFavorite(id);
+	}
+
+	public Integer getCountFt(){
+		return traningMapper.getFavoriteTraningCount();
+	}
+
+	public List<OnlineTraning> getListFt(Pageinfo pageinfo){
+		return traningMapper.getFavoriteTraningList(pageinfo);
+	}
 }

@@ -183,7 +183,7 @@ public class VolunteerPolicyController extends BaseController {
      */
     @ApiOperation(value = "获取文章详情+评论信息",response = VolunteerPolicy.class,httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id",required = true, value = "标题",dataType = "Integer")
+            @ApiImplicitParam(name = "id", value = "文章ID",dataType = "Integer")
     })
     @RequestMapping("/getVolunteerPolicyById/{id}")
     public VolunteerPolicy getVolunteerPolicyById(@PathVariable(value = "id") Integer id){

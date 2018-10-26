@@ -143,21 +143,21 @@
     </insert>
 
     <update id="addSignNumByprojectId" parameterType="com.zx.Pojo.ProjectSign">
-        update volunteer_project set sign_num += 1 where id=#{projectId}
+        update volunteer_project set sign_num =sign_num+ 1 where id=#{projectId}
     </update>
 
     <update id="addSignNumBystationId" parameterType="com.zx.Pojo.ProjectSign">
-        update station set sign_num += 1 where id=#{stationId}
+        update station set sign_num =sign_num+ 1 where id=#{stationId}
     </update>
 
     <delete id="delProjectSign" parameterType="com.zx.Pojo.ProjectSign">
         delete from project_sign where station_id=#{stationId} and user_id=#{userId}
     </delete>
     <update id="reduceSignNumByprojectId" parameterType="com.zx.Pojo.ProjectSign">
-        update volunteer_project set sign_num -= 1 where id=#{projectId}
+        update volunteer_project set sign_num =sign_num- 1 where id=#{projectId}
     </update>
     <update id="reduceSignNumBystationId" parameterType="com.zx.Pojo.ProjectSign">
-        update station set sign_num -= 1 where id=#{stationId}
+        update station set sign_num =sign_num- 1 where id=#{stationId}
     </update>
 
     <select id="getListofSign" parameterType="int" resultType="com.zx.Pojo.ProjectSign">

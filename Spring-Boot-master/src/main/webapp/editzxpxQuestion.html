@@ -65,6 +65,26 @@
 		</div>
 	</div>
 	</form>
+	
+	 <div class="bs-docs-example">
+		<table class="table table-hover table-bordered" style="table-layout:fixed;">
+		  <thead>
+			<tr>
+			  <th width="2px">#</th>
+			  <th width="60px">题目</th>
+			  <th width="45px">答案</th>
+			  <th width="60px">选项</th>
+			  <th width="60px">选项</th>
+			  <th width="60px">选项</th>
+			  <th width="60px">选项</th>
+			  <th width="60px">操作</th>
+			</tr>
+		  </thead>
+		  <tbody id="articelBody">
+			
+		  </tbody>
+		</table>
+	</div>
   	<button class="btn btn-primary btn-lg" id="clearbutton" style="float: right;margin-top: 10px; width: 80px;">
     		Clear
   	</button>
@@ -187,6 +207,28 @@
 		$("#questionjson").val(JSON.stringify(nodeStr));
 		$("#editForm").submit();
     });
+	
+	function deleteTraningQuestion(thisObj){
+		var id=thisObj.dataset.id;
+		$.ajax({
+			url:"/traning/delTraningQuestion/"+id,
+			type:"POST",
+			async:false,
+			success:function(data){
+				var msg=eval(data);
+				if(msg.code == "success")
+				{
+					window.location.reload();
+				}else
+				{	
+					$('#deleteModal').modal('hide');
+					$('#messageModal').modal({backdrop: 'static', keyboard: false});
+					$("#messageModal #myModalLabel").html("错误！");
+					$("#messageModal #myModalContent").html(msg.message+"!");
+				}
+			}
+		});
+	}
 	/*
 	$("#addCommonTest").click(function(){
 		var json={
@@ -202,7 +244,8 @@
 			data:JSON.stringify(json),
 			contentType:'application/json;charset=utf-8',
 			success:function(data){
-				alert(data)
+				var artllist= data;
+				
 			}
 		});
 	});*/
@@ -288,8 +331,40 @@
 		var urlId=getQueryString("projectId");
 		//包含id信息
 		if(urlId != null){
+			var pagestr="";
+			var tdstr="";
 			$("#articalId").val(urlId);
-			
+			var url="/traning/getQuestionByPriticeId/"+urlId;
+			$.ajax({
+				url:url,
+				async:false,
+				type:"POST",
+				success:function(data){
+					console.log(data);
+					var artlist=data;
+					for(var i=0;i<artlist.length;i++)
+					{
+						tdstr+="<tr class='' id=''>";
+						tdstr+="<td id='articelId' style='word-wrap:break-word;' hidden>"+artlist[i].id+"</td>";
+						tdstr+="<td id='articelTitle' style='word-wrap:break-word;'>"+artlist[i].seqNo+"</td>";
+                        tdstr+="<td id='articelTitle' style='word-wrap:break-word;'>"+artlist[i].title+"</td>";
+						 tdstr+="<td id='articelTitle' style='word-wrap:break-word;'>"+artlist[i].answer+"</td>";
+						var answers=artlist[i].answers;
+						var chang=answers.length;
+						for(var j=0;j<4;j++){
+							if(j >= chang){
+								tdstr+="<td id='questionAnswer' style='word-wrap:break-word;'>选项:无 内容:无</td>";
+							}else{
+								tdstr+="<td id='questionAnswer' style='word-wrap:break-word;'>选项:"+answers[j].selectName+" 内容:"+answers[j].selectContent+"</td>";
+							}
+							
+						}
+						tdstr+="<td id='operation' style='word-wrap:break-word;'><button id='updatebtn' class='btn btn-danger' type='button' data-id='"+artlist[i].id+"' onclick='deleteTraningQuestion(this)'><i class='icon-trash icon-white'></i>删除</button></td>";;
+						tdstr+="</tr>";
+					}
+					$('#articelBody').html(tdstr);
+				}
+			});
 		}
 	});
 	function getQueryString(name) { 

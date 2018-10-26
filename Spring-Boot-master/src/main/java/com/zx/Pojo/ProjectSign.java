@@ -16,6 +16,16 @@ public class ProjectSign {
     //岗位名称信息
     private String stationName;
 
+    private Integer hours;
+
+    public Integer getHours() {
+        return hours;
+    }
+
+    public void setHours(Integer hours) {
+        this.hours = hours;
+    }
+
     public Integer getId() {
         return id;
     }

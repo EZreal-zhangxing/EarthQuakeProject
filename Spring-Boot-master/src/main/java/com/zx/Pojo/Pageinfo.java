@@ -1,6 +1,8 @@
 package com.zx.Pojo;
 
-public class Pageinfo {
+import java.io.Serializable;
+
+public class Pageinfo implements Serializable{
     private Integer firstpage;//第一页
     private Integer prev;//上一页
     private Integer next;//下一页
@@ -25,8 +27,17 @@ public class Pageinfo {
     private UserApply conditionUserApply;
     private PartFile conditionFile;
     private UserTraning conditionUserTraning;
+    private UserCertificate conditionUC;
 
     private Object result;
+
+    public UserCertificate getConditionUC() {
+        return conditionUC;
+    }
+
+    public void setConditionUC(UserCertificate conditionUC) {
+        this.conditionUC = conditionUC;
+    }
 
     public UserTraning getConditionUserTraning() {
         return conditionUserTraning;

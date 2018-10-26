@@ -1,11 +1,14 @@
 package com.zx.Controller;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.zx.Pojo.*;
+import com.zx.Util.AliyunMessageSendUtil;
 import com.zx.Util.EncoderHandler;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,8 +26,9 @@ import java.util.List;
 public class UserController extends BaseController{
 	Logger logger=Logger.getLogger(UserController.class);
 	@Autowired
-	public UserService userService;
-
+	private UserService userService;
+	@Autowired
+	private AliyunMessageSendUtil sendUtil;
 	@Autowired
 	private EncoderHandler encoderHandler;
 	@Value("${linux_icon}")
@@ -40,20 +44,20 @@ public class UserController extends BaseController{
 
 	/**
 	 * 用户登陆接口
-	 * @param userId
+	 * @param telphone
 	 * @param password
 	 * @return
 	 */
 	@ApiOperation(value = "用户登陆接口" ,response = Message.class,httpMethod = "GET")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "userId", value = "用户ID",required = true,dataType = "int"),
-			@ApiImplicitParam(name = "password", value = "用户密码",required = true,dataType = "String")
+			@ApiImplicitParam(name = "telphone", value = "用户手机号",required = true,dataType = "string"),
+			@ApiImplicitParam(name = "password", value = "用户密码",required = true,dataType = "string")
 	})
 	@RequestMapping("/login")
-	public Message Login(@RequestParam(value="userId") Integer userId,@RequestParam(value="password") String password){
+	public Message Login(@RequestParam(value="telphone") String telphone,@RequestParam(value="password") String password){
 		User user=new User();
-		user.setId(userId);
-		user.setPassword(password);
+		user.setTelphone(telphone);
+		user.setPassword(encoderHandler.encodeByMD5(password));
 		boolean result=userService.Login(user);
 		return result?new Message(MessageCode.MSG_SUCCESS):new Message(MessageCode.MSG_FAIL);
 	}
@@ -61,76 +65,64 @@ public class UserController extends BaseController{
 	/**
 	 * 发送验证码 生成账户 默认密码为123456
 	 * @param telphone
-	 * @param email
-	 * @param type 1 电话 2 邮箱
 	 * @return
 	 */
 	@ApiOperation(value = "发送验证码接口" ,response = Message.class,httpMethod = "GET")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "telphone", value = "电话号码",required = false,dataType = "String"),
-			@ApiImplicitParam(name = "email", value = "邮箱",required = false,dataType = "String"),
-			@ApiImplicitParam(name = "type", value = "类型(1 表示电话 2表示邮箱)",dataType = "int")
+			@ApiImplicitParam(name = "telphone", value = "电话号码",required = true,dataType = "string")
 	})
 	@RequestMapping("/sendRegistCode")
-	public Message regist(@RequestParam(value = "telphone",required = false) String telphone,
-						  @RequestParam(value = "email",required = false) String email,
-						  @RequestParam(value = "type") Integer type){
+	public Message regist(@RequestParam(value = "telphone",required = true) String telphone){
 		User user=new User();
 		user.setPassword(encoderHandler.encodeByMD5("123456"));
 		user.setStatue(0);//设置状态注册中
 		String code=getCode();
 		user.setCode(code);
-		if(type == 1){
-			//电话
-			user.setUserName(telphone);
-			user.setTelphone(telphone);
-			User userinfo=userService.searchUserInfo(user);
-			if(userinfo == null){
-				//保存信息
-				userService.Regist(user);
-			}else{
-				userinfo.setCode(code);
-				userService.updateUserCode(userinfo);
-			}
-			//调用发送接口
-
+		//电话
+		user.setUserName(telphone);
+		user.setTelphone(telphone);
+		User userinfo=userService.searchUserInfo(user);
+		if(userinfo == null){
+			//保存信息
+			userService.Regist(user);
 		}else{
-			//邮箱
-			user.setUserName(email);
-			user.setUserEmail(email);
-			User userinfo=userService.searchUserInfo(user);
-			if(userinfo == null){
-				//保存信息
-				userService.Regist(user);
-			}else{
-				userinfo.setCode(code);
-				userService.updateUserCode(userinfo);
-			}
-			//调用发送接口
+			userinfo.setCode(code);
+			userService.updateUserCode(userinfo);
 		}
-
+		//调用发送接口
+		SendMessage sendMessage= new SendMessage();
+		sendMessage.setCode(code);
+		sendMessage.setTelphone(telphone);
+		try {
+			sendUtil.sendMessage(sendMessage);
+		} catch (ClientException e) {
+			e.printStackTrace();
+			logger.error("验证码发送失败！",e);
+			return new Message(MessageCode.MSG_FAIL_CODE);
+		}
 		return new Message(MessageCode.MSG_SUCCESS_CODE);
 	}
 
 	/**
 	 * 验证码校验
+	 * 注册
 	 * 返回用户信息
 	 * @return
 	 */
-	@ApiOperation(value = "验证码教研",notes = "成功返回用户信息对象，失败返回消息错误对象",response = Object.class,httpMethod = "GET")
+	@ApiOperation(value = "验证码校验 注册",notes = "成功返回用户信息对象，失败返回消息错误对象",response = Object.class,httpMethod = "GET")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "telphone", value = "电话号码",required = false,dataType = "String"),
-			@ApiImplicitParam(name = "email", value = "邮箱",required = false,dataType = "String"),
-			@ApiImplicitParam(name = "code", value = "验证码",dataType = "String")
+			@ApiImplicitParam(name = "telphone", value = "电话号码",required = true,dataType = "String"),
+			@ApiImplicitParam(name = "code", value = "验证码",required = true,dataType = "String"),
+			@ApiImplicitParam(name = "password", value = "密码",required = true,dataType = "String")
 	})
 	@RequestMapping("/checkCode")
-	public Object checkCode(@RequestParam(value = "telphone",required = false) String telphone,
-							 @RequestParam(value = "email",required = false) String email,
-							 @RequestParam(value = "code") String code){
+	public Object checkCode(@RequestParam(value = "telphone",required = true) String telphone,
+							 @RequestParam(value = "password",required = true) String password,
+							 @RequestParam(value = "code",required = true) String code){
 		User user=new User();
 		user.setTelphone(telphone);
-		user.setUserEmail(email);
 		user.setCode(code);
+		user.setPassword(encoderHandler.encodeByMD5(password));
 		User res=userService.checkCode(user);
 		if(res != null){
 			//校验成功
@@ -295,7 +287,7 @@ public class UserController extends BaseController{
 
 	@ApiOperation(value = "更具用户ID (考核模块使用)获取该用户所申请的星级列表",response = UserApply.class,httpMethod = "GET")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int")
+			@ApiImplicitParam(name = "userId", value = "用户ID",dataType = "int")
 	})
 	@RequestMapping("/getListofUserApply/{userId}")
 	public List<UserApply> getListofUserApply(@PathVariable(value = "userId") Integer userId){
@@ -360,10 +352,12 @@ public class UserController extends BaseController{
 	}
 
 
-	@ApiOperation(value = "获取用户看过的视频列表",response = Pageinfo.class,httpMethod = "GET")
+	@ApiOperation(value = "获取用户看过或未完成的视频列表",response = Pageinfo.class,httpMethod = "GET")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
-			@ApiImplicitParam(name = "type", value = "0 未完成 1 已完成",dataType = "int")
+			@ApiImplicitParam(name = "type", value = "0 未完成 1 已完成",dataType = "int"),
+			@ApiImplicitParam(name = "pageSize", value = "页面条数",defaultValue = "10", dataType = "int"),
+			@ApiImplicitParam(name = "page", value = "标题",defaultValue = "1", dataType = "string")
 	})
 	@RequestMapping("/getListofMyclass")
 	public Pageinfo getListofMyclass(@RequestParam(value = "userId") Integer userId,
@@ -389,7 +383,7 @@ public class UserController extends BaseController{
 	 * @param haveSeeTime
 	 * @return
 	 */
-	@ApiOperation(value = "获取用户看过的视频列表",response = Message.class,httpMethod = "GET")
+	@ApiOperation(value = "增加用户看过或者未完成的视频信息",response = Message.class,httpMethod = "GET")
 	@ApiImplicitParams({
 					@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
 					@ApiImplicitParam(name = "type", value = "0 未完成 1 已完成",dataType = "int"),
@@ -407,6 +401,50 @@ public class UserController extends BaseController{
 		userTraning.setTraningId(traningId);
 		userTraning.setHavewatchTime(haveSeeTime);
 		userService.saveMyClass(userTraning);
+		return new Message(MessageCode.MSG_SUCCESS);
+	}
+
+	@ApiOperation(value = "获取用户信息",response = User.class,httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int")
+	})
+	@RequestMapping("/getUserInfoByid/{id}")
+	public User getUserInfoByid(@PathVariable(value = "id") Integer id){
+		return userService.getUserByid(id);
+	}
+
+
+	@ApiOperation(value = "修改用户信息",response = Message.class,httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
+			@ApiImplicitParam(name = "userName",required = false, value = "用户姓名",dataType = "int"),
+			@ApiImplicitParam(name = "sex",required = false, value = "用户性别",dataType = "int"),
+			@ApiImplicitParam(name = "birthday",required = false, value = "用户生日",dataType = "int"),
+			@ApiImplicitParam(name = "workstatus",required = false, value = "工作状态",dataType = "int"),
+			@ApiImplicitParam(name = "email",required = false, value = "邮箱",dataType = "int"),
+			@ApiImplicitParam(name = "telphone",required = false, value = "电话",dataType = "int"),
+			@ApiImplicitParam(name = "password",required = false, value = "密码",dataType = "int")
+	})
+	@RequestMapping("/updateUserInfo")
+	public Message updateUserInfo(@RequestParam(value = "userId",required = true) Integer userId,
+								  @RequestParam(value = "userName",required = false) String userName,
+								  @RequestParam(value = "sex",required = false) String sex,
+								  @RequestParam(value = "birthday",required = false) String birthday,
+								  @RequestParam(value = "workstatus",required = false) String workstatus,
+								  @RequestParam(value = "email",required = false) String email,
+								  @RequestParam(value = "telphone",required = false) String telphone,
+								  @RequestParam(value = "password",required = false) String password){
+
+		User user = new User();
+		user.setId(userId);
+		user.setUserName(userName);
+		user.setSex(sex);
+		user.setBirthday(birthday);
+		user.setWorkStatue(workstatus);
+		user.setUserEmail(email);
+		user.setTelphone(telphone);
+		user.setPassword(encoderHandler.encodeByMD5(password));
+		userService.updateUser(user);
 		return new Message(MessageCode.MSG_SUCCESS);
 	}
 

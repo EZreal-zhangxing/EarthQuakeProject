@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.Dao.UserCertificateMapper">
+    <insert id="addUserCertificate" parameterType="com.zx.Pojo.UserCertificate">
+        insert into user_certificate(user_name,user_identify,file_path)
+        values(#{userName},#{userIdentify},#{filePath})
+    </insert>
+
+    <select id="getUsercertificate" parameterType="com.zx.Pojo.UserCertificate" resultType="com.zx.Pojo.UserCertificate">
+        select id,user_name as userName,user_identify as userIdentify,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate,file_path as filePath
+        from user_certificate where user_name=#{userName} and user_identify=#{userIdentify}
+    </select>
+
+
+    <select id="getCountUserCertificate" parameterType="com.zx.Pojo.UserCertificate" resultType="int">
+        select count(id) as num
+        from user_certificate
+        where 1=1
+        <if test="userName != null and userName != ''">
+            and user_name like CONCAT("%",#{userName},"%")
+        </if>
+        <if test="userIdentify!=null and userIdentify!= ''">
+            and user_identify like CONCAT("%",#{userIdentify},"%")
+        </if>
+    </select>
+    <select id="getListUserCertificate" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.UserCertificate">
+        select id,user_name as userName,user_identify as userIdentify,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate,file_path as filePath
+        from user_certificate
+        where 1=1
+        <if test="conditionUC.userName!=null">
+            and user_name like CONCAT("%",#{conditionUC.userName},"%")
+        </if>
+        <if test="conditionUC.userIdentify!=null">
+            and user_identify like CONCAT("%",#{conditionUC.userIdentify},"%")
+        </if>
+        limit #{begin},#{shownum}
+    </select>
+
+    <delete id="delUserCertificate" parameterType="int">
+        delete from user_cerificate where id=#{id}
+    </delete>
+</mapper>

@@ -13,6 +13,35 @@ public class User {
 	private Integer statue; //0 注册中 1 注册成功 2 无效
 	private String code; //验证码
 
+	private String workStatue;
+
+	private String sex;
+	private String birthday;
+
+	public String getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getWorkStatue() {
+		return workStatue;
+	}
+
+	public void setWorkStatue(String workStatue) {
+		this.workStatue = workStatue;
+	}
+
 	public String getCode() {
 		return code;
 	}

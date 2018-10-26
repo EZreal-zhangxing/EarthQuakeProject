@@ -91,11 +91,12 @@
                   <th width="2px">#</th>
 				  <th width="60px">文章标题</th>
                   <th width="45px">文章模块</th>
-                  <th width="145px">课程介绍</th>
+                  <th width="90px">课程介绍</th>
                   <th width="30px">发布时间</th>
-				  <th width="30px">阅读数</th>
-				  <th width="30px">收藏数</th>
-				  <th width="60px">操作</th>
+				  <th width="10px">阅读数</th>
+				  <th width="10px">收藏数</th>
+				  <th width="20px">是否推荐</th>
+				  <th width="100px">操作</th>
                 </tr>
               </thead>
               <tbody id="articelBody">
@@ -109,13 +110,13 @@
 				 	</ul>
 				</div>
 				<div class="pagination" align="right">
-				<ul>
-					<li>
-						<a id="jumptopage" href="">跳转至：</a>
-						<input type="text" style="width:20px;" placeholder="" autocomplete="off" onkeyup="changeA($(this).val())">
-					</li>
-				</ul>
-			</div>
+					<ul>
+						<li>
+							<a id="jumptopage" href="">跳转至：</a>
+							<input type="text" style="width:20px;" placeholder="" autocomplete="off" onkeyup="changeA($(this).val())">
+						</li>
+					</ul>
+				</div>
 			</div>
           </div>
         </section>
@@ -219,7 +220,14 @@
 						tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
                         tdstr+="<td id='readNum' style='word-wrap:break-word;'>"+artlist[i].readNum+"</td>";
 						tdstr+="<td id='collectionNum' style='word-wrap:break-word;'>"+artlist[i].collectionNum+"</td>";
-						tdstr+="<td id='operation' style='word-wrap:break-word;'><a id='updatebtn' class='btn btn-primary' href='/editzypx.html?id="+artlist[i].id+"' target='_blank' type='button' '><i class='icon-edit icon-white'></i>修改</a>&nbsp;<button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
+						
+						 if(parseInt(artlist[i].isFavorite) == 1){
+                            tdstr+="<td id='articelModelsth' style='word-wrap:break-word;'>推荐</td>";
+							tdstr+="<td id='operation' style='word-wrap:break-word;'><a id='updatebtn' class='btn btn-primary' href='/editzxpx.html?id="+artlist[i].id+"' target='_blank' type='button' '><i class='icon-edit icon-white'></i>修改</a>&nbsp;<button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button>&nbsp;<button id='updatebtn' class='btn btn-info' type='button' onclick='ungroom("+artlist[i].id+")'><i class='icon-heart icon-white'></i>不推荐</button></td>";;
+                        }else{
+                            tdstr+="<td id='articelModelsth' style='word-wrap:break-word;'>不推荐</td>";
+							tdstr+="<td id='operation' style='word-wrap:break-word;'><a id='updatebtn' class='btn btn-primary' href='/editzxpx.html?id="+artlist[i].id+"' target='_blank' type='button' '><i class='icon-edit icon-white'></i>修改</a>&nbsp;<button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button>&nbsp;<button id='updatebtn' class='btn btn-info' type='button' onclick='groom("+artlist[i].id+")'><i class='icon-heart icon-white'></i>推荐</button></td>";;
+                        }
 						tdstr+="</tr>";
 					}
 					var pagelist=pageinfo.pageStr;
@@ -270,7 +278,7 @@
 		}
 		$('#modal_deleteAr').click(function (){
 			var id=$('#deleteModal #artId').val();
-			var	posturl="/news/deleteNews/"+id;
+			var	posturl="/traning/deleteOnlineTraningInfo/"+id;
 			$.ajax({
 	 			url:posturl,
 	 			type:'post',
@@ -294,6 +302,46 @@
 		});
 		function toltip() {
 		  $('[data-toggle="tooltip"]').tooltip();
+		}
+		function groom(id){
+			$.ajax({
+				url:"/traning/favoriteTraning/"+id,
+				async:false,
+				type:"POST",
+				success:function(data){
+					var msg=eval(data);
+					if(msg.code == "success")
+					{
+						window.location.reload();
+					}else
+					{	
+						$('#deleteModal').modal('hide');
+						$('#messageModal').modal({backdrop: 'static', keyboard: false});
+						$("#messageModal #myModalLabel").html("错误！");
+						$("#messageModal #myModalContent").html(msg.message+"!");
+					}
+				}
+			});
+		}
+		function ungroom(id){
+			$.ajax({
+				url:"/traning/UnfavoriteTraning/"+id,
+				async:false,
+				type:"POST",
+				success:function(data){
+					var msg=eval(data);
+					if(msg.code == "success")
+					{
+						window.location.reload();
+					}else
+					{	
+						$('#deleteModal').modal('hide');
+						$('#messageModal').modal({backdrop: 'static', keyboard: false});
+						$("#messageModal #myModalLabel").html("错误！");
+						$("#messageModal #myModalContent").html(msg.message+"!");
+					}
+				}
+			});
 		}
     </script>
   </body>
