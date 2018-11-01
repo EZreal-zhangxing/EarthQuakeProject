@@ -6,7 +6,11 @@ public enum  MessageCode {
     MSG_SUCCESS_CODE("success","验证码发送成功！"),
     MSG_FAIL_CODE("fail","验证码发送失败！"),
     MSG_CODE_ERROR("fail","验证码错误！"),
-    MSG_FORMAT("formatException","转换异常！");
+    MSG_FORMAT("formatException","转换异常！"),
+
+    MSG_SCORE_SUCCESS("success","已经购买！"),
+    MSG_SCORE_SUCCESS_DOWNLOAD("success","可以下载！"),
+    MSG_SCORE_FAIL("fail","分数不足！");
 
     private String code;
 

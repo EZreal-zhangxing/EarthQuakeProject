@@ -1,14 +1,19 @@
 package com.zx.Controller;
 
-import com.zx.Pojo.Message;
-import com.zx.Pojo.MessageCode;
-import com.zx.Pojo.Pageinfo;
+import com.zx.Pojo.*;
+import com.zx.Service.TraningService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BaseController {
+    @Autowired
+    private TraningService traningService;
+
     //页面初始化
     public Pageinfo initpage(Integer datanum,String page,Integer pageSize)
     {
@@ -136,5 +141,37 @@ public class BaseController {
     @RequestMapping("/error")
     public Message error(){
         return new Message(MessageCode.MSG_FAIL);
+    }
+
+    /**
+     * 发布消息给所有人
+     */
+    public void addMessageToAllUser(String title,String content){
+        List<User> list = traningService.getUserList();
+        LinkedList<UserMessage> linkedList=new LinkedList<UserMessage>();
+        if(list.size()>0){
+            for (User user:list){
+                UserMessage userMessage=new UserMessage();
+                userMessage.setMessageTitle(title);
+                userMessage.setMessageContent(content);
+                userMessage.setUserId(user.getId());
+                linkedList.add(userMessage);
+            }
+            traningService.addMessageList(linkedList);
+        }
+    }
+
+    /**
+     * 发布消息给指定人
+     * @param title
+     * @param content
+     * @param userId
+     */
+    public void addMessageToUser(String title,String content,Integer userId){
+        UserMessage userMessage=new UserMessage();
+        userMessage.setMessageTitle(title);
+        userMessage.setMessageContent(content);
+        userMessage.setUserId(userId);
+        traningService.addOneMessage(userMessage);
     }
 }

@@ -448,6 +448,81 @@ public class UserController extends BaseController{
 		return new Message(MessageCode.MSG_SUCCESS);
 	}
 
+
+	@ApiOperation(value = "获取用户的系统消息",response = Pageinfo.class,httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
+			@ApiImplicitParam(name = "pageSize", value = "页面条数",defaultValue = "10", dataType = "int"),
+			@ApiImplicitParam(name = "page", value = "标题",defaultValue = "1", dataType = "string")
+	})
+	@RequestMapping("/getUserMessage")
+	public Pageinfo getUserMessage(@RequestParam(value = "userId") Integer userid,
+								   @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
+								   @RequestParam(value = "page",defaultValue = "1") String page){
+		Integer num = userService.getCountMessage(userid);
+		Pageinfo pageinfo = initpage(num,page,pageSize);
+		List<UserMessage> list = userService.getListOfMessage(pageinfo,userid);
+		pageinfo.setResult(list);
+		return pageinfo;
+	}
+
+
+	@ApiOperation(value = "更新消息为已读状态",response = Message.class,httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "messageId",required = true, value = "消息ID",dataType = "int")
+	})
+	@RequestMapping("/updateUserMessage/{messageId}")
+	public Message updateUserMessage(@PathVariable(value = "messageId") Integer messageId){
+		userService.updateMessagestatue(messageId);
+		return new Message(MessageCode.MSG_SUCCESS);
+	}
+
+
+	@ApiOperation(value = "用户扣分接口 (在用户每次下载(课程内课件下载，资料下载)的时候需要调用这个接口进行一次分数的校验。)",response = Message.class,httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
+			@ApiImplicitParam(name = "score",required = true, value = "所扣分数",dataType = "int"),
+			@ApiImplicitParam(name = "fileId",required = true, value = "文件ID",dataType = "int"),
+			@ApiImplicitParam(name = "traningId",required = false, value = "文件ID",dataType = "int"),
+			@ApiImplicitParam(name = "type",required = true, value = "扣分类型（0 课件下载扣分traningId必传,1 资料下载扣分traningId不必传）",dataType = "int")
+	})
+	@RequestMapping("/UserReduceScore")
+	public Message UserReduceScore(@RequestParam(value = "userId") Integer userId,
+								   @RequestParam(value = "score") Integer score,
+								   @RequestParam(value = "fileId") Integer fileId,
+								   @RequestParam(value = "traningId") Integer traningId,
+								   @RequestParam(value = "type") Integer type){
+		UserOrder userOrder = new UserOrder();
+		userOrder.setUserId(userId);
+		userOrder.setScore(score);
+		userOrder.setFileId(fileId);
+		userOrder.setType(0); //减分
+		userOrder.setTraningId(traningId);
+
+		Boolean result = userService.CheckIsExistRecord(userOrder,type);
+		if(result){
+			//已经购买过 直接进入下载
+			return new Message(MessageCode.MSG_SCORE_SUCCESS);
+		}else{
+			//查询分数是否足够
+			User user = userService.getUserByid(userId);
+			if(user.getScore() < score){
+				return new Message(MessageCode.MSG_SCORE_FAIL);
+			}else{
+				//足够
+				if(type == 0){
+					userOrder.setDesc("课件下载！扣分["+score+"]");
+				}else{
+					userOrder.setDesc("资料下载！扣分["+score+"]");
+				}
+				userService.addUserOrder(userOrder);
+				userService.reduceUserScore(userOrder);
+				addMessageToUser("【积分提示】","下载课件资料，扣除积分"+score+"分。",userId);
+				return new Message(MessageCode.MSG_SCORE_SUCCESS_DOWNLOAD);
+			}
+		}
+	}
+
 	/**
 	 * 获取当前路径下的系统环境
 	 * @return
@@ -475,4 +550,5 @@ public class UserController extends BaseController{
 		}
 		return stringBuffer.toString();
 	}
+
 }

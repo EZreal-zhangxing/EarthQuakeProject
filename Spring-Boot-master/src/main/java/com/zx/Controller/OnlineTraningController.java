@@ -2,6 +2,7 @@ package com.zx.Controller;
 
 import com.zx.Pojo.*;
 import com.zx.Service.TraningService;
+import com.zx.Service.UserService;
 import com.zx.Util.EncoderHandler;
 import io.swagger.annotations.*;
 import net.sf.json.JSONArray;
@@ -20,10 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author zhangxing
@@ -44,6 +42,8 @@ public class OnlineTraningController extends BaseController {
     @Autowired
     private TraningService traningService;
 
+    @Autowired
+    private UserService userService;
     @Autowired
     private EncoderHandler encoderHandler;
 
@@ -217,9 +217,11 @@ public class OnlineTraningController extends BaseController {
         if(StringUtils.isBlank(traningId)){
             //insert
             result=traningService.saveOnlineTraning(onlineTraning);
+            addMessageToAllUser("【课程提醒】","志愿者小伙伴！有新课上线了！赶紧去课程超市了解一下！课后别忘记复盘答题，有积分的！");
         }else{
             //update
             result=traningService.updateTraningInfo(onlineTraning);
+            addMessageToAllUser("【课程提醒】","志愿者小伙伴！有新课更新了！赶紧去课程超市了解一下！课后别忘记复盘答题，有积分的！");
         }
         try {
             if(StringUtils.isBlank(traningId)){
@@ -431,14 +433,15 @@ public class OnlineTraningController extends BaseController {
     }
 
     /**
-     * 交卷信息
+     * 在线练习交卷信息
      * name=examStr的表单数据格式为：
      * {"examId":"id",answers:[{"questionId":"id","answer":"A"},{"questionId":"id","answer":"B"}]}
      * @return 得分
      */
-    @ApiOperation(value = "交卷信息" ,notes = "name=examStr的表单数据格式为：{\"examId\":\"id\",answers:[{\"questionId\":\"id\",\"answer\":\"A\"},{\"questionId\":\"id\",\"answer\":\"B\"}]}",response = UserExam.class,httpMethod = "POST")
+    @ApiOperation(value = "在线练习交卷信息" ,notes = "name=userId用户ID,name=examStr(答题数据集为后面展示的JSON格式)的表单数据格式为：{\"examId\":\"id\",answers:[{\"questionId\":\"id\",\"answer\":\"A\"},{\"questionId\":\"id\",\"answer\":\"B\"}]}",response = UserExam.class,httpMethod = "POST")
     @RequestMapping(value = "/saveUserExam")
     public UserExam saveUserExam(HttpServletRequest request) {
+        String userId=request.getParameter("userId");//用户ID
         String examInfo=request.getParameter("examStr");
         JSONObject examObject=JSONObject.fromObject(examInfo);
         String examId=examObject.optString("examId");
@@ -457,10 +460,63 @@ public class OnlineTraningController extends BaseController {
         UserExam userExam = new UserExam();
         userExam.setExamId(examId);
         userExam.setScore(count*1.0F/questionList.size()*100);
+        userExam.setType(1);
         traningService.saveUserExam(userExam);
+
+        UserOrder userOrder =new UserOrder();
+        userOrder.setUserId(Integer.parseInt(userId));
+        userOrder.setScore(count*2);
+        userOrder.setType(1);//设置type 1加分
+        userOrder.setDesc("答题加分!["+count*2+"]");
+        userService.addUserOrder(userOrder); //保存流水
+        userService.addUserScore(userOrder); //加分
+        addMessageToUser("【积分提示】","参与在线考试答题奖励积分"+userOrder.getScore()+"分！",userOrder.getUserId());
+
         return userExam;
     }
 
+    /**
+     * 课后练习交卷信息
+     * name=examStr的表单数据格式为：
+     * {"traningId":"id",answers:[{"questionId":"id","answer":"A"},{"questionId":"id","answer":"B"}]}
+     * @return 得分
+     */
+    @ApiOperation(value = "课后练习交卷信息" ,notes = "name=userId用户ID,name=examStr(答题数据集为后面展示的JSON格式)的表单数据格式为：{\"traningId\":\"id\",answers:[{\"questionId\":\"id\",\"answer\":\"A\"},{\"questionId\":\"id\",\"answer\":\"B\"}]}",response = UserExam.class,httpMethod = "POST")
+    @RequestMapping(value = "/saveAfterClassPrictice")
+    public UserExam saveAfterClassPrictice(HttpServletRequest request){
+        String userId=request.getParameter("userId");//用户ID
+        String examInfo=request.getParameter("examStr");
+        JSONObject examObject=JSONObject.fromObject(examInfo);
+        String traningId=examObject.optString("traningId");
+
+        JSONArray jsonArray=examObject.optJSONArray("answers");
+        Map<String,String> questionList= traningService.getClassQuestionAndAnswer(Integer.parseInt(traningId));
+
+        int count=0;
+        for(int i=0;i<jsonArray.size();i++){
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String questionId = jsonObject.optString("questionId");
+            String answer = jsonObject.optString("answer");
+            if(StringUtils.equals(answer,questionList.get(questionId))){
+                count++;
+            }
+        }
+        UserExam userExam = new UserExam();
+        userExam.setExamId(traningId);
+        userExam.setScore(count*1.0F/questionList.size()*100);
+        userExam.setType(0);
+        traningService.saveUserExam(userExam);
+
+        UserOrder userOrder =new UserOrder();
+        userOrder.setUserId(Integer.parseInt(userId));
+        userOrder.setScore(count*2);
+        userOrder.setType(1);//设置type 1加分
+        userOrder.setDesc("答题加分!["+count*2+"]");
+        userService.addUserOrder(userOrder); //保存流水
+        userService.addUserScore(userOrder); //加分
+        addMessageToUser("【积分提示】","参与课后习题答题奖励积分"+userOrder.getScore()+"分！",userOrder.getUserId());
+        return userExam;
+    }
     /**
      * 获取试卷信息列表
      * @return

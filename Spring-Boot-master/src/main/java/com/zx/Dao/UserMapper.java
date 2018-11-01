@@ -90,4 +90,20 @@ public interface UserMapper{
 	void updateUserInfo(User user);
 
 	Integer insertUserVolunteerInfo(UserVolunteer userVolunteer);
+
+	List<UserMessage> getUserMessage(Integer userId);
+
+	Integer getCountUserMessage(Integer userId);
+
+	void updateMessageIsread(Integer messageId);
+
+	Integer addUserOrder(UserOrder userOrder);
+
+	Integer getIsexistOrder(UserOrder userOrder);
+
+	Integer getIsexistOrderTraning(UserOrder userOrder);
+
+	Integer reduceUserScore(UserOrder userOrder);
+
+	Integer addUserScore(UserOrder userOrder);
 }

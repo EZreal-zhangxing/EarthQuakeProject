@@ -146,7 +146,7 @@
     </select>
 
     <insert id="addUserExamInfo" parameterType="com.zx.Pojo.UserExam">
-        insert into user_exam(exam_id,score) values(#{examId},#{score})
+        insert into user_exam(exam_id,score,type) values(#{examId},#{score},#{type})
     </insert>
 
     <select id="getCountOfExam" resultType="int">
@@ -156,6 +156,7 @@
     <select id="getListofExamInfo" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.Examination">
         select exam_id as examId,title,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
         from examination
+        order by create_date
         limit #{begin},#{shownum}
     </select>
 
@@ -229,4 +230,21 @@
         limit #{begin},#{shownum}
     </select>
     <!---->
+
+    <insert id="addMessage" parameterType="linkedList">
+        insert into message(user_id,message_title,message_content,is_read)
+        VALUES
+        <foreach collection="list" separator="," index="i" item="item">
+            (#{item.userId},#{item.messageTitle},#{item.messageContent},0)
+        </foreach>
+    </insert>
+
+    <insert id="addOneMessage" parameterType="com.zx.Pojo.UserMessage">
+        insert into message(user_id,message_title,message_content,is_read)
+        VALUES (#{item.userId},#{item.messageTitle},#{item.messageContent},0)
+    </insert>
+
+    <select id="getUserList" resultType="com.zx.Pojo.User">
+        select id from USER
+    </select>
 </mapper>

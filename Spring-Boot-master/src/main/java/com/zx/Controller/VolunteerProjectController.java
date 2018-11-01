@@ -415,15 +415,15 @@ public class VolunteerProjectController extends BaseController {
      * @return
      */
     @RequestMapping("/ProjectArrange")
-    public Message ProjectArrange(@RequestParam(value = "signId") String signId,
-                                  @RequestParam(value = "userId") String userId,
+    public Message ProjectArrange(@RequestParam(value = "signId") Integer signId,
+                                  @RequestParam(value = "userId") Integer userId,
                                   @RequestParam(value = "startDate") String startDate,
                                   @RequestParam(value = "endDate") String endDate) throws ParseException {
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH");
         ProjectSignArrange signArrange=new ProjectSignArrange();
-        signArrange.setProjectSignId(Integer.parseInt(signId));
-        signArrange.setUserId(Integer.parseInt(userId));
-        signArrange.setUserName(userService.getUserName(Integer.parseInt(userId)));
+        signArrange.setProjectSignId(signId);
+        signArrange.setUserId(userId);
+        signArrange.setUserName(userService.getUserName(userId));
         signArrange.setStartDate(startDate);
         signArrange.setEndDate(endDate);
         Calendar startcal=Calendar.getInstance();
@@ -439,6 +439,8 @@ public class VolunteerProjectController extends BaseController {
         signArrange.setHours(hours);
 
         volunteerProjectService.saveSignArrange(signArrange);
+
+        addMessageToUser("【系统提示】","您的项目排班已更新，请注意查询，如有疑问请与项目负责人联系。",userId);
         return new Message(MessageCode.MSG_SUCCESS);
     }
 

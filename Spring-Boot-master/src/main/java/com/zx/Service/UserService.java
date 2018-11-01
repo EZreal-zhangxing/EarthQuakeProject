@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import com.github.pagehelper.PageHelper;
 import com.zx.Pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -133,5 +134,43 @@ public class UserService {
 
 	public Integer addUserVolunteer(UserVolunteer userVolunteer){
 		return userMapper.insertUserVolunteerInfo(userVolunteer);
+	}
+
+	public Integer getCountMessage(Integer userId){
+		return userMapper.getCountUserMessage(userId);
+	}
+
+	public List<UserMessage> getListOfMessage(Pageinfo pageinfo,Integer userId){
+		PageHelper.startPage(pageinfo.getPagenum(),pageinfo.getShownum());
+		List<UserMessage> list = userMapper.getUserMessage(userId);
+		return list;
+	}
+
+	public void updateMessagestatue(Integer messageId){
+		userMapper.updateMessageIsread(messageId);
+	}
+
+	public Integer addUserOrder(UserOrder userOrder){
+		return userMapper.addUserOrder(userOrder);
+	}
+
+	public Boolean CheckIsExistRecord(UserOrder userOrder,Integer type){
+		if(type == 1){
+			//资料下载
+			Integer num = userMapper.getIsexistOrder(userOrder);
+			return num>0?true:false;
+		}else{
+			//课件下载
+			Integer num = userMapper.getIsexistOrderTraning(userOrder);
+			return num>0?true:false;
+		}
+	}
+
+	public Integer reduceUserScore(UserOrder userOrder){
+		return userMapper.reduceUserScore(userOrder);
+	}
+
+	public Integer addUserScore(UserOrder userOrder){
+		return userMapper.addUserScore(userOrder);
 	}
 }

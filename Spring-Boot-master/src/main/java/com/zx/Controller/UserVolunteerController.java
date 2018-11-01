@@ -2,6 +2,7 @@ package com.zx.Controller;
 
 import com.zx.Pojo.Message;
 import com.zx.Pojo.MessageCode;
+import com.zx.Pojo.UserOrder;
 import com.zx.Pojo.UserVolunteer;
 import com.zx.Service.UserService;
 import io.swagger.annotations.Api;
@@ -27,6 +28,15 @@ public class UserVolunteerController extends BaseController {
     @RequestMapping("/addUservolunteerInfo")
     public Message addUservolunteerInfo(UserVolunteer userVolunteer){
         Integer num =userService.addUserVolunteer(userVolunteer);
+        UserOrder userOrder = new UserOrder();
+        userOrder.setUserId(userVolunteer.getUserId());
+        userOrder.setType(1);
+        userOrder.setScore(10);
+        userOrder.setDesc("用户信息搜集加分！加分[10]");
+        userService.addUserOrder(userOrder);
+        userService.addUserScore(userOrder);
+
+        addMessageToUser("【积分提示】","认证个人信息奖励积分10分！",userVolunteer.getUserId());
         return num>0?new Message(MessageCode.MSG_SUCCESS):new Message(MessageCode.MSG_FAIL);
     }
 }

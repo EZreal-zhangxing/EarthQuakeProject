@@ -47,14 +47,16 @@ public class TraningService {
 	 */
 	public OnlineTraning getTraningByid(Integer id){
 		OnlineTraning onlineTraning=traningMapper.getTraningInfoByid(id);
-		List<TraningQuestion> list = traningMapper.getQuestioninfoByArticalId(id);
-		for(TraningQuestion traningQuestion:list){
-			List<TraningAnswer> answerList = traningMapper.getAnswerbyQuestionId(traningQuestion);
-			traningQuestion.setAnswers(answerList);
+		if(onlineTraning!=null){
+			List<TraningQuestion> list = traningMapper.getQuestioninfoByArticalId(id);
+			for(TraningQuestion traningQuestion:list){
+				List<TraningAnswer> answerList = traningMapper.getAnswerbyQuestionId(traningQuestion);
+				traningQuestion.setAnswers(answerList);
+			}
+			onlineTraning.setQuestionList(list);
+			//阅读数加一
+			traningMapper.addReadNumbyTraningId(id);
 		}
-		onlineTraning.setQuestionList(list);
-		//阅读数加一
-		traningMapper.addReadNumbyTraningId(id);
 		return onlineTraning;
 	}
 
@@ -94,6 +96,17 @@ public class TraningService {
 		return map;
 	}
 
+
+	public HashMap<String,String> getClassQuestionAndAnswer(Integer traningId){
+        List<TraningQuestion> list = traningMapper.getQuestioninfoByArticalId(traningId);
+        HashMap<String,String> map=new HashMap<String, String>();
+        for (TraningQuestion traningQuestion : list){
+            if(!map.containsKey(traningQuestion.getId())){
+                map.put(traningQuestion.getId(),traningQuestion.getAnswer());
+            }
+        }
+		return map;
+	}
 	public void saveUserExam(UserExam userExam){
 	    traningMapper.addUserExamInfo(userExam);
     }
@@ -179,6 +192,18 @@ public class TraningService {
 		}
 		traningMapper.delTraningQuestionBytraningId(id);
 		traningMapper.deleteOnlineTraningByid(id);
+	}
+
+	public void addMessageList(LinkedList<UserMessage> linkedList){
+		traningMapper.addMessage(linkedList);
+	}
+
+	public void addOneMessage(UserMessage userMessage){
+		traningMapper.addOneMessage(userMessage);
+	}
+
+	public List<User> getUserList(){
+		return traningMapper.getUserList();
 	}
 
 	public void updateUnFavorite(Integer id){

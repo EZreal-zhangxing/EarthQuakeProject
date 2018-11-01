@@ -74,4 +74,10 @@ public interface TraningMapper {
 
     List<OnlineTraning> getFavoriteTraningList(Pageinfo pageinfo);
 
+    void addMessage(LinkedList<UserMessage> linkedList);
+
+    void addOneMessage(UserMessage userMessage);
+
+    List<User> getUserList();
+
 }

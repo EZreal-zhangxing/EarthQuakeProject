@@ -19,4 +19,11 @@
         <typeAlias alias="arrayList" type="java.util.ArrayList" />
         <typeAlias alias="linkedList" type="java.util.LinkedList" />
     </typeAliases>
+
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <!-- 设置数据库类型Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库-->
+            <property name="dialect" value="mysql"/>
+        </plugin>
+    </plugins>
 </configuration>

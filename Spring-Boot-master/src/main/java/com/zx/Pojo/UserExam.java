@@ -9,10 +9,19 @@ import java.io.Serializable;
 public class UserExam implements Serializable {
     private Integer id;
     private String examId;
+    private Integer type; // 0 课后练习 1 在线练习
     private Float score;
     private String createDate;
 
     public UserExam() {
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public Integer getId() {
