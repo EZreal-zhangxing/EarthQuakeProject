@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2018-10-26 17:07:20
+Date: 2018-11-01 09:41:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -129,6 +129,24 @@ INSERT INTO `for_help` VALUES ('1', 'biaoti', 'neiron', 'fda', 'fdas', 'fsaa', '
 INSERT INTO `for_help` VALUES ('3', null, null, null, null, null, null, '2018-10-24 17:52:30');
 
 -- ----------------------------
+-- Table structure for message
+-- ----------------------------
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `message_title` varchar(500) DEFAULT NULL,
+  `message_content` varchar(1000) DEFAULT NULL,
+  `is_read` int(2) DEFAULT '0' COMMENT '0 未读 1 已读',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of message
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for model
 -- ----------------------------
 DROP TABLE IF EXISTS `model`;
@@ -137,7 +155,7 @@ CREATE TABLE `model` (
   `model_name` varchar(255) DEFAULT NULL,
   `parent_model` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of model
@@ -169,6 +187,10 @@ INSERT INTO `model` VALUES ('26', '科普园地', '1');
 INSERT INTO `model` VALUES ('27', '首页新闻资讯', '1');
 INSERT INTO `model` VALUES ('28', '政策推荐文章', '6');
 INSERT INTO `model` VALUES ('29', '首页大讲堂', '1');
+INSERT INTO `model` VALUES ('30', '首页志愿故事之封面人物', '2');
+INSERT INTO `model` VALUES ('31', '首都防震减灾科普大讲堂', '5');
+INSERT INTO `model` VALUES ('32', '地球科学与资源学院青年志愿者协会', '5');
+INSERT INTO `model` VALUES ('33', '地震应急服务支队', '5');
 
 -- ----------------------------
 -- Table structure for news
@@ -443,7 +465,7 @@ CREATE TABLE `traning_answer` (
   `select_content` varchar(255) DEFAULT NULL,
   `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of traning_answer
@@ -537,12 +559,33 @@ CREATE TABLE `user_exam` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `exam_id` varchar(64) DEFAULT NULL COMMENT '试卷ID',
   `score` float(11,2) DEFAULT NULL COMMENT '得分',
+  `type` int(11) DEFAULT NULL COMMENT '0 课后练习 1 在线练习',
   `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_exam
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for user_order
+-- ----------------------------
+DROP TABLE IF EXISTS `user_order`;
+CREATE TABLE `user_order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `desc` varchar(2000) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `score` int(11) DEFAULT '0' COMMENT '用户积分消耗',
+  `type` int(2) DEFAULT NULL COMMENT '0 减分 1 加分',
+  `file_id` int(11) NOT NULL,
+  `traning_id` int(11) DEFAULT NULL,
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of user_order
 -- ----------------------------
 
 -- ----------------------------
@@ -589,7 +632,7 @@ CREATE TABLE `user_volunteer` (
   `service_type` varchar(255) DEFAULT NULL COMMENT '服务类型',
   `volunteer_type` varchar(1000) DEFAULT NULL COMMENT '志愿者类型',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_volunteer
