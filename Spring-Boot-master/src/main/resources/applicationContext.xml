@@ -7,16 +7,16 @@
        <!--本机-->
 	<!--<bean id="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
 		<!--<property name="url" value="jdbc:mysql://localhost:3306/earthquake"></property>-->
-		<!--<property name="username" value="root"></property>-->
-		<!--<property name="password" value="admin"></property>-->
+		<!--<property name="username" value="****"></property>-->
+		<!--<property name="password" value="****"></property>-->
 		<!--<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>-->
 	<!--</bean>-->
 
 
 	<bean id="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="url" value="jdbc:mysql://localhost:3306/earthquake"></property>
-		<property name="username" value="root"></property>
-		<property name="password" value="root"></property>
+		<property name="username" value="****"></property>
+		<property name="password" value="****"></property>
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
 	</bean>
 	
