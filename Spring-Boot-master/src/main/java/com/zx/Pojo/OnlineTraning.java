@@ -26,9 +26,29 @@ public class OnlineTraning implements Serializable {
 
     private Integer isFavorite;
 
+    private Integer isCollection; //是否收藏 0 未收藏 1 以收藏
+
+    private Integer userId;
+
     private String createDate;
 
     private List<TraningQuestion> questionList;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getIsCollection() {
+        return isCollection;
+    }
+
+    public void setIsCollection(Integer isCollection) {
+        this.isCollection = isCollection;
+    }
 
     public Integer getIsFavorite() {
         return isFavorite;

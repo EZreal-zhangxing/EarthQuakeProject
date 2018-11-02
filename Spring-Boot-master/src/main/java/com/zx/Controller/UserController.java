@@ -388,7 +388,7 @@ public class UserController extends BaseController{
 	 * @param haveSeeTime
 	 * @return
 	 */
-	@ApiOperation(value = "增加用户已完成/未完成/收藏的的视频列表",response = Message.class,httpMethod = "GET")
+	@ApiOperation(value = "增加用户已完成/未完成/收藏的的视频列表, 取消收藏",response = Message.class,httpMethod = "GET")
 	@ApiImplicitParams({
 					@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
 					@ApiImplicitParam(name = "type", value = "0 未完成 1 已完成 2 收藏",dataType = "int"),
@@ -405,6 +405,16 @@ public class UserController extends BaseController{
 		userTraning.setType(type);
 		userTraning.setTraningId(traningId);
 		userTraning.setHavewatchTime(haveSeeTime);
+		if(type == 2){
+			//判断是否已经收藏过
+			List<UserTraning> list = userService.checkIsExistColl(userTraning);
+			if(list.size()>0){
+				//收藏过
+				//删除取消收藏
+				userService.cancleCollection(list,traningId);
+				return new Message(MessageCode.MSG_COL_SUCCESS);
+			}
+		}
 		userService.saveMyClass(userTraning);
 		return new Message(MessageCode.MSG_SUCCESS);
 	}
@@ -461,7 +471,7 @@ public class UserController extends BaseController{
 			@ApiImplicitParam(name = "page", value = "标题",defaultValue = "1", dataType = "string")
 	})
 	@RequestMapping("/getUserMessage")
-	public Pageinfo getUserMessage(@RequestParam(value = "userId") Integer userid,
+	public Pageinfo getUserMessage(@RequestParam(value = "userId",required = true) Integer userid,
 								   @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
 								   @RequestParam(value = "page",defaultValue = "1") String page){
 		Integer num = userService.getCountMessage(userid);
@@ -487,15 +497,15 @@ public class UserController extends BaseController{
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
 			@ApiImplicitParam(name = "score",required = true, value = "所扣分数",dataType = "int"),
-			@ApiImplicitParam(name = "fileId",required = true, value = "文件ID",dataType = "int"),
-			@ApiImplicitParam(name = "traningId",required = false, value = "文件ID",dataType = "int"),
-			@ApiImplicitParam(name = "type",required = true, value = "扣分类型（0 课件下载扣分traningId必传,1 资料下载扣分traningId不必传）",dataType = "int")
+			@ApiImplicitParam(name = "fileId",required = false, value = "文件ID",dataType = "int"),
+			@ApiImplicitParam(name = "traningId",required = false, value = "课程ID",dataType = "int"),
+			@ApiImplicitParam(name = "type",required = true, value = "扣分类型（0 减分,1 加分）",dataType = "int")
 	})
 	@RequestMapping("/UserReduceScore")
-	public Message UserReduceScore(@RequestParam(value = "userId") Integer userId,
-								   @RequestParam(value = "score") Integer score,
-								   @RequestParam(value = "fileId") Integer fileId,
-								   @RequestParam(value = "traningId") Integer traningId,
+	public Message UserReduceScore(@RequestParam(value = "userId",required = true) Integer userId,
+								   @RequestParam(value = "score",required = true) Integer score,
+								   @RequestParam(value = "fileId",required = false) Integer fileId,
+								   @RequestParam(value = "traningId",required = false) Integer traningId,
 								   @RequestParam(value = "type") Integer type){
 		UserOrder userOrder = new UserOrder();
 		userOrder.setUserId(userId);

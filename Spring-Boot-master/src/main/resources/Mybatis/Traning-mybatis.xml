@@ -50,8 +50,9 @@
     </select>
 
     <select id="getListOfTraning" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.OnlineTraning">
-        select <include refid="base_col_sub"/>
+        select <include refid="base_col_sub"/>,b.num as isCollection
         from online_traning ot
+        left join (select traning_id,IFNULL(count(id),0) as num from user_traning where user_id=#{conditionOnlineTraning.userId}) b on ot.id=b.traning_id
         where 1=1
         <if test="conditionOnlineTraning.title != null and conditionOnlineTraning.title != ''">
             and ot.title like concat('%', #{conditionOnlineTraning.title}, '%')
@@ -61,6 +62,10 @@
         </if>
         order by ot.create_date DESC
         limit #{begin},#{shownum}
+    </select>
+
+    <select id="CheckIsExistInCollection" parameterType="hashMap" resultType="int">
+        select count(id) as num from user_traning where user_id=#{userId} and traning_id=#{traningId}
     </select>
 
     <insert id="addTraningInfo" parameterType="com.zx.Pojo.OnlineTraning">
@@ -100,6 +105,10 @@
 
     <update id="addCollectionNumbyTraningId" parameterType="int">
         update online_traning set collection_num=collection_num+1 where id=#{id}
+    </update>
+
+    <update id="reduceCollectionNumbyTraningId" parameterType="int">
+        update online_traning set collection_num=collection_num-1 where id=#{id}
     </update>
 
     <insert id="addTraningQuestion" parameterType="com.zx.Pojo.TraningQuestion">

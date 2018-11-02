@@ -3,6 +3,7 @@ package com.zx.Dao;
 import com.zx.Pojo.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,6 +12,8 @@ public interface TraningMapper {
     Integer getCountOfTraning(OnlineTraning onlineTraning);
 
     List<OnlineTraning> getListOfTraning(Pageinfo pageinfo);
+
+    Integer CheckIsExistInCollection(HashMap hashMap);
 
     Integer addTraningInfo(OnlineTraning onlineTraning);
 
@@ -51,6 +54,8 @@ public interface TraningMapper {
     void addReadNumbyTraningId(Integer id);
 
     void addCollectionNumbyTraningId(Integer id);
+
+    void reduceCollectionNumbyTraningId(Integer id);
 
     void delExamationByid(String examId);
 

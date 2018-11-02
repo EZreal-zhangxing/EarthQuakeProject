@@ -64,6 +64,9 @@ public interface UserMapper{
 	 */
 	Integer getprojectNum(Integer userId);
 
+	List<UserTraning> checkIsExistColl(UserTraning userTraning);
+
+	void delUserTraning(Integer id);
 	/**
 	 * 更具用户ID获取
 	 * @param userId

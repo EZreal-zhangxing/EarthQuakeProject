@@ -29,9 +29,6 @@ public class TraningService {
 	    return traningMapper.addTraningInfo(onlineTraning);
     }
 
-    public List<OnlineTraning> getlistOfTraningByType(Pageinfo pageinfo){
-		return traningMapper.getListofinfoBytype(pageinfo);
-	}
 
 	public OnlineTraning getOnlineTraningByid(Integer id){
 		return traningMapper.getTraningInfoByid(id);
@@ -66,10 +63,6 @@ public class TraningService {
 
 	public void batchaddTraningAnswer(ArrayList<TraningAnswer> list){
 		traningMapper.BatchAddQuestionAnswer(list);
-	}
-
-	public List<TraningQuestion> getlistofThingByTraning(Integer id){
-		return traningMapper.getQuestioninfoByArticalId(id);
 	}
 
 	public void saveExamination(Examination examination){

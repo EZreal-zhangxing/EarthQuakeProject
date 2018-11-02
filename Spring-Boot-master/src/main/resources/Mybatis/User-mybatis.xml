@@ -251,6 +251,13 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		update message set is_read=1 where id=#{messageId}
 	</update>
 
+    <select id="checkIsExistColl" parameterType="com.zx.Pojo.UserTraning" resultType="com.zx.Pojo.UserTraning">
+        select id from user_traning where type=2 and traning_id=#{traningId} and user_id=#{userId}
+    </select>
+
+    <delete id="delUserTraning" parameterType="int">
+        delete from user_traning where id=#{id}
+    </delete>
 
 	<!--用户积分下载文件流水表-->
 	<insert id="addUserOrder" parameterType="com.zx.Pojo.UserOrder">
@@ -259,11 +266,11 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 
 	<select id="getIsexistOrder" parameterType="com.zx.Pojo.UserOrder" resultType="int">
-		select count(id) as num from user_order where user_id=#{userId} and file_id=#{fileId} and type=0
+		select IFNULL(count(id),0) as num from user_order where user_id=#{userId} and file_id=#{fileId} and type=0
 	</select>
 
 	<select id="getIsexistOrderTraning" parameterType="com.zx.Pojo.UserOrder" resultType="int">
-		select count(id) as num from user_order where traning_id=#{traningId} and user_id=#{userId} and type=0
+		select IFNULL(count(id),0) as num from user_order where traning_id=#{traningId} and user_id=#{userId} and type=0
 	</select>
 	<update id="reduceUserScore" parameterType="com.zx.Pojo.UserOrder">
 		update USER set score=score-#{score} where id=#{userId}

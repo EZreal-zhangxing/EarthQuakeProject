@@ -124,6 +124,17 @@ public class UserService {
 		return userMapper.getMyClass(pageinfo);
 	}
 
+	public List<UserTraning> checkIsExistColl(UserTraning userTraning){
+		return userMapper.checkIsExistColl(userTraning);
+	}
+
+	public void cancleCollection(List<UserTraning> list,Integer traningId){
+		for (UserTraning userTraning : list){
+			userMapper.delUserTraning(userTraning.getId());
+		}
+		traningMapper.reduceCollectionNumbyTraningId(traningId);
+	}
+
 	public void saveMyClass(UserTraning userTraning){
 		userMapper.addMyclass(userTraning);
 		if(userTraning.getType() == 2){
