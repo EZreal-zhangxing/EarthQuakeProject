@@ -17,7 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import com.zx.Service.UserService;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Api(tags = "用户模块")
@@ -48,18 +53,18 @@ public class UserController extends BaseController{
 	 * @param password
 	 * @return
 	 */
-	@ApiOperation(value = "用户登陆接口" ,response = Message.class,httpMethod = "GET")
+	@ApiOperation(value = "用户登陆接口" ,response = Object.class,httpMethod = "GET")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "telphone", value = "用户手机号",required = true,dataType = "string"),
 			@ApiImplicitParam(name = "password", value = "用户密码",required = true,dataType = "string")
 	})
 	@RequestMapping("/login")
-	public Message Login(@RequestParam(value="telphone") String telphone,@RequestParam(value="password") String password){
+	public Object Login(@RequestParam(value="telphone") String telphone,@RequestParam(value="password") String password){
 		User user=new User();
 		user.setTelphone(telphone);
 		user.setPassword(encoderHandler.encodeByMD5(password));
-		boolean result=userService.Login(user);
-		return result?new Message(MessageCode.MSG_SUCCESS):new Message(MessageCode.MSG_FAIL);
+		User result=userService.Login(user);
+		return result!=null?result:new Message(MessageCode.MSG_FAIL);
 	}
 
 	/**
@@ -417,13 +422,13 @@ public class UserController extends BaseController{
 	@ApiOperation(value = "修改用户信息",response = Message.class,httpMethod = "GET")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
-			@ApiImplicitParam(name = "userName",required = false, value = "用户姓名",dataType = "int"),
-			@ApiImplicitParam(name = "sex",required = false, value = "用户性别",dataType = "int"),
-			@ApiImplicitParam(name = "birthday",required = false, value = "用户生日",dataType = "int"),
-			@ApiImplicitParam(name = "workstatus",required = false, value = "工作状态",dataType = "int"),
-			@ApiImplicitParam(name = "email",required = false, value = "邮箱",dataType = "int"),
-			@ApiImplicitParam(name = "telphone",required = false, value = "电话",dataType = "int"),
-			@ApiImplicitParam(name = "password",required = false, value = "密码",dataType = "int")
+			@ApiImplicitParam(name = "userName",required = false, value = "用户姓名",dataType = "string"),
+			@ApiImplicitParam(name = "sex",required = false, value = "用户性别",dataType = "string"),
+			@ApiImplicitParam(name = "birthday",required = false, value = "用户生日",dataType = "string"),
+			@ApiImplicitParam(name = "workstatus",required = false, value = "工作状态",dataType = "string"),
+			@ApiImplicitParam(name = "email",required = false, value = "邮箱",dataType = "string"),
+			@ApiImplicitParam(name = "telphone",required = false, value = "电话",dataType = "string"),
+			@ApiImplicitParam(name = "password",required = false, value = "密码",dataType = "string")
 	})
 	@RequestMapping("/updateUserInfo")
 	public Message updateUserInfo(@RequestParam(value = "userId",required = true) Integer userId,
@@ -523,6 +528,59 @@ public class UserController extends BaseController{
 		}
 	}
 
+	@RequestMapping("/adminlogin/{username}/{password}")
+	public Message adminlogin(@PathVariable(value = "username") String username, @PathVariable(value = "password") String password, HttpServletResponse response, HttpServletRequest request){
+		AdminUser adminUser = new AdminUser();
+		adminUser.setUserName(username);
+		adminUser.setPassword(password);
+		AdminUser user = userService.adminlogin(adminUser);
+		if(user != null){
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:sss");
+			String loginToken="zx_"+username+password+"_"+simpleDateFormat.format(new Date());
+			loginToken = encoderHandler.encodeByMD5(loginToken);
+			user.setLoginCode(loginToken);
+			userService.updateAdminCode(user);
+			Cookie cookie = new Cookie("token",loginToken);
+			cookie.setPath("/");
+			Cookie userCookie = new Cookie("userId",user.getId()+"");
+			userCookie.setPath("/");
+			response.addCookie(cookie);
+			response.addCookie(userCookie);
+			return new Message(MessageCode.MSG_ADMIN_LOGIN_SUCCESS);
+		}else{
+			return new Message(MessageCode.MSG_ADMIN_LOGIN_FAIL);
+		}
+	}
+
+	@RequestMapping("/checkAdminCode")
+	public Message checkAdminCode(AdminUser adminUser){
+		if(adminUser.getId()==null || adminUser.getLoginCode() == null){
+			return new Message(MessageCode.MSG_FAIL);
+		}
+		Integer num = userService.checkAdminLogin(adminUser.getId()+"",adminUser.getLoginCode());
+		return num>0?new Message(MessageCode.MSG_SUCCESS):new Message(MessageCode.MSG_FAIL);
+	}
+
+	/**
+	 * 获取用户积分流水
+	 * @return
+	 */
+	@ApiOperation(value = "获取用户积分流水",response = Pageinfo.class,httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
+			@ApiImplicitParam(name = "pageSize", value = "页面条数",defaultValue = "10", dataType = "int"),
+			@ApiImplicitParam(name = "page", value = "页数",defaultValue = "1", dataType = "string")
+	})
+	@RequestMapping("/getUserOrderList")
+	public Pageinfo getUserOrderList(@RequestParam(value = "userId") Integer userId,
+									 @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
+									 @RequestParam(value = "page",defaultValue = "1") String page){
+		Integer num = userService.getCountOrder(userId);
+		Pageinfo pageinfo = initpage(num,page,pageSize);
+		List<UserOrder> list = userService.getListOfOrder(pageinfo,userId);
+		pageinfo.setResult(list);
+		return pageinfo;
+	}
 	/**
 	 * 获取当前路径下的系统环境
 	 * @return

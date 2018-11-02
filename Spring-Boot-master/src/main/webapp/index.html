@@ -96,13 +96,14 @@
 			if(username !="" && password !="")
 			{
 				$.ajax({
-					url:'/adminlogin/'+username+'/'+password,
+					url:'/user/adminlogin/'+username+'/'+password,
 					type:'POST',
 					async:'false',
 					success:function (data){
 						var msgobj=eval(data);
 						if(msgobj.code == 'success')
 						{
+
 							window.location.href="adminyfc.html";
 						}else
 						{

@@ -16,9 +16,9 @@ public class UserService {
 	@Autowired
 	private UserMapper userMapper;
 	
-	public boolean Login(User user){
-		Integer userCount=userMapper.getUserNum(user);
-		return userCount>0?true:false;
+	public User Login(User user){
+		User userCount=userMapper.getUserNum(user);
+		return userCount;
 	}
 
 	public Integer getCountOfCommons(Integer userId){ return userMapper.getCountOfCommonsByUserId(userId); }
@@ -172,5 +172,29 @@ public class UserService {
 
 	public Integer addUserScore(UserOrder userOrder){
 		return userMapper.addUserScore(userOrder);
+	}
+
+	public AdminUser adminlogin(AdminUser adminUser){
+		return userMapper.adminUserlogin(adminUser);
+	}
+
+	public void updateAdminCode(AdminUser adminUser){
+		userMapper.updateAdminUserLoginCode(adminUser);
+	}
+
+	public Integer checkAdminLogin(String id,String token){
+		AdminUser adminUser = new AdminUser();
+		adminUser.setId(Integer.parseInt(id));
+		adminUser.setLoginCode(token);
+		return userMapper.checkAdminCode(adminUser);
+	}
+
+	public Integer getCountOrder(Integer id){
+		return userMapper.getCountUserOrder(id);
+	}
+
+	public List<UserOrder> getListOfOrder(Pageinfo pageinfo,Integer id){
+		PageHelper.startPage(pageinfo.getPagenum(),pageinfo.getShownum());
+		return userMapper.getListUserOrder(id);
 	}
 }

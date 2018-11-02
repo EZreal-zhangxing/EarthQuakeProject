@@ -8,6 +8,9 @@ public enum  MessageCode {
     MSG_CODE_ERROR("fail","验证码错误！"),
     MSG_FORMAT("formatException","转换异常！"),
 
+    MSG_ADMIN_LOGIN_FAIL("fail","登陆失败！"),
+    MSG_ADMIN_LOGIN_SUCCESS("success","登陆成功！"),
+
     MSG_SCORE_SUCCESS("success","已经购买！"),
     MSG_SCORE_SUCCESS_DOWNLOAD("success","可以下载！"),
     MSG_SCORE_FAIL("fail","分数不足！");

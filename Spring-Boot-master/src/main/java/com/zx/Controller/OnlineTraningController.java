@@ -585,6 +585,11 @@ public class OnlineTraningController extends BaseController {
         return traningService.getlistofTraningWithAnswer(id);
     }
 
+    /**
+     * 在线培训课后练习得删除
+     * @param traningQuestionId
+     * @return
+     */
     @RequestMapping("/delTraningQuestion/{id}")
     public Message delTraningQuestion(@PathVariable(value = "id") String traningQuestionId){
         traningService.delTraningQuestions(traningQuestionId);

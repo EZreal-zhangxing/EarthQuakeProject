@@ -71,7 +71,7 @@
           </div>
 		  <div class="bs-docs-example">
 		  	<form id="queryPrice" class="form-inline" align="center" action="" method="post">
-				<input type="text" id="examId" name="examId" placeholder="试卷ID" autocomplete="off" value="" hidden>
+				<input type="text" id="examId" name="examId" placeholder="试卷ID" readonly autocomplete="off" value="" hidden>
 				<!--
 			  	<input type="text" id="articelName" name="articelName" placeholder="试卷名" autocomplete="off" value="">
 				<button id="queryPrice_btn" class="btn btn-primary" type="button" onclick="loadArticel(1)"><i class="icon-search icon-white"></i> 查询</button>&nbsp;
@@ -212,7 +212,7 @@
 							
 						}
                         tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
-						tdstr+="<td id='operation' style='word-wrap:break-word;'><button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
+						tdstr+="<td id='operation' style='word-wrap:break-word;'><button id='updatebtn' class='btn btn-danger' type='button' data-id='"+artlist[i].id+"' onclick='deleteArt(this)'><i class='icon-trash icon-white'></i>删除</button></td>";;
 						tdstr+="</tr>";
 					}
 					/*
@@ -257,14 +257,16 @@
             var t = new Date(date).toLocaleString();
             return t;
         }
-		function deleteArt(id)
+		function deleteArt(obj)
 		{
+			var artid=obj.dataset.id;
+			console.log(artid);
 			$('#deleteModal').modal({backdrop: 'static', keyboard: false});
-			$('#deleteModal #artId').attr('value',id);
+			$('#deleteModal #artId').attr('value',artid);
 		}
 		$('#modal_deleteAr').click(function (){
 			var id=$('#deleteModal #artId').val();
-			var	posturl="/news/deleteNews/"+id;
+			var	posturl="/traning/delquestion/"+id;
 			$.ajax({
 	 			url:posturl,
 	 			type:'post',

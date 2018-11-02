@@ -5,7 +5,7 @@ import java.util.List;
 import com.zx.Pojo.*;
 
 public interface UserMapper{
-	Integer getUserNum(User user);
+	User getUserNum(User user);
 
 	List<Common> getCommonListByuserId(Pageinfo pageinfo);
 
@@ -106,4 +106,14 @@ public interface UserMapper{
 	Integer reduceUserScore(UserOrder userOrder);
 
 	Integer addUserScore(UserOrder userOrder);
+
+	AdminUser adminUserlogin(AdminUser adminUser);
+
+	void updateAdminUserLoginCode(AdminUser adminUser);
+
+	Integer checkAdminCode(AdminUser adminUser);
+
+	Integer getCountUserOrder(Integer userId);
+
+	List<UserOrder> getListUserOrder(Integer userId);
 }

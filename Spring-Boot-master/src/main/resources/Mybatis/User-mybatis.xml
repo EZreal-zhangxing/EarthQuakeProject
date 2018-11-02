@@ -3,8 +3,10 @@
 mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
 <mapper namespace="com.zx.Dao.UserMapper">
-	<select id="getUserNum" resultType="int" parameterType="com.zx.Pojo.User">
-		select count(1) as num from user where telphone=#{telphone} and password=#{password}
+	<select id="getUserNum" resultType="com.zx.Pojo.User" parameterType="com.zx.Pojo.User">
+		select id,user_name as userName,icon,telphone,user_email as userEmail,score,work_statue as workStatue,sex,birthday
+		from user
+		where telphone=#{telphone} and password=#{password} and statue=1
 	</select>
 
 	<select id="getCountOfCommonsByUserId" parameterType="int" resultType="int">
@@ -76,7 +78,7 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 
 	<update id="changePassword" parameterType="com.zx.Pojo.User">
-		update user set password=#{password} where id=#{Id}
+		update user set password=#{password} where id=#{id}
 	</update>
 
 	<select id="getUserTeamInfo" parameterType="int" resultType="int">
@@ -191,13 +193,17 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="getUserInfobyid" parameterType="int" resultType="com.zx.Pojo.User">
-		select id,user_name as userName,telphone,user_email as userEmail,work_status as workStatus,score
+		select id,user_name as userName,telphone,user_email as userEmail,work_statue as workStatue,score
 		from user where id=#{id}
 	</select>
 
 	<update id="updateUserInfo" parameterType="com.zx.Pojo.User">
 		update user
-		set user_name=#{userName}
+		set
+		code=code
+		<if test="userName!= null">
+			,user_name=#{userName}
+		</if>
 		<if test="telphone!= null">
 			,telphone=#{telphone}
 		</if>
@@ -216,6 +222,7 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="birthday!= null">
 			,birthday=#{birthday}
 		</if>
+		where id=#{id}
 	</update>
 
 	<insert id="insertUserVolunteerInfo" parameterType="com.zx.Pojo.UserVolunteer">
@@ -263,4 +270,26 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="addUserScore" parameterType="com.zx.Pojo.UserOrder">
 		update USER set score=score+#{score} where id=#{userId}
 	</update>
+
+	<!--系统管理员登陆-->
+	<select id="adminUserlogin" parameterType="com.zx.Pojo.AdminUser" resultType="com.zx.Pojo.AdminUser">
+		select id,user_name,password,login_code
+		from admin_user where user_name=#{userName} and password=#{password}
+	</select>
+
+	<update id="updateAdminUserLoginCode" parameterType="com.zx.Pojo.AdminUser">
+		update admin_user set login_code=#{loginCode} where id=#{id}
+	</update>
+
+	<select id="checkAdminCode" parameterType="com.zx.Pojo.AdminUser" resultType="int">
+		select count(id) as num from admin_user where id=#{id} and login_code=#{loginCode}
+	</select>
+
+	<select id="getCountUserOrder" resultType="int" parameterType="int">
+		select count(id) as num from user_order where user_id=#{userId}
+	</select>
+	<select id="getListUserOrder" parameterType="int" resultType="com.zx.Pojo.UserOrder">
+		select id,`desc`,score,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate,type
+		from user_order where user_id=#{userId}
+	</select>
 </mapper>

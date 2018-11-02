@@ -38,14 +38,14 @@ public class HelpController extends BaseController {
     private ForhelpService forhelpService;
 
     @ApiOperation(value = "保存求助信息 参数分别为{helptitle:求助标题，content:内容，area:内容，address：地址，createman:创建人，telphone：电话} 以上参数以form表单提交" ,response = Pageinfo.class,httpMethod = "POST")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "helptitle", value = "标题", dataType = "string"),
-            @ApiImplicitParam(name = "content", value = "内容",dataType = "string"),
-            @ApiImplicitParam(name = "area", value = "区域",dataType = "string"),
-            @ApiImplicitParam(name = "address", value = "地址",dataType = "string"),
-            @ApiImplicitParam(name = "createman", value = "求助人",dataType = "string"),
-            @ApiImplicitParam(name = "telphone", value = "电话", dataType = "string")
-    })
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "helptitle", value = "标题", dataType = "string"),
+//            @ApiImplicitParam(name = "content", value = "内容",dataType = "string"),
+//            @ApiImplicitParam(name = "area", value = "区域",dataType = "string"),
+//            @ApiImplicitParam(name = "address", value = "地址",dataType = "string"),
+//            @ApiImplicitParam(name = "createman", value = "求助人",dataType = "string"),
+//            @ApiImplicitParam(name = "telphone", value = "电话", dataType = "string")
+//    })
     @RequestMapping("/saveHelpinfo")
     public Message saveHelpInfo(HttpServletRequest request, HttpServletResponse response){
         String comefrom=request.getParameter("comefrom");
