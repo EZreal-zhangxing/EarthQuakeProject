@@ -50,6 +50,8 @@ public interface TraningMapper {
 
     void addReadNumbyTraningId(Integer id);
 
+    void addCollectionNumbyTraningId(Integer id);
+
     void delExamationByid(String examId);
 
     void delQuestionById(String examId);

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import com.github.pagehelper.PageHelper;
+import com.zx.Dao.TraningMapper;
 import com.zx.Pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ import com.zx.Dao.UserMapper;
 public class UserService {
 	@Autowired
 	private UserMapper userMapper;
+
+	@Autowired
+	private TraningMapper traningMapper;
 	
 	public User Login(User user){
 		User userCount=userMapper.getUserNum(user);
@@ -122,6 +126,9 @@ public class UserService {
 
 	public void saveMyClass(UserTraning userTraning){
 		userMapper.addMyclass(userTraning);
+		if(userTraning.getType() == 2){
+			traningMapper.addCollectionNumbyTraningId(userTraning.getTraningId());
+		}
 	}
 
 	public User getUserByid(Integer id){

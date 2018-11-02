@@ -186,6 +186,7 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into user_traning(user_id,traning_id,havewatch_time,type)
 		values(#{userId},#{traningId},#{havewatchTime},#{type})
 	</insert>
+
 	<!--end-->
 
 	<select id="getServiceHoursByprojectSignId" parameterType="int" resultType="int">

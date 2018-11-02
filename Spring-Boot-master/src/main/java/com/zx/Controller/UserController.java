@@ -357,10 +357,10 @@ public class UserController extends BaseController{
 	}
 
 
-	@ApiOperation(value = "获取用户看过或未完成的视频列表",response = Pageinfo.class,httpMethod = "GET")
+	@ApiOperation(value = "获取用户已完成/未完成/收藏的的视频列表",response = Pageinfo.class,httpMethod = "GET")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
-			@ApiImplicitParam(name = "type", value = "0 未完成 1 已完成",dataType = "int"),
+			@ApiImplicitParam(name = "type", value = "0 未完成 1 已完成 2 用户收藏的",dataType = "int"),
 			@ApiImplicitParam(name = "pageSize", value = "页面条数",defaultValue = "10", dataType = "int"),
 			@ApiImplicitParam(name = "page", value = "标题",defaultValue = "1", dataType = "string")
 	})
@@ -388,10 +388,10 @@ public class UserController extends BaseController{
 	 * @param haveSeeTime
 	 * @return
 	 */
-	@ApiOperation(value = "增加用户看过或者未完成的视频信息",response = Message.class,httpMethod = "GET")
+	@ApiOperation(value = "增加用户已完成/未完成/收藏的的视频列表",response = Message.class,httpMethod = "GET")
 	@ApiImplicitParams({
 					@ApiImplicitParam(name = "userId",required = true, value = "用户ID",dataType = "int"),
-					@ApiImplicitParam(name = "type", value = "0 未完成 1 已完成",dataType = "int"),
+					@ApiImplicitParam(name = "type", value = "0 未完成 1 已完成 2 收藏",dataType = "int"),
 					@ApiImplicitParam(name = "traningId",required = true,value = "视频文章ID",dataType = "int"),
 					@ApiImplicitParam(name = "haveSeeTime",required = false, value = "已看时间",dataType = "String")
 	})

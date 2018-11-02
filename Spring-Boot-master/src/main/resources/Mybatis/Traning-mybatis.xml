@@ -98,6 +98,10 @@
         update online_traning set read_num=read_num+1 where id=#{id}
     </update>
 
+    <update id="addCollectionNumbyTraningId" parameterType="int">
+        update online_traning set collection_num=collection_num+1 where id=#{id}
+    </update>
+
     <insert id="addTraningQuestion" parameterType="com.zx.Pojo.TraningQuestion">
         insert into traning_question(id,traning_id,title,type,seq_no,answer)
         value(#{id},#{traningId},#{title},#{type},#{seqNo},#{answer})
