@@ -262,13 +262,13 @@ public class OnlineTraningController extends BaseController {
     @ApiOperation(value = "更具type查询各个模块" ,response = Pageinfo.class,httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "type", value = "模块类别",required = true,dataType = "int"),
-            @ApiImplicitParam(name = "userId", value = "用户ID",dataType = "int"),
+            @ApiImplicitParam(name = "userId", value = "用户ID",dataType = "int",required = false),
             @ApiImplicitParam(name = "pageSize", value = "页面条数",defaultValue = "10", dataType = "int"),
             @ApiImplicitParam(name = "page", value = "标题",defaultValue = "1", dataType = "string")
     })
     @RequestMapping("/getListofTraningInfo")
     public Pageinfo getListofTraningInfo(@RequestParam(value="type") Integer type,
-                                         @RequestParam(value="userId") Integer userId,
+                                         @RequestParam(value="userId",required = false) Integer userId,
                                          @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
                                          @RequestParam(value = "page",defaultValue = "1") String page){
         OnlineTraning onlineTraning=new OnlineTraning();
