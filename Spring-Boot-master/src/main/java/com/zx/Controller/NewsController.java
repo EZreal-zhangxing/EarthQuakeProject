@@ -1,12 +1,10 @@
 package com.zx.Controller;
 
-import com.github.pagehelper.Page;
 import com.zx.Pojo.*;
 import com.zx.Service.NewsService;
 import com.zx.Service.PreviewClassService;
 import com.zx.Util.EncoderHandler;
 import io.swagger.annotations.*;
-import io.swagger.models.HttpMethod;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
@@ -18,8 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 

@@ -242,20 +242,47 @@
         order by ot.create_date DESC
         limit #{begin},#{shownum}
     </select>
-    <!---->
+    <!--消息处理 -->
 
     <insert id="addMessage" parameterType="linkedList">
-        insert into message(user_id,message_title,message_content,is_read)
+        insert into message(user_id,message_title,message_content,is_read,type)
         VALUES
         <foreach collection="list" separator="," index="i" item="item">
-            (#{item.userId},#{item.messageTitle},#{item.messageContent},0)
+            (#{item.userId},#{item.messageTitle},#{item.messageContent},0,0)
         </foreach>
     </insert>
 
     <insert id="addOneMessage" parameterType="com.zx.Pojo.UserMessage">
-        insert into message(user_id,message_title,message_content,is_read)
-        VALUES (#{item.userId},#{item.messageTitle},#{item.messageContent},0)
+        insert into message(user_id,message_title,message_content,is_read,type)
+        VALUES (#{userId},#{messageTitle},#{messageContent},0,0)
     </insert>
+
+    <insert id="addPushMessage" parameterType="com.zx.Pojo.UserMessage">
+        insert into message(user_id,message_title,message_content,is_read,type)
+        VALUES (#{userId},#{messageTitle},#{messageContent},0,1)
+    </insert>
+
+    <update id="updatePushMessage">
+        update message set is_read=1 where type=1
+    </update>
+
+    <select id="getPushMessage" resultType="com.zx.Pojo.UserMessage">
+        select message_title as messageTitle,message_content as messageContent,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+        from message where type=1 and is_read=0
+        order by create_date
+        limit 1
+    </select>
+
+
+    <select id="getCountPushMessage" resultType="int">
+        select count(id) as num from message where type=1
+    </select>
+
+    <select id="getListofPushMessage" resultType="com.zx.Pojo.UserMessage">
+        select id,user_id as userId,message_title as messageTitle,message_content as messageContent,
+        is_read as isRead,type,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+        from message where type=1
+    </select>
 
     <select id="getUserList" resultType="com.zx.Pojo.User">
         select id from USER

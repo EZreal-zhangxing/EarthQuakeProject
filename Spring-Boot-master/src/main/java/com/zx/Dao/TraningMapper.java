@@ -87,4 +87,14 @@ public interface TraningMapper {
 
     List<User> getUserList();
 
+    Integer addPushMessage(UserMessage userMessage);
+
+    void updatePushMessage();
+
+    UserMessage getPushMessage();
+
+    Integer getCountPushMessage();
+
+    List<UserMessage> getListofPushMessage();
+
 }

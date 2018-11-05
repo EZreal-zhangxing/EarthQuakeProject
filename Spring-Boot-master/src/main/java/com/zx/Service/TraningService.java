@@ -1,5 +1,6 @@
 package com.zx.Service;
 
+import com.github.pagehelper.PageHelper;
 import com.zx.Dao.TraningMapper;
 import com.zx.Pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -213,5 +214,25 @@ public class TraningService {
 
 	public List<OnlineTraning> getListFt(Pageinfo pageinfo){
 		return traningMapper.getFavoriteTraningList(pageinfo);
+	}
+
+	public Integer addPushMessage(UserMessage userMessage){
+		//将所有 推送消息置为已读状态
+		traningMapper.updatePushMessage();
+		//添加消息
+		return traningMapper.addPushMessage(userMessage);
+	}
+
+	public UserMessage getPushMessage(){
+		return traningMapper.getPushMessage();
+	}
+
+	public Integer getCountofPushMessage(){
+		return traningMapper.getCountPushMessage();
+	}
+
+	public List<UserMessage> getListofPushMessage(Pageinfo pageinfo){
+		PageHelper.startPage(pageinfo.getPagenum(),pageinfo.getShownum());
+		return traningMapper.getListofPushMessage();
 	}
 }

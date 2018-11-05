@@ -11,7 +11,7 @@ public class UserMessage implements Serializable {
     private Integer userId;
     private String messageTitle;
     private String messageContent;
-    private Integer idRead;
+    private Integer isRead;
     private String createDate;
 
     public UserMessage() {
@@ -49,12 +49,12 @@ public class UserMessage implements Serializable {
         this.messageContent = messageContent;
     }
 
-    public Integer getIdRead() {
-        return idRead;
+    public Integer getIsRead() {
+        return isRead;
     }
 
-    public void setIdRead(Integer idRead) {
-        this.idRead = idRead;
+    public void setIsRead(Integer isRead) {
+        this.isRead = isRead;
     }
 
     public String getCreateDate() {
