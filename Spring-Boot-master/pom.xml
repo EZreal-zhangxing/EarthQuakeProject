@@ -204,6 +204,9 @@
 	            </includes>
 	        </resource>
 		</resources>
+
+
+
         <plugins>
             <!--<plugin>-->
                 <!--<groupId>org.springframework.boot</groupId>-->
@@ -220,6 +223,7 @@
                 </configuration>
             </plugin>
         </plugins>
+
     </build>
     <repositories>
         <repository>
@@ -233,4 +237,37 @@
             <url>https://repo.spring.io/libs-release</url>
         </pluginRepository>
     </pluginRepositories>
+    <!-- 多环境配置-->
+    <!---->
+    <!--<profiles>-->
+        <!--<profile>-->
+            <!--<id>dev</id>-->
+            <!--<properties>-->
+                <!--<env>dev</env>-->
+            <!--</properties>-->
+            <!--<activation>-->
+                <!--&lt;!&ndash;默认启用的是dev环境配置 设置这个值为true &ndash;&gt;-->
+                <!--<activeByDefault>false</activeByDefault>-->
+            <!--</activation>-->
+        <!--</profile>-->
+        <!--&lt;!&ndash; 测试环境 &ndash;&gt;-->
+        <!--<profile>-->
+            <!--<id>test</id>-->
+            <!--<properties>-->
+                <!--<env>test</env>-->
+            <!--</properties>-->
+            <!--<activation>-->
+                <!--<activeByDefault>false</activeByDefault>-->
+            <!--</activation>-->
+        <!--</profile>-->
+    <!--</profiles>-->
+
+    <!--
+        在application.properties文件里面设置#SpringBoot
+        启动加载配置文件
+        spring.profiles.active=@env@ 与properties里面的参数相同
+        更具profiles的选项不同 会自动加载application-dev/test.properties环境的配置文件
+        以命令行启动的时候 可以通过 java -jar XXX.jar \-\-spring.profiles.active=dev/test 配置不桶的启动环境
+        在linux环境下 java -jar XXX.jar -Dspring.profiles.active=dev/test
+    -->
 </project>
