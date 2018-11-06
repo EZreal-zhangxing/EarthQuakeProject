@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TraningService {
@@ -51,6 +48,12 @@ public class TraningService {
 				List<TraningAnswer> answerList = traningMapper.getAnswerbyQuestionId(traningQuestion);
 				traningQuestion.setAnswers(answerList);
 			}
+			Collections.sort(list, new Comparator<TraningQuestion>() {
+				@Override
+				public int compare(TraningQuestion o1, TraningQuestion o2) {
+					return o1.getSeqNo()-o2.getSeqNo();
+				}
+			});
 			onlineTraning.setQuestionList(list);
 			//阅读数加一
 			traningMapper.addReadNumbyTraningId(id);
