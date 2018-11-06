@@ -126,7 +126,8 @@
 
     <select id="getQuestioninfoByArticalId" parameterType="int" resultType="com.zx.Pojo.TraningQuestion">
         select id,traning_id as traningId,title,type,seq_no as seqNo,answer,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
-        from traning_question where traning_id=#{id}
+        from traning_question
+        where traning_id=#{id}
     </select>
 
     <select id="getAnswerbyQuestionId" parameterType="com.zx.Pojo.TraningQuestion" resultType="com.zx.Pojo.TraningAnswer">
