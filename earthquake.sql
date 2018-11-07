@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2018-11-02 10:13:22
+Date: 2018-11-07 17:16:10
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,7 +30,7 @@ CREATE TABLE `admin_user` (
 -- ----------------------------
 -- Records of admin_user
 -- ----------------------------
-INSERT INTO `admin_user` VALUES ('1', 'admin', 'admin', 'b33206cf9f023e454a7724749d2bf61a');
+INSERT INTO `admin_user` VALUES ('1', 'admin', 'admin', '8b968bc9e8509c2b1bde2aa65203932b');
 
 -- ----------------------------
 -- Table structure for answer
@@ -156,12 +156,15 @@ CREATE TABLE `message` (
   `message_content` varchar(1000) DEFAULT NULL,
   `is_read` int(2) DEFAULT '0' COMMENT '0 未读 1 已读',
   `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `type` int(1) DEFAULT '0' COMMENT '0 系统消息 1 推送消息',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of message
 -- ----------------------------
+INSERT INTO `message` VALUES ('1', null, 'title', 'content', '1', '2018-11-05 14:17:37', '0');
+INSERT INTO `message` VALUES ('2', null, '标题', '内容', '0', '2018-11-05 14:19:15', '0');
 
 -- ----------------------------
 -- Table structure for model
@@ -617,11 +620,12 @@ CREATE TABLE `user_traning` (
   `type` int(1) DEFAULT NULL COMMENT '0 未看完 1 已看完',
   `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_traning
 -- ----------------------------
+INSERT INTO `user_traning` VALUES ('1', '1', '4', null, null, '2018-11-02 16:06:20');
 
 -- ----------------------------
 -- Table structure for user_volunteer
