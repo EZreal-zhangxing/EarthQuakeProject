@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 
 /**
+ * 用户拦截器
  * @author zhangxing
  * @Date 2018/11/1 10:44
  */

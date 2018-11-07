@@ -1,6 +1,7 @@
 package com.zx.Util;
 
 /**
+ * 跨域过滤器，允许任何请求头的请求
  * @author zhangxing
  * @Date 2018/10/19 13:12
  */

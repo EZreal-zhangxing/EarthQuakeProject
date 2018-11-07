@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
+ * 拦截器配置
  * @author zhangxing
  * @Date 2018/11/1 10:50
  */
