@@ -9,14 +9,12 @@ import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 @SpringBootApplication
 @ImportResource("classpath:applicationContext.xml")
 @ComponentScan(basePackages={"com.zx"})
 //Spring boot 默认扫描Application入口类所在的包 兄弟包父包并不会扫描 需要手动配置扫描包
-@EnableSwagger2
 public class Application extends TomcatEmbeddedServletContainerFactory {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
