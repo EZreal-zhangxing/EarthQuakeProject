@@ -8,6 +8,7 @@ import com.zx.Service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class UserVolunteerController extends BaseController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation(value = "添加用户资源申请信息",response = Message.class,httpMethod = "POST")
+    @ApiOperation(value = "添加用户信息申请信息",response = Message.class,httpMethod = "POST")
     @RequestMapping("/addUservolunteerInfo")
     public Message addUservolunteerInfo(UserVolunteer userVolunteer){
         Integer num =userService.addUserVolunteer(userVolunteer);
@@ -38,5 +39,12 @@ public class UserVolunteerController extends BaseController {
 
         addMessageToUser("【积分提示】","认证个人信息奖励积分10分！",userVolunteer.getUserId());
         return num>0?new Message(MessageCode.MSG_SUCCESS):new Message(MessageCode.MSG_FAIL);
+    }
+
+    @ApiOperation(value = "检查用户是否提交过信息",response = Message.class,httpMethod = "GET")
+    @RequestMapping("/checkUserisCommitInfo/{userId}")
+    public Message checkUserisCommitInfo(@PathVariable(value = "userId") Integer userId){
+        boolean result=userService.checkUserisCommit(userId);
+        return result?new Message(MessageCode.MSG_USERINFO_SUCCESS):new Message(MessageCode.MSG_USERINFO_FAIL);
     }
 }

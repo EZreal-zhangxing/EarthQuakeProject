@@ -184,6 +184,15 @@ public class UserService {
 		}
 	}
 
+	/**
+	 * 检查用户是否提交过内容
+	 * @return
+	 */
+	public boolean checkUserisCommit(Integer userId){
+		Integer num = userMapper.checkUserCommitInfo(userId);
+		return num>0?true:false;
+	}
+
 	public Integer reduceUserScore(UserOrder userOrder){
 		return userMapper.reduceUserScore(userOrder);
 	}

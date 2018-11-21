@@ -119,4 +119,6 @@ public interface UserMapper{
 	Integer getCountUserOrder(Integer userId);
 
 	List<UserOrder> getListUserOrder(Integer userId);
+
+	Integer checkUserCommitInfo(Integer userId);
 }

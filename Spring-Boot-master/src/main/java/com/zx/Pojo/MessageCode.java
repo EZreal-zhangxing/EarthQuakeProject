@@ -14,6 +14,9 @@ public enum  MessageCode {
     MSG_SCORE_SUCCESS("success","已经购买！"),
     MSG_SCORE_SUCCESS_DOWNLOAD("success","可以下载！"),
 
+    MSG_USERINFO_SUCCESS("exist","用户已经提交过信息"),
+    MSG_USERINFO_FAIL("notexist","用户未提交过"),
+
     MSG_COL_SUCCESS("success","取消收藏成功！"),
     MSG_SCORE_FAIL("fail","分数不足！");
 

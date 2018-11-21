@@ -300,4 +300,8 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select id,`desc`,score,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate,type
 		from user_order where user_id=#{userId}
 	</select>
+
+	<select id="checkUserCommitInfo" parameterType="int" resultType="int">
+		select count(id) as num from user_volunteer where user_id=#{userId}
+	</select>
 </mapper>
