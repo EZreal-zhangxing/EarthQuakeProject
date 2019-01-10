@@ -13,7 +13,7 @@
     </select>
 
     <select id="getListofNewsByCondition" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.News">
-        select id,news_type as newsType,title,content,image_url as imageUrl,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate from news where 1=1
+        select id,news_type as newsType,title,image_url as imageUrl,video_url as videoUrl,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate from news where 1=1
         <if test="conditionNews.newsType != null  and conditionNews.newsType!= ''">
             and news_type=#{conditionNews.newsType}
         </if>
@@ -37,8 +37,8 @@
     </select>
 
     <insert id="saveNews" parameterType="com.zx.Pojo.News">
-        insert into news(news_type,title,content,url,image_url)
-        values(#{newsType},#{title},#{content},#{url},#{imageUrl})
+        insert into news(news_type,title,content,url,image_url,video_url)
+        values(#{newsType},#{title},#{content},#{url},#{imageUrl},#{videoUrl})
     </insert>
 
     <update id="updateNews" parameterType="com.zx.Pojo.News">
@@ -47,7 +47,8 @@
         title=#{title},
         content=#{content},
         url=#{url},
-        image_url=#{imageUrl}
+        image_url=#{imageUrl},
+        video_url=#{videoUrl}
         where id=#{id}
     </update>
 

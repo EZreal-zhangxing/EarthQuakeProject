@@ -223,11 +223,21 @@
 					{
 						tdstr+="<tr class='' id=''>";
 						tdstr+="<td id='articelId' style='word-wrap:break-word;'>"+artlist[i].id+"</td>";
-                        tdstr+="<td id='articelTitle' style='word-wrap:break-word;'><a href='common.html?id="+artlist[i].id+"&ajaxUrl=/volunteerPolicy/getListOfCommon' target="_blank" data-toggle='tooltip' title='点击此处查看评论信息！' data-placement='top'>"+artlist[i].title+"</a></td>";
+                        tdstr+="<td id='articelTitle' style='word-wrap:break-word;'><a href='common.html?id="+artlist[i].id+"&ajaxUrl=/volunteerPolicy/getListOfCommon' target='_blank' data-toggle='tooltip' title='点击此处查看评论信息！' data-placement='top'>"+artlist[i].title+"</a></td>";
                         tdstr+="<td id='modelName' style='word-wrap:break-word;'>"+artlist[i].modelName+"</td>";
                         tdstr+="<td id='description' style='word-wrap:break-word;'>"+artlist[i].description+"</td>";
-                        tdstr+="<td id='outUrl' style='word-wrap:break-word;'>"+artlist[i].outUrl+"</td>";
-                        tdstr+="<td id='imageUrl' style='word-wrap:break-word;'>"+artlist[i].imageUrl+"</td>";	
+                        if(artlist[i].outUrl == null){
+                            tdstr+="<td id='outUrl' style='word-wrap:break-word;'>无</td>";
+                        }else
+                        {
+                            tdstr+="<td id='outUrl' style='word-wrap:break-word;'>"+artlist[i].outUrl+"</td>";
+                        }
+                        if(artlist[i].imageUrl == null){
+                            tdstr+="<td id='imageUrl' style='word-wrap:break-word;'>无</td>";
+                        }else
+                        {
+                            tdstr+="<td id='imageUrl' style='word-wrap:break-word;'>"+artlist[i].imageUrl+"</td>";
+                        }
                         tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
 						tdstr+="<td id='operation' style='word-wrap:break-word;'><a id='updatebtn' class='btn btn-primary' href='/editzyzc.html?id="+artlist[i].id+"' target='_blank' type='button' ><i class='icon-edit icon-white'></i>修改</a>&nbsp;<button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
 						tdstr+="</tr>";

@@ -19,6 +19,8 @@ public interface VolunteerTeamMapper {
 
     VolunteerTeam getVolunteerTeamByid(Integer id);
 
+    Integer updateVolunteerteamByid(VolunteerTeam volunteerTeam);
+
     void addSignTeam(TeamSign teamSign);
 
     List<TeamSign> getListofSignTeam(Integer id);

@@ -41,6 +41,13 @@ public class VolunteerStarService {
 
 	}
 
+	public VolunteerStar getVolunteerStartInfoByid(Integer id){
+		return volunteerStarMapper.getVolunteerStartInfoByid(id);
+	}
+
+	public Integer updateVolunteerStar(VolunteerStar volunteerStar){
+		return volunteerStarMapper.updateVolunteerStar(volunteerStar);
+	}
 	public void addVolunteerStar(VolunteerStar volunteerStar){
 		volunteerStarMapper.addVolunteerStar(volunteerStar);
 	}

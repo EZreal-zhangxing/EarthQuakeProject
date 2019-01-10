@@ -1,6 +1,7 @@
 package com.zx.Pojo;
 
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class VolunteerTeam {
     private Integer id;
@@ -13,8 +14,9 @@ public class VolunteerTeam {
     private Integer areaId;
     private Integer serviceType;
     private Integer teamManNum; //人数属性
-    private Integer teamType;//
+    private Integer teamType;//团队类型
     private String createDate;
+    private Date sqlCreateDate;
     private String teamMan;//团队联系人
     private String teamManTel;
     private String teamManEmail;
@@ -26,6 +28,15 @@ public class VolunteerTeam {
     private String serviceName;
 
     public VolunteerTeam() {
+    }
+
+    public Date getSqlCreateDate() {
+        return sqlCreateDate;
+    }
+
+    public void setSqlCreateDate(Date sqlCreateDate) {
+        this.sqlCreateDate = sqlCreateDate;
+        this.createDate=new SimpleDateFormat("yyyy-MM-dd").format(sqlCreateDate);
     }
 
     public Integer getSignNum() {

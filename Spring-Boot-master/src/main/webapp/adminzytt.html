@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>志愿项目</title>
+    <title>志愿团体</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="介绍如何搭建Bootstrap里面HTML基本元素，并利用可扩展的class增强其展示效果。">
@@ -290,7 +290,7 @@
                         tdstr+="<td id='teamManNum' style='word-wrap:break-word;'>"+artlist[i].teamNum+"</td>";
 						tdstr+="<td id='signNum' style='word-wrap:break-word;'><a href='projectTeamSignNum.html?projectId="+artlist[i].id+"' target='_blank' data-toggle='tooltip' title='点击此处查看报名人数！' data-placement='top'>"+artlist[i].signNum+"</a></td>";
                         tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
-						tdstr+="<td id='operation' style='word-wrap:break-word;'><a id='updatebtn' class='btn btn-primary' href='/editzyxm.html?id="+artlist[i].id+"' target='_blank' type='button' onclick='updateArt("+artlist[i].id+")'><i class='icon-edit icon-white'></i>修改</a>&nbsp;<button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
+						tdstr+="<td id='operation' style='word-wrap:break-word;'><a id='updatebtn' class='btn btn-primary' href='/editzytt.html?id="+artlist[i].id+"' target='_blank' type='button' onclick='updateArt("+artlist[i].id+")'><i class='icon-edit icon-white'></i>修改</a>&nbsp;<button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
 						tdstr+="</tr>";
 					}
 					var pagelist=pageinfo.pageStr;

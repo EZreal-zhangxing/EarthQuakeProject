@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -87,6 +88,7 @@ public class VolunteerStarController extends BaseController {
 
     @RequestMapping("/addVolunteerStar")
     public void addVolunteerStar(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "filepath") MultipartFile filepath){
+        String id=request.getParameter("articalId");
         String title=request.getParameter("title");
         String model=request.getParameter("model");
         String outUrl=request.getParameter("outUrl");
@@ -95,6 +97,7 @@ public class VolunteerStarController extends BaseController {
         String areaId=request.getParameter("modelarea");
         String articalNum=request.getParameter("articalNum");
         VolunteerStar volunteerStar=new VolunteerStar();
+        volunteerStar.setId((id!=null && !"".equals(id))?Integer.parseInt(id):null);
         volunteerStar.setTitle(title);
         volunteerStar.setModelId(Integer.parseInt(model));
         volunteerStar.setOutUrl(outUrl);
@@ -112,20 +115,46 @@ public class VolunteerStarController extends BaseController {
         }
         //上传文件处理
         String fileName=filepath.getOriginalFilename();
-        if(fileName != null && !"".equals(fileName)){
-            String hzname=fileName.substring(fileName.indexOf("."), fileName.length());
-            String md5filename=encoderHandler.encodeByMD5(fileName+System.currentTimeMillis());
-            String fileondesPath=getfilepath()+md5filename+hzname;
-            File file=new File(fileondesPath);
-            //保存文件
-            try {
-                saveFile(file,filepath.getInputStream(),getfilepath());
-                volunteerStar.setImageUrl(fileondesPath);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if(volunteerStar.getId() == null){
+            if(fileName != null && !"".equals(fileName)){
+                String hzname=fileName.substring(fileName.indexOf("."), fileName.length());
+                String md5filename=encoderHandler.encodeByMD5(fileName+System.currentTimeMillis());
+                String fileondesPath=getfilepath()+md5filename+hzname;
+                File file=new File(fileondesPath);
+                //保存文件
+                try {
+                    saveFile(file,filepath.getInputStream(),getfilepath());
+                    volunteerStar.setImageUrl(fileondesPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            volunteerStarService.addVolunteerStar(volunteerStar);
+        }else{
+            //获取原始文件存储路径 并删除
+            VolunteerStar oldVolunteerStar=volunteerStarService.getVolunteerStartInfoByid(volunteerStar.getId());
+            if(!"".equals(fileName)){
+                //重新选择文件 需要重新上传
+                //删除老文件
+                delFileByfilePath(oldVolunteerStar.getImageUrl());
+                //重新上传文件并生成文件名
+                if(fileName != null && !"".equals(fileName)){
+                    String hzname=fileName.substring(fileName.indexOf("."), fileName.length());
+                    String md5filename=encoderHandler.encodeByMD5(fileName+System.currentTimeMillis());
+                    String fileondesPath=getfilepath()+md5filename+hzname;
+                    File file=new File(fileondesPath);
+                    try {
+                        saveFile(file,filepath.getInputStream(),getfilepath());
+                        volunteerStar.setImageUrl(fileondesPath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }else{
+                volunteerStar.setImageUrl(oldVolunteerStar.getImageUrl());
+            }
+            volunteerStarService.updateVolunteerStar(volunteerStar);
         }
-        volunteerStarService.addVolunteerStar(volunteerStar);
         try {
             jumpPage(response,1,"editzyzx.html");
         } catch (IOException e) {

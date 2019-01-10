@@ -90,8 +90,9 @@ public class UserController extends BaseController{
 			//保存信息
 			userService.Regist(user);
 		}else{
-			userinfo.setCode(code);
-			userService.updateUserCode(userinfo);
+			return new Message(MessageCode.MSG_USER_REGIST);
+//			userinfo.setCode(code);
+//			userService.updateUserCode(userinfo);
 		}
 		//调用发送接口
 		SendMessage sendMessage= new SendMessage();

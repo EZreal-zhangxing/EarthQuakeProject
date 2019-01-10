@@ -27,7 +27,7 @@
 	<h1>在线培训 <br/></h1>
 	<hr/>
 	<form id="editForm" action="/traning/addClassInfo" method="post" enctype="multipart/form-data">
-	<input id="traningId" type="text" name="traningId" placeholder="培训ID" autocomplete="off"/>
+	<input id="traningId" type="text" name="traningId" placeholder="培训ID" autocomplete="off" readonly/>
 	<div class="form-horizontal">
 		<p>培训信息配置</p>
 		<div class="control-group">
@@ -42,10 +42,10 @@
 				<input id="subModel" type="hidden" name="model" />
 				<select id="modelOne" class="span2">
 					<option id="default" value="0" selected>请选择所属模块：</option>
-					<option id="default" value="1">在线培训应急</option>
-					<option id="default" value="2">在线培训减灾</option>
+					<option id="default" value="1">应急技能</option>
+					<option id="default" value="2">减灾科普</option>
 					<option id="default" value="3">心理教室</option>
-					<option id="default" value="4">视频超市</option>
+					<option id="default" value="4">课程超市</option>
 					<option id="default" value="5">医疗救护</option>
 				</select>
 			</div>

@@ -27,6 +27,7 @@
 	<h1>志愿之星添加文章 <br/></h1>
 	<hr/>
 	<form id="editForm" action="/volunteerStar/addVolunteerStar" method="post" enctype="multipart/form-data">
+	<input id="articalId" name="articalId" value="" type="hidden" />
 	<div class="form-horizontal">
 		<div class="control-group">
 			<label class="control-label" for="inputEmail">标题</label>
@@ -85,6 +86,7 @@
 			<input type="hidden" id="modelareatext" name="modelarea" value="" data=""/>
 			<label class="control-label" for="serviceType">项目区域</label>
 			<div class="controls">
+				<input type="hidden" name="areaId" id="areaIdVal"/>
 				<select class="span2" id="modelarea" onchange="changeValue('modelarea','modelareatext')">
 					<option value="" selected>请选择地区：</option>
 				</select>
@@ -239,10 +241,22 @@
 					optionStr+="<option value="+areaId+">"+areaName+"</option>";
 				}
 				$('#modelarea').html(optionStr);
+                changeSelectOptions();
 			}
 		});
 	}
-	
+	function changeSelectOptions(){
+	    var data=$("#areaIdVal").val();
+		var options=$("[id=modelarea] option");
+		for(var i = 0;i<options.length;i++){
+			if(options[i].value!=data){
+				options[i].selected=false;
+			}else{
+				options[i].selected=true;
+			}
+		}
+	}
+
 	function changeValue(name,id){
 		var option= $('#'+name+' option:selected');
 		$('#'+id).val(option.val());
@@ -328,6 +342,36 @@
  </script>
 
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+    $(function(){
+        var urlId=getQueryString("id");
+        //包含id信息
+        if(urlId != null){
+            $("#articalId").val(urlId);
+            $.ajax({
+                url:'/volunteerStar/getVolunteerStarByid/'+urlId,
+                type:'POST',
+                async:true,
+                success:function(data){
+                    console.log(data);
+                    $("#title").val(data.title);
+                    $("#outUrl").val(data.outUrl);
+                    $("#articelDesc").val(data.description);
+                    $("#photoCover").val(data.imageUrl);
+                    $("#articalNum").val(data.articalNum);
+                    $("#areaIdVal").val(data.areaId);
+                    $("#z").val(data.content);
+                    $("#editor").html(data.content);
+                }
+            });
+        }
+    });
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+</script>
 <script type="text/javascript">
  	$('input[id=lefile]').change(function() {
 		$('#photoCover').val($(this).val());

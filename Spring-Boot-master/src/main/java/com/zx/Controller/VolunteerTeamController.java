@@ -110,6 +110,7 @@ public class VolunteerTeamController extends BaseController {
      */
     @RequestMapping("/addVolunteerTeam")
     public void addVolunteerTeam(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "filepath") MultipartFile filepath){
+        String id=request.getParameter("articalId");
         String title=request.getParameter("title");
         String content=request.getParameter("arttext");
         String outUrl=request.getParameter("outUrl");
@@ -122,7 +123,10 @@ public class VolunteerTeamController extends BaseController {
         String projectManTel=request.getParameter("projectManTel");
         String projectManEmail=request.getParameter("projectManEmail");
         String projectAddress=request.getParameter("projectAddress");
+        String createDate = request.getParameter("createDate");
+
         VolunteerTeam volunteerTeam=new VolunteerTeam();
+        volunteerTeam.setId((id!=null && !"".equals(id))?Integer.parseInt(id):null);
         volunteerTeam.setTitle(title);
         volunteerTeam.setOutUrl(outUrl);
         volunteerTeam.setDescription(description);
@@ -135,24 +139,56 @@ public class VolunteerTeamController extends BaseController {
         volunteerTeam.setTeamManEmail(projectManEmail);
         volunteerTeam.setTeamAddress(projectAddress);
         volunteerTeam.setContent(content);
-        //上传文件处理
+        volunteerTeam.setCreateDate(createDate);
+
         String fileName=filepath.getOriginalFilename();
-        if(fileName != null && !"".equals(fileName)){
-            String hzname=fileName.substring(fileName.indexOf("."), fileName.length());
-            String md5filename=encoderHandler.encodeByMD5(fileName+System.currentTimeMillis());
-            String fileondesPath=getfilepath()+md5filename+hzname;
-            File file=new File(fileondesPath);
-            //保存文件
-            try {
-                saveFile(file,filepath.getInputStream(),getfilepath());
-                volunteerTeam.setUrl(fileondesPath);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if(volunteerTeam.getId() ==null){
+            //上传文件处理
+            if(fileName != null && !"".equals(fileName)){
+                String hzname=fileName.substring(fileName.indexOf("."), fileName.length());
+                String md5filename=encoderHandler.encodeByMD5(fileName+System.currentTimeMillis());
+                String fileondesPath=getfilepath()+md5filename+hzname;
+                File file=new File(fileondesPath);
+                //保存文件
+                try {
+                    saveFile(file,filepath.getInputStream(),getfilepath());
+                    volunteerTeam.setUrl(fileondesPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            volunteerTeamService.saveVolunteerTeam(volunteerTeam);
+        }else{
+            //获取原始文件存储路径 并删除
+            VolunteerTeam oldVolunteerteam=volunteerTeamService.getVolunteerTeamByid(volunteerTeam.getId());
+            if(!"".equals(fileName)){
+                //重新选择文件 需要重新上传
+                //删除老文件
+                delFileByfilePath(oldVolunteerteam.getUrl());
+                //重新上传文件并生成文件名
+                if(fileName != null && !"".equals(fileName)){
+                    String hzname=fileName.substring(fileName.indexOf("."), fileName.length());
+                    String md5filename=encoderHandler.encodeByMD5(fileName+System.currentTimeMillis());
+                    String fileondesPath=getfilepath()+md5filename+hzname;
+                    File file=new File(fileondesPath);
+                    try {
+                        saveFile(file,filepath.getInputStream(),getfilepath());
+                        volunteerTeam.setUrl(fileondesPath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }else{
+                volunteerTeam.setUrl(oldVolunteerteam.getUrl());
+            }
+            volunteerTeamService.updateVolunteerteamByid(volunteerTeam);
         }
-        volunteerTeamService.saveVolunteerTeam(volunteerTeam);
         try {
-            jumpPage(response,1,"editzytt.html");
+            if(volunteerTeam.getId() == null){
+                jumpPage(response,1,"editzytt.html");
+            }else{
+                jumpPage(response,1,"editzytt.html?id="+volunteerTeam.getId());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

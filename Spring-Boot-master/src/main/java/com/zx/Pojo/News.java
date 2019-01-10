@@ -12,12 +12,22 @@ public class News {
     private String imageUrl;
     private String createDate;
 
+    private String videoUrl;
+
     private String modelName;
 
     private List<Common> commonList;
 
     public List<Common> getCommonList() {
         return commonList;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
     public void setCommonList(List<Common> commonList) {

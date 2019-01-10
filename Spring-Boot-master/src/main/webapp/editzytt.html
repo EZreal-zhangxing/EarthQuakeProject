@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>志愿项目添加</title>
+    <title>志愿团体添加</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="keywords" content="opensource rich wysiwyg text editor jquery bootstrap execCommand html5" />
     <meta name="description" content="This tiny jQuery Bootstrap WYSIWYG plugin turns any DIV into a HTML5 rich text editor" />
@@ -38,6 +38,7 @@
 	<h1>添加志愿团体 <br/></h1>
 	<hr/>
 	<form id="editForm" action="/volunteerTeam/addVolunteerTeam" method="post" enctype="multipart/form-data">
+	<input id="articalId" name="articalId" value="" type="text" />
 	<div class="form-horizontal">
 		<div class="control-group">
 			<label class="control-label" for="inputEmail">标题</label>
@@ -99,32 +100,32 @@
 		<!-- 属性选择 -->
 		<div class="control-inline">
 			<div class="control-group">
-				<input type="hidden" id="modelareatext" name="modelarea" value="" data=""/>
+				<input type="hidden" id="modelareatext" name="modelarea" value="0" data=""/>
 				<label class="control-label" for="serviceType">项目区域</label>
 				<div class="controls">
 					<select class="span2" id="modelarea" onchange="changeValue('modelarea','modelareatext')">
-						<option value="" selected>请选择地区：</option>
+						<option value="0" selected>请选择地区：</option>
 					</select>
 				</div>
 			</div>
 			
 			
 			<div class="control-group">
-				<input type="hidden" name="serviceType" id="serviceTypetext" value="" data=""/>
+				<input type="hidden" name="serviceType" id="serviceTypetext" value="0" data=""/>
 				<label class="control-label" for="serviceType">服务类别</label>
 				<div class="controls">
 					<select class="span2" id="serviceType" onchange="changeValue('serviceType','serviceTypetext')">
-						<option value="" selected>请选择服务类别：</option>
+						<option value="0" selected>请选择服务类别：</option>
 					</select>
 				</div>
 			</div>
 			
 			<div class="control-group">
-				<input type="hidden" name="teamType" id="teamTypetext" value="" data=""/>
+				<input type="hidden" name="teamType" id="teamTypetext" value="0" data=""/>
 				<label class="control-label" for="teamType">团队类型</label>
 				<div class="controls">
 					<select class="span2" id="teamType" onchange="changeValue('teamType','teamTypetext')">
-						<option value="" selected>请选择团队类型：</option>
+						<option value="0" selected>请选择团队类型：</option>
 					</select>
 				</div>
 			</div>
@@ -155,6 +156,16 @@
 			<label class="control-label" for="projectAddress">项目地址</label>
 			<div class="controls">
 				<input type="text" id="projectAddress" name="projectAddress" placeholder="项目地址" autocomplete="off" value="">
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="serviceType">创建时间</label>
+			<div class="controls">
+				<div class="input-append date form_datetime">
+					<input id="createDate" name="createDate" size="16" type="text" value="" placeholder="创建时间" readonly>
+					<span class="add-on"><i class="icon-th"></i></span>
+				</div>
 			</div>
 		</div>
 		
@@ -252,8 +263,12 @@
 		<button id="message_button_no" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">关闭</button>
 	  </div>
 	</div>
-	
-	
+
+<script type="text/javascript">
+    $(".form_datetime").datetimepicker({
+        format: "yyyy-mm-dd hh:ii:ss"
+    });
+</script>
 <script type="text/javascript">
 	$("#submitbutton").click(function(){
 	    var result=true;
@@ -393,8 +408,45 @@
  </script>
 <script type="text/javascript">
 	$(".form_datetime").datetimepicker({
-		format: "yyyy-mm-dd hh:ii:ss"
+		format: "yyyy-mm-dd"
 	});
+</script>
+<script type="text/javascript">
+    $(function(){
+        var urlId=getQueryString("id");
+        //包含id信息
+        if(urlId != null){
+            $("#articalId").val(urlId);
+            $.ajax({
+                url:'/volunteerTeam/getVolunteerTeamByid/'+urlId,
+                type:'POST',
+                async:true,
+                success:function(data){
+                    console.log(data);
+                    $("#title").val(data.title);
+                    $("#outUrl").val(data.outUrl);
+                    $("#articelDesc").val(data.description);
+                    $("#teamNum").val(data.teamNum);
+                    $("#photoCover").val(data.url);
+                    $("#modelareatext").val(data.areaId);
+                    $("#serviceTypetext").val(data.serviceType);
+                    $("#teamTypetext").val(data.teamType);
+                    $("#projectMan").val(data.teamMan);
+                    $("#projectManTel").val(data.teamManTel);
+                    $("#projectManEmail").val(data.teamManEmail);
+                    $("#projectAddress").val(data.teamAddress);
+                    $("#createDate").val(data.createDate);
+                    $("#z").val(data.content);
+                    $("#editor").html(data.content);
+                }
+            });
+        }
+    });
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
 </script>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 <script type="text/javascript">
@@ -419,40 +471,55 @@
 					optionStr+="<option value="+areaId+">"+areaName+"</option>";
 				}
 				$('#modelarea').html(optionStr);
+                changeSelectOptions('modelareatext','modelarea');
 			}
 		});
 	}
 	
 	function getserviceType(){
-			var areaStr=$("#serviceType").html();
-			$.ajax({
-				url:"/volunteerTeam/getteamServiceType",
-				type:"POST",
-				async:"false",
-				success:function(data){
-					for(var i=0;i<data.length;i++){
-						var servicetype=data[i];
-						areaStr+="<option name='serviceType' value='"+servicetype.id+"'>"+servicetype.serviceName+"</option>";
-					}
-					$("#serviceType").html(areaStr);
+		var areaStr=$("#serviceType").html();
+		$.ajax({
+			url:"/volunteerTeam/getteamServiceType",
+			type:"POST",
+			async:"false",
+			success:function(data){
+				for(var i=0;i<data.length;i++){
+					var servicetype=data[i];
+					areaStr+="<option name='serviceType' value='"+servicetype.id+"'>"+servicetype.serviceName+"</option>";
 				}
-			});
-		}
+				$("#serviceType").html(areaStr);
+                changeSelectOptions('serviceTypetext','serviceType');
+			}
+		});
+	}
 		
-		function getTeamtype(){
-			var areaStr=$("#teamType").html();
-			$.ajax({
-				url:"/volunteerTeam/getTeamType",
-				type:"POST",
-				async:"false",
-				success:function(data){
-					for(var i=0;i<data.length;i++){
-						var teamtype=data[i];
-						areaStr+="<option name='teamType' value='"+teamtype.id+"'>"+teamtype.teamType+"</option>";
-					}
-					$("#teamType").html(areaStr);
+	function getTeamtype(){
+		var areaStr=$("#teamType").html();
+		$.ajax({
+			url:"/volunteerTeam/getTeamType",
+			type:"POST",
+			async:"false",
+			success:function(data){
+				for(var i=0;i<data.length;i++){
+					var teamtype=data[i];
+					areaStr+="<option name='teamType' value='"+teamtype.id+"'>"+teamtype.teamType+"</option>";
 				}
-			});
-		}
+				$("#teamType").html(areaStr);
+                changeSelectOptions('teamTypetext','teamType');
+			}
+		});
+	}
+
+    function changeSelectOptions(name,optionid){
+        var data=$("#"+name).val();
+        var options=$("[id="+optionid+"] option");
+        for(var i = 0;i<options.length;i++){
+            if(options[i].value!=data){
+                options[i].selected=false;
+            }else{
+                options[i].selected=true;
+            }
+        }
+    }
  </script>
 </html>

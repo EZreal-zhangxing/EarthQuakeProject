@@ -110,12 +110,14 @@ public class NewsController extends BaseController {
     }
 
     @RequestMapping("/addNews")
-    public void addNews(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "filepath") MultipartFile filepath){
+    public void addNews(HttpServletRequest request, HttpServletResponse response,
+                        @RequestParam(value = "filepath") MultipartFile filepath,
+                        @RequestParam(value = "filepathVideo") MultipartFile filepathVideo){
         String id=request.getParameter("articalId");
         String title=request.getParameter("title"); //标题
         String modelid=request.getParameter("model");//模块ID
         String url=request.getParameter("outUrl"); //文章外链
-        String articelDesc=request.getParameter("articelDesc"); //文章介绍
+//        String articelDesc=request.getParameter("articelDesc"); //文章介绍
         String content=request.getParameter("arttext");//文章内容
         News news=new News();
         //设置ID
@@ -125,9 +127,11 @@ public class NewsController extends BaseController {
         news.setUrl(url);
         news.setContent(content);
         int result=0;
+        //图片文件处理
         String fileName=filepath.getOriginalFilename();
+        String videoFilename=filepathVideo.getOriginalFilename();
         if(news.getId() == null){
-
+            //处理图片文件
             if(fileName != null && !"".equals(fileName)){
                 String hzname=fileName.substring(fileName.indexOf("."), fileName.length());
                 String md5filename=encoderHandler.encodeByMD5(fileName+System.currentTimeMillis());
@@ -136,6 +140,19 @@ public class NewsController extends BaseController {
                 try {
                     saveFile(file,filepath.getInputStream(),getfilepath());
                     news.setImageUrl(fileondesPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            //处理视频文件
+            if(videoFilename != null && !"".equals(videoFilename)){
+                String hzname=videoFilename.substring(videoFilename.indexOf("."), videoFilename.length());
+                String md5filename=encoderHandler.encodeByMD5(videoFilename+System.currentTimeMillis());
+                String VfileondesPath=getfilepath()+md5filename+hzname;
+                File file=new File(VfileondesPath);
+                try {
+                    saveFile(file,filepathVideo.getInputStream(),getfilepath());
+                    news.setVideoUrl(VfileondesPath);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -163,6 +180,27 @@ public class NewsController extends BaseController {
                 }
             }else{
                 news.setImageUrl(oldNews.getImageUrl());
+            }
+            //视屏文件处理
+            if(!"".equals(videoFilename)){
+                //重新选择文件 需要重新上传
+                //删除老文件
+                delFileByfilePath(oldNews.getVideoUrl());
+                //重新上传文件并生成文件名
+                if(videoFilename != null && !"".equals(videoFilename)){
+                    String hzname=videoFilename.substring(videoFilename.indexOf("."), videoFilename.length());
+                    String md5filename=encoderHandler.encodeByMD5(fileName+System.currentTimeMillis());
+                    String VfileondesPath=getfilepath()+md5filename+hzname;
+                    File file=new File(VfileondesPath);
+                    try {
+                        saveFile(file,filepathVideo.getInputStream(),getfilepath());
+                        news.setVideoUrl(VfileondesPath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }else{
+                news.setVideoUrl(oldNews.getVideoUrl());
             }
             //更新操作
             result=newsService.updateNews(news);

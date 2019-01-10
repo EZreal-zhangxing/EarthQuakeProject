@@ -61,6 +61,19 @@
         values(#{modelId},#{title},#{outUrl},#{imageUrl},#{description},#{content},#{areaId},#{commonNum},#{viewNum},#{articalNum})
     </insert>
 
+    <update id="updateVolunteerStar" parameterType="com.zx.Pojo.VolunteerStar">
+        update volunteer_star
+        set model_id=#{modelId},
+        title=#{title},
+        out_url=#{outUrl},
+        image_url =#{imageUrl},
+        description=#{description},
+        content=#{content},
+        area_id =#{areaId},
+        num=#{articalNum}
+        where id=#{id}
+    </update>
+
     <select id="getListofVolunteerBymodelId" resultType="com.zx.Pojo.VolunteerStar" parameterType="int">
         select <include refid="base_coloum"/>,
         a.area_name as areaName,
@@ -69,6 +82,12 @@
         left join area a on vs.area_id = a.id
         left join model m on vs.model_id = m.id
         where 1=1 and vs.model_id=#{modelId}
+    </select>
+
+    <select id="getVolunteerStartInfoByid" parameterType="int" resultType="com.zx.Pojo.VolunteerStar">
+        select <include refid="base_coloum"/>
+        from volunteer_start vs
+        where vs.id=#{id}
     </select>
 
     <insert id="addStarCommon" parameterType="com.zx.Pojo.Common">

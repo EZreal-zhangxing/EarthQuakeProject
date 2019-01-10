@@ -88,6 +88,7 @@
 				  <th width="60px">文章标题</th>
                   <th width="60px">文章模块</th>
                   <th width="145px">展示图片</th>
+                  <th width="145px">视频地址</th>
                   <th width="30px">发布时间</th>
 				  <th width="60px">操作</th>
                 </tr>
@@ -243,6 +244,8 @@
                             tdstr+="<td id='articelModel' style='word-wrap:break-word;'>首页新闻资讯</td>";
                         }else if(parseInt(artlist[i].newsType) == 29){
                             tdstr+="<td id='articelModel' style='word-wrap:break-word;'>大讲堂</td>";
+                        }else if(parseInt(artlist[i].newsType) == 32){
+                            tdstr+="<td id='articelModel' style='word-wrap:break-word;'>讲师风采</td>";
                         }else{
                             tdstr+="<td id='articelModel' style='word-wrap:break-word;'>不匹配模块</td>";
                         }
@@ -253,6 +256,12 @@
 						{
 							tdstr+="<td id='articelPic' style='word-wrap:break-word;'>"+artlist[i].imageUrl+"</td>";
 						}
+                        if(artlist[i].videoUrl == null){
+                            tdstr+="<td id='videoUrl' style='word-wrap:break-word;'>无</td>";
+                        }else
+                        {
+                            tdstr+="<td id='videoUrl' style='word-wrap:break-word;'>"+artlist[i].videoUrl+"</td>";
+                        }
                         tdstr+="<td id='createDate' style='word-wrap:break-word;'>"+artlist[i].createDate+"</td>";
 						tdstr+="<td id='operation' style='word-wrap:break-word;'><a id='updatebtn' class='btn btn-primary' href='/editnews.html?id="+artlist[i].id+"' target='_blank' type='button' '><i class='icon-edit icon-white'></i>修改</a>&nbsp;<button id='updatebtn' class='btn btn-danger' type='button' onclick='deleteArt("+artlist[i].id+")'><i class='icon-trash icon-white'></i>删除</button></td>";;
 						tdstr+="</tr>";

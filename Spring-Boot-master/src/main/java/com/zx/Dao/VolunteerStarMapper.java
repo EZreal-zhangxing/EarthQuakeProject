@@ -25,6 +25,10 @@ public interface VolunteerStarMapper {
 
     public List<Common> getStarCommon(Integer articalId);
 
+    VolunteerStar getVolunteerStartInfoByid(Integer id); //更具ID获取志愿之星的内容
+
+    Integer updateVolunteerStar(VolunteerStar volunteerStar); //更新志愿之心
+
     public void updateAddViewNumByid(Integer articalId); //浏览数+1
     public void updateReduceViewNumByid(Integer articalId); //浏览数-1
     public void updateAddCommonNumByid(Integer articalId); //评论数+1

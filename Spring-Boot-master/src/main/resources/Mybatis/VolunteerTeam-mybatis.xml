@@ -21,7 +21,7 @@
         vt.service_type as serviceType,
         vt.team_man_num as teamManNum,
         vt.team_type as teamType,
-        DATE_FORMAT(vt.create_date,'%Y-%m-%d %H:%i:%s') as createDate,
+        DATE_FORMAT(vt.create_date,'%Y-%m-%d %H:%i:%s') as sqlCreateDate,
         vt.team_man as teamMan,
         vt.team_man_tel as teamManTel,
         vt.team_man_email as teamManEmail,
@@ -82,7 +82,7 @@
         area_id,service_type,team_man_num,team_type,create_date,team_man,team_man_tel,
         team_man_email,team_address)
         VALUES(#{title},#{outUrl},#{url},#{description},#{content},#{teamNum},
-        #{areaId},#{serviceType},#{teamManNum},#{teamType},NOW(),#{teamMan},#{teamManTel},
+        #{areaId},#{serviceType},#{teamManNum},#{teamType},DATE_FORMAT(#{createDate},"%Y-%m-%d"),#{teamMan},#{teamManTel},
         #{teamManEmail},#{teamAddress})
     </insert>
 
@@ -101,6 +101,19 @@
         left join team_type tt on vt.team_type=tt.id
         where 1=1 and vt.id=#{id}
     </select>
+
+    <update id="updateVolunteerteamByid" parameterType="com.zx.Pojo.VolunteerTeam">
+        update volunteer_team set
+        title=#{title},out_url=#{outUrl},
+        url=#{url},description=#{description},
+        content=#{content},team_num=#{teamNum},
+        area_id=#{areaId},service_type=#{serviceType},
+        team_man_num=#{teamManNum},team_type=#{teamType},
+        create_date=#{createDate},team_man=#{teamMan},
+        team_man_tel=#{teamManTel},team_man_email=#{teamManEmail},
+        team_address=#{teamAddress}
+        where id=#{id}
+    </update>
 
     <insert id="addSignTeam" parameterType="com.zx.Pojo.TeamSign">
         insert into team_sign(team_id,user_id) VALUES (#{teamId},#{userId})

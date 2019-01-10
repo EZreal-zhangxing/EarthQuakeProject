@@ -26,6 +26,8 @@ public class VolunteerTeamService {
 
 	public VolunteerTeam getVolunteerTeamByid(Integer id){ return volunteerTeamMapper.getVolunteerTeamByid(id); }
 
+	public Integer updateVolunteerteamByid(VolunteerTeam volunteerTeam){ return volunteerTeamMapper.updateVolunteerteamByid(volunteerTeam); }
+
 	public List<TeamSign> getListofTeamSign(Integer id){ return volunteerTeamMapper.getListofSignTeam(id); }
 
 	public void addSignTeam(TeamSign teamSign){ volunteerTeamMapper.addSignTeam(teamSign);}

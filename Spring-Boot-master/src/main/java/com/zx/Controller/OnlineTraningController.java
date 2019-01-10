@@ -119,7 +119,6 @@ public class OnlineTraningController extends BaseController {
         String teacherDesc=request.getParameter("teacherDesc");
 
         OnlineTraning onlineTraning=new OnlineTraning();
-
         onlineTraning.setTitle(title);
         onlineTraning.setType(Integer.parseInt(type));
         onlineTraning.setOutUrl(outUrl);
@@ -170,7 +169,7 @@ public class OnlineTraningController extends BaseController {
             }
         }else{
             if(oldonlineTraning!=null) {
-                oldonlineTraning.setVideoUrl(oldonlineTraning.getVideoUrl());
+                onlineTraning.setVideoUrl(oldonlineTraning.getVideoUrl());
             }
         }
         //课堂资料信息处理
