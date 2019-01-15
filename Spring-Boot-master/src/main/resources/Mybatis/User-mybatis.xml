@@ -261,8 +261,8 @@ mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!--用户积分下载文件流水表-->
 	<insert id="addUserOrder" parameterType="com.zx.Pojo.UserOrder">
-		insert into user_order(user_id,file_id,score)
-		values(#{userId},#{fileId},#{score})
+		insert into user_order(desc,user_id,file_id,score,type,traning_id)
+		values(#{desc},#{userId},#{fileId},#{score},#{type},#{traningId})
 	</insert>
 
 	<select id="getIsexistOrder" parameterType="com.zx.Pojo.UserOrder" resultType="int">

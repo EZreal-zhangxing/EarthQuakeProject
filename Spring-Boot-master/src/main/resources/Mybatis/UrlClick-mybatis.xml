@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zx.Dao.UrlClickMapper">
+    <select id="checkIsexist" parameterType="com.zx.Pojo.UrlClickNum" resultType="int">
+        select count(id) as num from url_click_num where model_url=#{modelUrl} and model_desc=#{modelDesc}
+    </select>
+
+    <insert id="addClickItem" parameterType="com.zx.Pojo.UrlClickNum">
+        insert into url_click_num(model_url,model_desc) values(#{modelUrl},#{modelDesc})
+    </insert>
+
+    <update id="addNum" parameterType="com.zx.Pojo.UrlClickNum">
+        update url_click_num
+        set num=num+1
+        where model_url=#{modelUrl} and model_desc=#{modelDesc}
+    </update>
 
 </mapper>

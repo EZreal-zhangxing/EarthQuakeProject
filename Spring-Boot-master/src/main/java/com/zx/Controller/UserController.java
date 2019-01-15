@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -591,6 +592,38 @@ public class UserController extends BaseController{
 		pageinfo.setResult(list);
 		return pageinfo;
 	}
+
+	/**
+	 * 用户分享/完成课程积分增加
+	 * @return
+	 */
+	@ApiOperation(value = "用户积分添加",response = Message.class,httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "userId",required = true,value = "用户ID",dataType = "int"),
+			@ApiImplicitParam(name = "className",required = false,value = "课程名",dataType = "string"),
+			@ApiImplicitParam(name = "type",required = false,value = "类型（0分享 1课程完成）",dataType = "int"),
+			@ApiImplicitParam(name = "score",required = true,value = "数值",dataType = "int")
+	})
+	@RequestMapping("/addUserShareScore")
+	public Message addUserShareScore(@RequestParam(value = "userId") Integer userId,
+									 @RequestParam(value = "className") String className,
+									 @RequestParam(value = "type") Integer type,
+									 @RequestParam(value = "score") Integer score){
+		UserOrder userOrder=new UserOrder();
+		userOrder.setUserId(userId);
+		userOrder.setType(1);
+		if(type == 0){
+			userOrder.setScore(10);
+			userOrder.setDesc("【积分提示】 您今日分享课程【"+className+"】奖励积分10分！");
+		}else{
+			userOrder.setScore(20);
+			userOrder.setDesc("【积分提示】已完成【"+className+"】课程，奖励积分20分！");
+		}
+		userService.addUserOrder(userOrder);//添加流水
+		userService.addUserScore(userOrder);//添加分数
+		return new Message(MessageCode.MSG_SUCCESS);
+	}
+
 	/**
 	 * 获取当前路径下的系统环境
 	 * @return
