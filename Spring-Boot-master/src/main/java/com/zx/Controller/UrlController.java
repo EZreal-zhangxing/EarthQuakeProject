@@ -2,6 +2,7 @@ package com.zx.Controller;
 
 import com.zx.Pojo.Message;
 import com.zx.Pojo.MessageCode;
+import com.zx.Pojo.SearchArtical;
 import com.zx.Pojo.UrlClickNum;
 import com.zx.Service.UrlClickService;
 import io.swagger.annotations.Api;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author zhangxing
@@ -37,5 +40,14 @@ public class UrlController extends BaseController {
         urlClickNum.setModelDesc(modelName);
         urlClickService.addNumofClick(urlClickNum);
         return new Message(MessageCode.MSG_SUCCESS);
+    }
+
+    @ApiOperation(value = "文章信息查询" ,response = Message.class,httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "keyword", value = "关键字",required = true,dataType = "string")
+    })
+    @RequestMapping("/search")
+    public List<SearchArtical> search(@RequestParam(value = "keyword") String keyword){
+        return urlClickService.SearchNews(keyword);
     }
 }

@@ -11,7 +11,21 @@
             and model_id = #{modelId}
         </if>
     </select>
-    <sql id="base_coloum">
+    <sql id="base_coloum_withoutContent">
+        vs.id,
+        vs.model_id as modelId,
+        vs.title,
+        vs.out_url as outUrl,
+        vs.image_url as imageUrl,
+        vs.description,
+--         vs.content,
+        IFNULL(vs.area_id,'') as areaId,
+        DATE_FORMAT(vs.create_date,'%Y-%m-%d %H:%i:%s') as createDate,
+        vs.common_num as commonNum,
+        vs.view_num as viewNum,
+        IFNULL(vs.num,'') as articalNum
+    </sql>
+    <sql id="base_coloum_withcontent">
         vs.id,
         vs.model_id as modelId,
         vs.title,
@@ -26,7 +40,7 @@
         IFNULL(vs.num,'') as articalNum
     </sql>
     <select id="getListOfVolunteerStar" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.VolunteerStar">
-        select <include refid="base_coloum"/>,
+        select <include refid="base_coloum_withoutContent"/>,
         a.area_name as areaName,
         m.model_name as modelName
         from volunteer_star vs
@@ -47,7 +61,7 @@
     </delete>
 
     <select id="getVolunteerStarByid" parameterType="int" resultType="com.zx.Pojo.VolunteerStar">
-        select <include refid="base_coloum"/>,
+        select <include refid="base_coloum_withcontent"/>,
         a.area_name as areaName,
         m.model_name as modelName
         from volunteer_star vs
@@ -75,7 +89,7 @@
     </update>
 
     <select id="getListofVolunteerBymodelId" resultType="com.zx.Pojo.VolunteerStar" parameterType="int">
-        select <include refid="base_coloum"/>,
+        select <include refid="base_coloum_withcontent"/>,
         a.area_name as areaName,
         m.model_name as modelName
         from volunteer_star vs
@@ -85,7 +99,7 @@
     </select>
 
     <select id="getVolunteerStartInfoByid" parameterType="int" resultType="com.zx.Pojo.VolunteerStar">
-        select <include refid="base_coloum"/>
+        select <include refid="base_coloum_withoutContent"/>
         from volunteer_start vs
         where vs.id=#{id}
     </select>

@@ -60,7 +60,7 @@
     </select>
 
     <select id="getListVolunteerProject" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.VolunteerProject">
-        select b.id,b.show_image as showImage,b.title,b.description,b.content,b.area_id as areaId,a.area_name as areaName,b.service_type as serviceType
+        select b.id,b.show_image as showImage,b.title,b.description,b.area_id as areaId,a.area_name as areaName,b.service_type as serviceType
         ,b.service_type_name as serviceTypeName,b.project_statue as projectStatue,b.project_statue_name as projectStatueName,
         b.sign_area as signArea,b.sign_area_name as signAreaName,b.service_to as serviceTo,b.service_to_name as serviceToName,
         b.project_man_num as projectManNum,DATE_FORMAT(b.create_date,'%Y-%m-%d %H:%i:%s') as createDate,DATE_FORMAT(b.end_date,'%Y-%m-%d %H:%i:%s') as endDate,IFNULL(b.sign_num,'0') as signNum

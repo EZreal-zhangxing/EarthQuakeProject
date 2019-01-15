@@ -12,7 +12,7 @@
     </select>
 
     <select id="getListofVolunteer" resultType="com.zx.Pojo.Volunteer" parameterType="com.zx.Pojo.Pageinfo">
-        select id,title,type,description,content,show_image_url as showImageUrl,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
+        select id,title,type,description,show_image_url as showImageUrl,DATE_FORMAT(create_date,'%Y-%m-%d %H:%i:%s') as createDate
         from volunteer where 1=1
         <if test="conditionVolunteer.title != null and conditionVolunteer.title != ''">
             and title like concat('%', #{conditionVolunteer.title}, '%')

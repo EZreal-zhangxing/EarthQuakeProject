@@ -15,4 +15,46 @@
         where model_url=#{modelUrl} and model_desc=#{modelDesc}
     </update>
 
+    <!--检索新闻-->
+    <select id="searchNews" parameterType="String" resultType="com.zx.Pojo.SearchArtical">
+        select ns.id,ns.news_type as model,m.model_name as modelName,ns.title,'/news/getNewsByid' as RequestUrl
+        from news ns
+        left join model m on ns.news_type=m.id
+        where ns.title like CONCAT("%",#{keyword},"%")
+    </select>
+    <!--检索志愿故事-->
+    <select id="searchVolunteer" parameterType="String" resultType="com.zx.Pojo.SearchArtical">
+        select v.id,v.type as model,m.model_name as modelName,v.title,'/volunteer/getVolunteerByid' as RequestUrl
+        from volunteer v
+        left join model m on v.type=m.id
+        where v.title like CONCAT("%",#{keyword},"%")
+    </select>
+    <!--检索志愿团体-->
+    <select id="searchVolunteerTeam" parameterType="String" resultType="com.zx.Pojo.SearchArtical">
+        select vt.id,vt.title,'/volunteerTeam/getVolunteerTeamByid' as RequestUrl
+        from volunteer_team vt
+        where vt.title like CONCAT("%",#{keyword},"%")
+    </select>
+
+    <!--检索志愿项目-->
+    <select id="searchVolunteerProject" parameterType="String" resultType="com.zx.Pojo.SearchArtical">
+        select vp.id,vp.title,'/volunteerProject/getProjectByid' as RequestUrl
+        from volunteer_project vp
+        where vp.title like CONCAT("%",#{keyword},"%")
+    </select>
+
+    <!--检索志愿之星-->
+    <select id="searchVolunteerStar" parameterType="String" resultType="com.zx.Pojo.SearchArtical">
+        select vs.id,vs.model_id as model,m.model_name as modelName,vs.title,'/volunteerStar/getVolunteerStarByid' as RequestUrl
+        from volunteer_star vs
+        left join model m on vs.model_id=m.id
+        where vs.title like CONCAT("%",#{keyword},"%")
+    </select>
+    <!--检索志愿政策-->
+    <select id="searchVolunteerPolicy" parameterType="String" resultType="com.zx.Pojo.SearchArtical">
+        select vp.id,vp.model_id as model,m.model_name as modelName,vp.title,'/volunteerPolicy/getVolunteerPolicyById' as RequestUrl
+        from volunteer_policy vp
+        left join model m on vp.model_id=m.id
+        where vp.title like CONCAT("%",#{keyword},"%");
+    </select>
 </mapper>

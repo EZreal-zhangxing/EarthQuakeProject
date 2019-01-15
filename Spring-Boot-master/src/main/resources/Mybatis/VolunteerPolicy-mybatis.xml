@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zx.Dao.VolunteerPolicyMapper">
-    <sql id="base_coloum">
+    <sql id="base_coloum_withoutContent">
+        vp.id,
+        vp.model_id as modelId,
+        vp.title,
+        vp.description,
+        vp.out_url as outUrl,
+        vp.image_url as imageUrl,
+        vp.view_num as viewNum,
+        vp.common_num as commonNum,
+        DATE_FORMAT(vp.create_date,'%Y-%m-%d %H:%i:%s') as createDate
+    </sql>
+
+    <sql id="base_coloum_withContent">
         vp.id,
         vp.model_id as modelId,
         vp.title,
@@ -25,7 +37,7 @@
     </select>
 
     <select id="getListOfVolunteerPolicy" parameterType="com.zx.Pojo.Pageinfo" resultType="com.zx.Pojo.VolunteerPolicy">
-        select <include refid="base_coloum"/>,
+        select <include refid="base_coloum_withoutContent"/>,
         m.model_name as modelName
         from volunteer_policy vp
         left join model m on vp.model_id = m.id
@@ -60,7 +72,7 @@
     </update>
 
     <select id="getVolunteerPolicyByid" parameterType="int" resultType="com.zx.Pojo.VolunteerPolicy">
-        select <include refid="base_coloum"/>,
+        select <include refid="base_coloum_withContent"/>,
         m.model_name as modelName
         from volunteer_policy vp
         left join model m on vp.model_id = m.id

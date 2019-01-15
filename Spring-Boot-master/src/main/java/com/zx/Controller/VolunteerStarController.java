@@ -79,7 +79,7 @@ public class VolunteerStarController extends BaseController {
      */
     @ApiOperation(value = "获取志愿之星详情",response = VolunteerStar.class,httpMethod = "GET")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id",required = true, value = "文章ID",dataType = "Integer")
+            @ApiImplicitParam(name = "id",required = true, value = "文章ID",dataType = "int")
     })
     @RequestMapping("/getVolunteerStarByid/{id}")
     public VolunteerStar getVolunteerStarByid(@PathVariable(value = "id") Integer id){
