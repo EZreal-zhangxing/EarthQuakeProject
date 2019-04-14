@@ -10,6 +10,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 用户拦截器
@@ -50,4 +53,11 @@ public class UserInterceptor implements HandlerInterceptor {
         System.out.println(Calendar.getInstance().getTime() + this.getClass().getName() + "[afterCompletion] run");
     }
 
+//    public static void main(String[] args) {
+//        return new testclass(){
+//            public void test(){
+//                new ScheduledThreadPoolExecutor(10);
+////                ReentrantLock
+//        };
+//    }
 }

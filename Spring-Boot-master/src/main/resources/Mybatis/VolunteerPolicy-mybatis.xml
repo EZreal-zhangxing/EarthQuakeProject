@@ -48,6 +48,7 @@
         <if test="conditionVolunteerPolicy.title!=null and conditionVolunteerPolicy.title!=''">
             and title like CONCAT('%',#{conditionVolunteerPolicy.title},'%')
         </if>
+        order by vp.create_date DESC
         limit #{begin},#{shownum}
     </select>
 
@@ -67,7 +68,8 @@
         description=#{description},
         content=#{content},
         out_url=#{outUrl},
-        image_url=#{imageUrl}
+        image_url=#{imageUrl},
+        create_date=DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
         where id=#{id}
     </update>
 
